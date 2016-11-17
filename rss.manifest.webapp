@@ -1,0 +1,31 @@
+{
+	"version": "1.0",
+	"name": "Firri",
+	"description": "Feed reader",
+	"size": 63252,
+	"package_path": "http://localhost:8080/rss.zip",
+	"icons": {
+		"128": "/icons/icon-128.png",
+		"512": "/icons/icon-512.png"
+	},
+	"developer": {
+		"name": "Michael Müller",
+		"url": "https://github.com/Schnark"
+	},
+	"installs_allowed_from": ["*"],
+	"default_locale": "en",
+	"permissions": {
+		"alarms": {
+			"description": "Automatic updates"
+		},
+		"desktop-notification": {
+			"description": "Notification for auto updates"
+		},
+		"storage": {
+			"description": "Storage without size limitations"
+		}
+	},
+	"messages": [{
+		"alarm": "/index.html"
+	}]
+}

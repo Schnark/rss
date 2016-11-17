@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html><head><title data-l10n-id="title">(title)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<link rel="apple-touch-icon" sizes="180x180" href="more-icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="more-icons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="more-icons/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="more-icons/manifest.json">
+<link rel="mask-icon" href="more-icons/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="more-icons/favicon.ico">
+<meta name="msapplication-config" content="more-icons/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="feed.css">
+<link rel="resource" type="application/l10n" href="l10n/locales.ini">
+<script src="js/l10n.js"></script>
+<script src="js/util.js"></script>
+<script src="js/single-entry.js"></script>
+<script src="js/multi-entry.js"></script>
+<script src="js/feed.js"></script>
+<script src="js/collection.js"></script>
+<script src="js/presenter.js"></script>
+</head><body>
+
+<section id="page-loading">
+<img src="icons/icon-512.png">
+</section>
+
+<section id="page-collection" hidden>
+<header><span id="button-config" class="left"><img src="img/config.png"></span><h1 data-l10n-id="title">(title)</h1><span class="right reload"><img src="img/reload.png"></span></header>
+<div class="wrapper">
+<ul id="collection-list"></ul>
+<p data-l10n-id="no-feeds">(no-feeds)</p>
+<p id="show-timeline" data-l10n-id="show-timeline">(show-timeline)</p>
+</div>
+</section>
+
+<section id="page-feed" hidden>
+<header><span class="left go-back"><img src="img/back.png"></span><h1 class="feed-title"></h1><span class="right reload"><img src="img/reload.png"></span></header>
+<div class="wrapper">
+<p class="last-update"></p>
+<p class="counts"></p>
+<p><input id="search-input" data-l10n-id="search-input" class="search" placeholder="(search)" type="search"></p>
+<ul id="feed-list"></ul>
+<p data-l10n-id="no-entries">(no-entries)</p>
+</div>
+</section>
+
+<section id="page-entry" hidden>
+<header><span class="left go-back"><img src="img/back.png"></span><h1 class="feed-title"></h1><a class="right browse" target="_blank"><img src="img/open.png"></a></header>
+<div class="wrapper">
+<p class="date"></p>
+<p class="navigation"><span id="navigate-prev" class="prev">←</span><span class="update"></span><span id="navigate-next" class="next">→</span></p>
+<h1 class="title"></h1>
+<p class="author"></p>
+<div class="content"></div>
+</div>
+</section>
+
+<section id="page-feed-config" hidden>
+<header><span class="left go-back"><img src="img/back.png"></span><h1 class="feed-title"></h1></header>
+<div class="wrapper">
+<p>
+<label><span data-l10n-id="label-title">(label-title)</span><br><input type="text" required class="title"></label><br>
+<label><span data-l10n-id="label-url">(label-url)</span><br><input type="url" required class="url"></label>
+<button id="page-feed-config-save" data-l10n-id="button-save-changes">(button-save-changes)</button>
+</p>
+<p>
+<button id="page-feed-config-read" data-l10n-id="button-all-read">(button-all-read)</button>
+<button id="page-feed-config-remove" class="destructive" data-l10n-id="button-remove">(button-remove)</button>
+</p>
+</div>
+</section>
+
+<section id="page-config" hidden>
+<header><span class="left go-back"><img src="img/back.png"></span><h1 data-l10n-id="title">(title)</h1></header>
+<div class="wrapper">
+<h1 data-l10n-id="add">(add)</h1>
+<p>
+<label><span data-l10n-id="label-url">(label-url)</span><br><input type="url" class="url"></label>
+<button id="page-config-add" data-l10n-id="button-add">(button-add)</button>
+</p>
+<h1 data-l10n-id="config">(config)</h1>
+<p>
+<label><span data-l10n-id="label-max-multi">(label-max-multi)</span><br><input type="number" required min="1" step="1" class="config-max-multi"></label><br>
+<label><span data-l10n-id="label-max-feed">(label-max-feed)</span><br><input type="number" required min="1" step="1" class="config-max-feed"></label><br>
+<label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><input type="url" class="config-cors-proxy"></label><br>
+<label><span data-l10n-id="label-auto-update">(label-auto-update)</span><br><select class="config-auto-update">
+<option value="-1" data-l10n-id="option-no-updates">(option-no-updates)</option>
+<option value="0" data-l10n-id="option-on-start">(option-on-start)</option>
+<option value="15" data-l10n-id="option-15-min">(option-15-min)</option>
+<option value="30" data-l10n-id="option-30-min">(option-30-min)</option>
+<option value="60" data-l10n-id="option-1-h">(option-1-h)</option>
+<option value="120" data-l10n-id="option-2-h">(option-2-h)</option>
+</select></label><br>
+<button id="page-config-save" data-l10n-id="button-save-config">(button-save-config)</button>
+<button id="page-config-read" data-l10n-id="button-all-feeds-read">(button-all-feeds-read)</button>
+</p>
+<h1 data-l10n-id="export-import">(export-import)</h1>
+<p>
+<a class="button feed-export" download="feed-export.opml" data-l10n-id="button-export">(button-export)</a>
+<button id="page-config-import" data-l10n-id="button-import">(button-import)</button>
+</p>
+<h1 data-l10n-id="faq">(faq)</h1>
+<p><dl>
+<dt data-l10n-id="faq-1-q">(faq-1-q)</dt>
+<dd data-l10n-id="faq-1-a">(faq-1-a)</dd>
+<dt data-l10n-id="faq-2-q">(faq-2-q)</dt>
+<dd data-l10n-id="faq-2-a-1">(faq-2-a-1)</dd>
+<dd data-l10n-id="faq-2-a-2">(faq-2-a-2)</dd>
+<dd data-l10n-id="faq-2-a-3">(faq-2-a-3)</dd>
+<dt data-l10n-id="faq-3-q">(faq-3-q)</dt>
+<dd data-l10n-id="faq-3-a">(faq-3-a)</dd>
+<dt data-l10n-id="faq-4-q">(faq-4-q)</dt>
+<dd data-l10n-id="faq-4-a">(faq-4-a)</dd>
+<dt data-l10n-id="faq-5-q">(faq-5-q)</dt>
+<dd data-l10n-id="faq-5-a">(faq-5-a)</dd>
+</dl></p>
+</div>
+</section>
+
+<footer id="info-banner">
+</footer>
+
+<script src="js/app.js"></script>
+</body></html>

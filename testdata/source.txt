@@ -1,0 +1,1 @@
+mozilla.rss is from https://blog.mozilla.org/feed/, and is available under the Creative Commons Attribution Share-Alike License v3.0. See the file itself for authors.
