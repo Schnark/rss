@@ -355,3 +355,21 @@ button, .button {
 	background-color: #eee;
 	color: #000;
 }
+
+del {
+	text-decoration: none;
+	background-color: #fcc;
+	border: 1px solid #f00;
+	border-radius: 5px;
+	padding: 3px;
+	line-height: 2;
+}
+
+ins {
+	text-decoration: none;
+	background-color: #cfc;
+	border: 1px solid #0f0;
+	border-radius: 5px;
+	padding: 3px;
+	line-height: 2;
+}

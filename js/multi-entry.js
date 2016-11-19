@@ -80,7 +80,8 @@ MultiEntry.prototype.show = function (element, index) {
 	}
 	if (this.entries.length > 1) {
 		element.getElementsByClassName('navigation')[0].hidden = false;
-		element.getElementsByClassName('update')[0].textContent = (index + 1) + '/' + this.entries.length;
+		element.getElementsByClassName('update')[0].textContent =
+			util.translate('entry-a-of-b', {a: index + 1, b: this.entries.length});
 		element.getElementsByClassName('prev')[0].className = 'prev' + (index === 0 ? ' disabled' : '');
 		element.getElementsByClassName('next')[0].className = 'next' + (index === this.entries.length - 1 ? ' disabled' : '');
 	} else {
@@ -89,6 +90,63 @@ MultiEntry.prototype.show = function (element, index) {
 	element.getElementsByClassName('feed-title')[0].textContent = this.parent.getTitle();
 	this.entries[index].show(element);
 	return index;
+};
+
+MultiEntry.prototype.showDiff = function (element, i1, i2) {
+	var oldEntry = this.entries[i1].getJSON(), newEntry = this.entries[i2].getJSON(),
+		diff = {}, link;
+
+	function makeLink (url) {
+		return '<a href="' + util.escape(url) + '" target="_blank">' + util.escape(url) + '</a>';
+	}
+
+	if (oldEntry.title === newEntry.title) {
+		diff.title = util.escape(oldEntry.title) || util.translate('no-title');
+	} else {
+		diff.title = util.diff(oldEntry.title, newEntry.title);
+	}
+	if (oldEntry.author === newEntry.author) {
+		diff.author = oldEntry.title;
+	} else {
+		diff.author = util.translate('diff-author', {a: oldEntry.author, b: newEntry.author});
+	}
+	if (oldEntry.date === newEntry.date) {
+		diff.date = util.formatDate(new Date(oldEntry.date));
+	} else {
+		diff.date = util.translate('diff-date', {a: (new Date(oldEntry.date)).toLocaleString(),
+			b: (new Date(newEntry.date)).toLocaleString()});
+	}
+	if (oldEntry.url === newEntry.url) {
+		diff.url = false;
+	} else {
+		diff.url = util.translate('diff-url', {a: makeLink(oldEntry.url), b: makeLink(newEntry.url)});
+	}
+	if (oldEntry.content === newEntry.content) {
+		diff.content = util.translate('no-diff-content');
+	} else {
+		diff.content = util.diff(oldEntry.content, newEntry.content);
+	}
+
+	element.getElementsByClassName('feed-title')[0].textContent = this.parent.getTitle();
+	element.getElementsByClassName('navigation')[0].hidden = false;
+	element.getElementsByClassName('update')[0].textContent = util.translate('diff-a-to-b', {a: i1 + 1, b: i2 + 1});
+	element.getElementsByClassName('prev')[0].className = 'prev';
+	element.getElementsByClassName('next')[0].className = 'next';
+	element.getElementsByClassName('title')[0].innerHTML = diff.title;
+	element.getElementsByClassName('author')[0].textContent = diff.author;
+	element.getElementsByClassName('date')[0].textContent = diff.date;
+
+	link = element.getElementsByClassName('browse')[0];
+	if (diff.url) {
+		link.href = '';
+		link.style.display = 'none';
+		diff.content = diff.url + '<br>' + diff.content;
+	} else {
+		link.href = oldEntry.url;
+		link.style.display = oldEntry.url ? '' : 'none';
+	}
+	element.getElementsByClassName('content')[0].innerHTML = diff.content;
+
 };
 
 MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index) {

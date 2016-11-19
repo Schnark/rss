@@ -190,8 +190,9 @@ util = {
 		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); //required by some proxys
 		util.workXhrQueue(xhr);
 	},
+	simulationUrls: ['testdata/mozilla1.rss', 'testdata/mozilla2.rss'],
 	getXMLViaSimulation: function (url, callback) {
-		util.getXmlViaProxy('testdata/mozilla.rss', '', callback);
+		util.getXmlViaProxy(util.simulationUrls.shift() || 'http://foo.invalid/', '', callback); //FIXME
 	},
 	getXML: function (url, proxy, callback) {
 		if (location.protocol === 'file:') { //allow testing without internet connection

@@ -24,15 +24,15 @@ function Presenter (config) {
 
 	this.bindShield(this.pageFeedConfig);
 
-	document.getElementById('navigate-prev').addEventListener('click', function () {
-		if (this.className.indexOf('disabled') === -1) {
-			that.onPrevNextClick(-1);
-		}
+	this.bindClickHold('navigate-prev', function () {
+		this.onPrevNextClick(-1);
+	}, function () {
+		this.onPrevNextHold(-1);
 	});
-	document.getElementById('navigate-next').addEventListener('click', function () {
-		if (this.className.indexOf('disabled') === -1) {
-			that.onPrevNextClick(1);
-		}
+	this.bindClickHold('navigate-next', function () {
+		this.onPrevNextClick(1);
+	}, function () {
+		this.onPrevNextHold(1);
 	});
 	this.bindMulti('reload', this.onReloadClick, function (index) {
 		return index === 0;
@@ -144,6 +144,7 @@ Presenter.prototype.doReload = function (list, notification) {
 
 Presenter.prototype.bindClickHold = function (id, click, hold) {
 	var that = this, list = document.getElementById(id), status = {},
+		isList = list.tagName.toLowerCase() === 'ul',
 		tapTime = this.config['tap-time'],
 		tapMove = this.config['tap-move'];
 
@@ -189,10 +190,13 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 
 	if (this.useTouch) {
 		list.addEventListener('touchstart', function (e) {
+			if (this.className.indexOf('disabled') > -1) {
+				return;
+			}
 			var touch = e.changedTouches[0];
 			start({
 				x: touch.screenX, y: touch.screenY,
-				index: Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li'))
+				index: isList ? Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li')) : 0
 			});
 		});
 		list.addEventListener('touchmove', function (e) {
@@ -202,7 +206,7 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 			}
 			move({
 				x: touch.screenX, y: touch.screenY,
-				index: Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li'))
+				index: isList ? Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li')) : 0
 			});
 		});
 		list.addEventListener('touchend', function (e) {
@@ -214,9 +218,12 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 		});
 	} else {
 		list.addEventListener('mousedown', function (e) {
+			if (this.className.indexOf('disabled') > -1) {
+				return;
+			}
 			start({
 				x: e.screenX, y: e.screenY,
-				index: Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li'))
+				index: isList ? Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li')) : 0
 			});
 		});
 		list.addEventListener('mousemove', function (e) {
@@ -225,7 +232,7 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 			}
 			move({
 				x: e.screenX, y: e.screenY,
-				index: Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li'))
+				index: isList ? Array.prototype.indexOf.call(list.childNodes, util.getParentNode(e.target, 'li')) : 0
 			});
 		});
 		list.addEventListener('mouseup', function (e) {
@@ -342,17 +349,23 @@ Presenter.prototype.updatePageFeed = function (feed) {
 	}
 };
 
-Presenter.prototype.updatePageEntry = function (entry) {
+Presenter.prototype.updatePageEntry = function (entry, diffToNext) {
 	var index;
-	if (Array.isArray(entry)) {
-		this.currentEntry = entry[0];
-		index = entry[1];
-	} else if (typeof entry === 'number') {
-		index = entry;
-	} else if (entry) {
-		this.currentEntry = entry;
+	if (diffToNext) {
+		this.currentEntry.showDiff(this.pageEntry, entry, entry + 1);
+		this.currentEntryIndex = entry;
+	} else {
+		if (Array.isArray(entry)) {
+			this.currentEntry = entry[0];
+			index = entry[1];
+		} else if (typeof entry === 'number') {
+			index = entry;
+		} else if (entry) {
+			this.currentEntry = entry;
+		}
+		this.currentEntryIndex = this.currentEntry.show(this.pageEntry, index);
 	}
-	this.currentEntryIndex = this.currentEntry.show(this.pageEntry, index);
+	this.currentEntryDiff = diffToNext;
 	this.scrollTop(this.pageEntry);
 };
 
@@ -412,7 +425,26 @@ Presenter.prototype.onEntryHold = function (index) {
 };
 
 Presenter.prototype.onPrevNextClick = function (dir) {
-	this.updatePageEntry(this.currentEntryIndex + dir);
+	var nextId;
+	if (this.currentEntryDiff) {
+		nextId = dir === -1 ? this.currentEntryIndex : this.currentEntryIndex + 1;
+	} else {
+		nextId = this.currentEntryIndex + dir;
+	}
+	this.updatePageEntry(nextId);
+};
+
+Presenter.prototype.onPrevNextHold = function (dir) {
+	var nextId;
+	if (this.currentEntryDiff) {
+		nextId = this.currentEntryIndex + dir;
+	} else {
+		nextId = dir === -1 ? this.currentEntryIndex - 1 : this.currentEntryIndex;
+	}
+	if (nextId === -1) {
+		return;
+	}
+	this.updatePageEntry(nextId, true);
 };
 
 Presenter.prototype.onTimelineClick = function () {
