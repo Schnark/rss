@@ -1,5 +1,5 @@
 /*global util: true*/
-/*global MozActivity, Notification, indexedDB*/
+/*global MozActivity, Notification, indexedDB, URL*/
 util =
 (function () {
 "use strict";
@@ -306,6 +306,29 @@ util = {
 	normalizeContent: function (content) {
 		return content.replace(/data-rel="lightbox-gallery-[a-zA-Z0-9]*"/g,
 			'data-rel="lightbox-gallery-ABC0"'); //WordPress lightbox, id changes every time
+	},
+	makeAbsolute: function (el, attr, base) {
+		var url = el.getAttribute(attr) || '';
+		if (url.charAt(0) === '.' || url.charAt(0) === '/') {
+			try {
+				url = new URL(url, base);
+				el.setAttribute(attr, url.toString());
+			} catch (e) {
+			}
+		}
+	},
+	showHtml: function (el, html, base) {
+		var links, i;
+		el.innerHTML = html; //FIXME use sandboxed iframe instead
+		links = el.getElementsByTagName('a');
+		for (i = 0; i < links.length; i++) {
+			links[i].target = '_blank';
+			util.makeAbsolute(links[i], 'href', base);
+		}
+		links = el.getElementsByTagName('img');
+		for (i = 0; i < links.length; i++) {
+			util.makeAbsolute(links[i], 'src', base);
+		}
 	},
 	showNotification: function () {
 		if (!document.hidden || !window.Notification || !navigator.mozApps || !navigator.mozApps.getSelf) {

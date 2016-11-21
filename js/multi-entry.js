@@ -106,7 +106,7 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		diff.title = util.diff(oldEntry.title, newEntry.title);
 	}
 	if (oldEntry.author === newEntry.author) {
-		diff.author = oldEntry.title;
+		diff.author = oldEntry.author;
 	} else {
 		diff.author = util.translate('diff-author', {a: oldEntry.author, b: newEntry.author});
 	}
@@ -145,8 +145,7 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		link.href = oldEntry.url;
 		link.style.display = oldEntry.url ? '' : 'none';
 	}
-	element.getElementsByClassName('content')[0].innerHTML = diff.content;
-
+	util.showHtml(element.getElementsByClassName('content')[0], diff.content, newEntry.url); //FIXME
 };
 
 MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index) {

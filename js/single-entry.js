@@ -1,5 +1,4 @@
 /*global SingleEntry: true, util*/
-/*global URL*/
 SingleEntry =
 (function () {
 "use strict";
@@ -52,36 +51,15 @@ SingleEntry.prototype.search = function (search) {
 };
 
 SingleEntry.prototype.show = function (element) {
-	var link, content, links, i;
-
-	function makeAbsolute (el, attr, base) {
-		var url = el.getAttribute(attr) || '';
-		if (url.charAt(0) === '.' || url.charAt(0) === '/') {
-			try {
-				url = new URL(url, base);
-				el.setAttribute(attr, url.toString());
-			} catch (e) {
-			}
-		}
-	}
-
+	var link;
 	element.getElementsByClassName('title')[0].textContent = this.title || util.translate('no-title');
 	element.getElementsByClassName('author')[0].textContent = this.author;
 	element.getElementsByClassName('date')[0].textContent = util.formatDate(this.date);
 	link = element.getElementsByClassName('browse')[0];
 	link.href = this.url;
 	link.style.display = this.url ? '' : 'none';
-	content = element.getElementsByClassName('content')[0];
-	content.innerHTML = this.content || util.translate('no-content'); //FIXME use sandboxed iframe instead
-	links = content.getElementsByTagName('a');
-	for (i = 0; i < links.length; i++) {
-		links[i].target = '_blank';
-		makeAbsolute(links[i], 'href', this.url); //FIXME relative to feed URL ?
-	}
-	links = content.getElementsByTagName('img');
-	for (i = 0; i < links.length; i++) {
-		makeAbsolute(links[i], 'src', this.url); //FIXME relative to feed URL ?
-	}
+	util.showHtml(element.getElementsByClassName('content')[0],
+		this.content || util.translate('no-content'), this.url); //FIXME relative to feed URL ?
 };
 
 SingleEntry.prototype.showList = function (listItem) {
