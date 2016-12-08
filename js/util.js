@@ -186,8 +186,7 @@ util = {
 			}
 			url += '_=' + Date.now(); //break cache when using a proxy
 		}
-		xhr.open('GET', proxy + url);
-		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); //required by some proxys
+		xhr.open('GET', url);
 		util.workXhrQueue(xhr);
 	},
 	simulationUrls: ['testdata/mozilla1.rss', 'testdata/mozilla2.rss'],
