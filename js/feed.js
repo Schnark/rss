@@ -8,6 +8,7 @@ function Feed (parent, data) {
 	this.title = data.title;
 	this.url = data.url;
 	this.date = data.date ? new Date(data.date) : false;
+	this.pause = data.pause || 0;
 	if (!this.isTimeline()) {
 		this.entries = data.entries.map(function (entry) {
 			return new MultiEntry(this, entry);
@@ -32,6 +33,7 @@ Feed.prototype.getJSON = function () {
 		title: this.title,
 		url: this.url,
 		date: this.date ? Number(this.date) : false,
+		pause: this.pause,
 		entries: this.entries.map(function (entry) {
 			return entry.getJSON();
 		})
@@ -83,11 +85,12 @@ Feed.prototype.getEntryByIndex = function (index, onlyEntry) {
 	return !onlyEntry && this.search ? [entry, entry.search(this.search)] : entry;
 };
 
-Feed.prototype.updateTitleUrl = function (element) {
-	var title, url;
+Feed.prototype.updateSettings = function (element) {
+	var title, url, pause;
 	title = element.getElementsByClassName('title')[0];
 	url = element.getElementsByClassName('url')[0];
-	if (!title.checkValidity() || !url.checkValidity()) {
+	pause = element.getElementsByClassName('pause')[0];
+	if (!title.checkValidity() || !url.checkValidity() || !pause.checkValidity()) {
 		return false;
 	}
 	if (url.value !== this.url && this.parent.indexByUrl(url.value) !== -1) {
@@ -95,6 +98,7 @@ Feed.prototype.updateTitleUrl = function (element) {
 	}
 	this.title = title.value;
 	this.url = url.value;
+	this.pause = pause.value;
 	this.parent.sort();
 	return true;
 };
@@ -127,13 +131,19 @@ Feed.prototype.add = function (data) {
 	return;
 };
 
-Feed.prototype.reload = function (callback, updateTitle) {
+Feed.prototype.reload = function (callback, force, updateTitle) {
 	var oldCounts, newCounts;
 	if (this.isTimeline()) {
 		this.parent.reload(callback);
 		return;
 	}
 	if (this.isUpdating) {
+		return;
+	}
+	if (!force && Number(new Date()) - Number(this.date) < this.pause * 1000 * 60 * 60) {
+		setTimeout(function () {
+			callback(util.errors.SKIP, this, 0, 0);
+		}.bind(this), 0);
 		return;
 	}
 	this.isUpdating = true;
@@ -264,6 +274,7 @@ Feed.prototype.showConfig = function (element) {
 	element.getElementsByClassName('feed-title')[0].textContent = this.title;
 	element.getElementsByClassName('title')[0].value = this.title;
 	element.getElementsByClassName('url')[0].value = this.url;
+	element.getElementsByClassName('pause')[0].value = this.pause;
 };
 
 Feed.prototype.markAsRead = function () {

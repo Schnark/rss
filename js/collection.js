@@ -88,7 +88,7 @@ Collection.prototype.add = function (url, callback) {
 		this.feeds.push(feed);
 		this.sort();
 		callback(util.errors.OK, feed);
-	}.bind(this), true);
+	}.bind(this), true, true);
 };
 
 Collection.prototype.addFromOPML = function (xml) {

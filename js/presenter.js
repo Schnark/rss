@@ -136,7 +136,7 @@ Presenter.prototype.doReload = function (list, notification) {
 		} else {
 			this.showInfo('reload-error', result);
 		}
-	}.bind(this));
+	}.bind(this), list !== this.collection);
 	this.updatePageCollection();
 	this.updatePageFeed();
 	this.showInfo('reload-start', list === this.collection);
@@ -491,7 +491,7 @@ Presenter.prototype.onAddClick = function (url) {
 };
 
 Presenter.prototype.onFeedConfigSaveClick = function () {
-	if (this.currentFeed.updateTitleUrl(this.pageFeedConfig)) {
+	if (this.currentFeed.updateSettings(this.pageFeedConfig)) {
 		this.updatePageCollection();
 		this.updatePageFeed();
 		this.onBackClick(true);
@@ -623,6 +623,7 @@ Presenter.prototype.getInfo = function (type, details) {
 		return util.translate('reload-new', details[0]);
 	case 'reload-error':
 		switch (details) {
+		case util.errors.SKIP: return util.translate('reload-error-skip');
 		case util.errors.HTTP: return util.translate('reload-error-http');
 		case util.errors.XML: return util.translate('reload-error-xml');
 		}

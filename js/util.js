@@ -238,24 +238,47 @@ util = {
 				util.parseAtomItems(items, author)
 		};
 	},
-	buildMedia: function (url, type) {
+	buildMedia: function (url, type, attr) {
+		url = util.escape(url);
+		type = util.escape(type);
+		attr = attr ? ' ' + attr : '';
 		switch (type.replace(/\/.*$/, '')) {
 		case 'audio':
-			return '<audio controls><source src="' + util.escape(url) + '" type="' + util.escape(type) + '"></audio>';
+			return '<p><audio controls' + attr + '><source src="' + url + '" type="' + type + '"></audio></p>';
 		case 'video':
-			return '<video controls><source src="' + util.escape(url) + '" type="' + util.escape(type) + '"></video>';
+			return '<p><video controls' + attr + '><source src="' + url + '" type="' + type + '"></video></p>';
 		case 'image':
-			return '<img src="' + util.escape(url) + '">';
+			return '<p><img alt="" src="' + url + '"' + attr + '></p>';
 		default:
 			return '';
 		}
 	},
-	parseMedia: function (enclosures) {
+	parseEnclosure: function (enclosures) {
 		var i, html = [];
 		for (i = 0; i < enclosures.length; i++) {
 			html.push(util.buildMedia(
 				enclosures[i].getAttribute('url') || '',
 				enclosures[i].getAttribute('type') || ''
+			));
+		}
+		return html.join('');
+	},
+	parseMedia: function (media) {
+		var i, html = [], attr;
+		for (i = 0; i < media.length; i++) {
+			attr = {
+				height: media[i].getAttribute('height'),
+				width: media[i].getAttribute('width')
+			};
+			if (attr.height && attr.width) {
+				attr = 'height="' + util.escape(attr.height) + '" width="' + util.escape(attr.width) + '"';
+			} else {
+				attr = '';
+			}
+			html.push(util.buildMedia(
+				media[i].getAttribute('url') || '',
+				'image',
+				attr
 			));
 		}
 		return html.join('');
@@ -268,7 +291,9 @@ util = {
 			author = util.getDataFromXmlElement(item, ['author', 'dc:creator']) || fallbackAuthor;
 			url = util.getDataFromXmlElement(item, ['feedburner:origLink', 'link']);
 			date = util.parseDate(util.getDataFromXmlElement(item, ['pubDate', 'dc:date']));
-			content = util.parseMedia(item.getElementsByTagName('enclosure')) +
+			content =
+				util.parseEnclosure(item.getElementsByTagName('enclosure')) +
+				util.parseMedia(item.getElementsByTagName('media:thumbnail')) +
 				util.getDataFromXmlElement(item, ['content:encoded', 'description']);
 			content = util.normalizeContent(content);
 			result.push({title: title, author: author, url: url, content: content, date: new Date(date)});
@@ -372,7 +397,8 @@ util = {
 		HTTP: 1,
 		XML: 2,
 		EXISTS: 3,
-		NOFEED: 4
+		NOFEED: 4,
+		SKIP: 5
 	},
 	storage: {
 		openDB: function (callback) {
