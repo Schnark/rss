@@ -290,13 +290,15 @@ util = {
 			title = util.getDataFromXmlElement(item, 'title');
 			author = util.getDataFromXmlElement(item, ['author', 'dc:creator']) || fallbackAuthor;
 			url = util.getDataFromXmlElement(item, ['feedburner:origLink', 'link']);
-			date = util.parseDate(util.getDataFromXmlElement(item, ['pubDate', 'dc:date']));
+			date = new Date(util.parseDate(util.getDataFromXmlElement(item, ['pubDate', 'dc:date'])));
 			content =
 				util.parseEnclosure(item.getElementsByTagName('enclosure')) +
 				util.parseMedia(item.getElementsByTagName('media:thumbnail')) +
 				util.getDataFromXmlElement(item, ['content:encoded', 'description']);
 			content = util.normalizeContent(content);
-			result.push({title: title, author: author, url: url, content: content, date: new Date(date)});
+			if (date < new Date()) {
+				result.push({title: title, author: author, url: url, content: content, date: date});
+			}
 		}
 		return result;
 	},
@@ -320,10 +322,12 @@ util = {
 			title = util.getDataFromXmlElement(item, 'title');
 			author = util.getDataFromXmlElement(item, ['name', 'author', 'dc:creator']) || fallbackAuthor;
 			url = util.getDataFromXmlElement(item, 'link', getHrefAttr);
-			date = util.parseDate(util.getDataFromXmlElement(item, ['updated', 'published']));
+			date = new Date(util.parseDate(util.getDataFromXmlElement(item, ['updated', 'published'])));
 			content = util.getDataFromXmlElement(item, ['content', 'summary'], maybeEscape);
 			content = util.normalizeContent(content);
-			result.push({title: title, author: author, url: url, content: content, date: new Date(date)});
+			if (date < new Date()) {
+				result.push({title: title, author: author, url: url, content: content, date: date});
+			}
 		}
 		return result;
 	},

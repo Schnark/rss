@@ -68,7 +68,6 @@ MultiEntry.prototype.shouldAdd = function (data) {
 
 MultiEntry.prototype.add = function (data) {
 	this.entries.push(new SingleEntry(this, data));
-	this.entries.sort(util.compare);
 	while (this.entries.length > this.getConfig('max-entries-per-multi')) {
 		this.entries.shift();
 	}

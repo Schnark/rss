@@ -2,7 +2,7 @@
 (function (worker) {
 "use strict";
 
-var VERSION = 'v1.4',
+var VERSION = 'v1.5',
 	FILES = [
 		'feed.css',
 		'index.html',
@@ -11,15 +11,15 @@ var VERSION = 'v1.4',
 		'img/config.png',
 		'img/open.png',
 		'img/reload.png',
-		'img/source.txt',
 		'js/app.js',
+		'js/collection.js',
+		'js/diff.js',
 		'js/feed.js',
 		'js/multi-entry.js',
-		'js/single-entry.js',
-		'js/collection.js',
 		'js/presenter.js',
+		'js/single-entry.js',
 		'js/util.js',
-		'js/lib/jsdiff.js',
+		'js/lib/arraydiff.js',
 		'js/lib/l10n.js',
 		'l10n/de.properties',
 		'l10n/en.properties',
