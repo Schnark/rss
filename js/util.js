@@ -25,6 +25,9 @@ util = {
 		}
 		return 0;
 	},
+	pad: function (n) {
+		return n < 10 ? '0' + String(n) : String(n);
+	},
 	escape: function (text) {
 		return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	},
@@ -43,6 +46,10 @@ util = {
 	},
 	formatDayMonth: function (date) {
 		return util.translate('date-format', {day: date.getDate(), month: util.translate('month-' + date.getMonth())});
+	},
+	formatHourMinute: function (date) {
+		var h = date.getHours(), m = date.getMinutes();
+		return util.translate('time-format', {h: h, hh: util.pad(h), m: m, mm: util.pad(m)});
 	},
 	formatRelativeDate: function (date) {
 		var diff = Number(new Date()) - Number(date);
@@ -69,8 +76,12 @@ util = {
 		diff = Math.round(diff / 12);
 		return util.translate('years-ago', diff);
 	},
-	formatDate: function (date) {
-		return util.formatDayMonth(date) + ' (' + util.formatRelativeDate(date) + ')';
+	formatDate: function (date, long) {
+		return util.translate(long ? 'date-time-long' : 'date-time-short', {
+			date: util.formatDayMonth(date),
+			time: util.formatHourMinute(date),
+			relative: util.formatRelativeDate(date)
+		});
 	},
 	getFile: function (callback) {
 		var pick;
@@ -376,8 +387,15 @@ util = {
 			};
 		});
 	},
+	alarmViaTimeout: {
+	},
 	removeAlarms: function (callback) {
 		if (!navigator.mozAlarms) {
+			if (util.alarmViaTimeout.id) {
+				clearTimeout(util.alarmViaTimeout.id);
+				util.alarmViaTimeout.id = false;
+			}
+			callback(true);
 			return;
 		}
 		navigator.mozAlarms.getAll().onsuccess = function () {
@@ -390,11 +408,26 @@ util = {
 		};
 	},
 	setAlarm: function (time) {
-		util.removeAlarms(function () {
+		util.removeAlarms(function (timeout) {
 			if (time > 0) {
-				navigator.mozAlarms.add(new Date(Date.now() + time), 'ignoreTimezone', {type: 'auto-update'});
+				if (timeout) {
+					util.alarmViaTimeout.id = setTimeout(function () {
+						if (util.alarmViaTimeout.callback) {
+							util.alarmViaTimeout.callback();
+						}
+					}, time);
+				} else {
+					navigator.mozAlarms.add(new Date(Date.now() + time), 'ignoreTimezone', {type: 'auto-update'});
+				}
 			}
 		});
+	},
+	handleAlarm: function (handler) {
+		if (navigator.mozSetMessageHandler) {
+			navigator.mozSetMessageHandler('alarm', handler);
+		} else {
+			util.alarmViaTimeout.callback = handler;
+		}
 	},
 	errors: {
 		OK: 0,

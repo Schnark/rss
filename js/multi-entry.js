@@ -70,6 +70,12 @@ MultiEntry.prototype.add = function (data) {
 	this.entries.push(new SingleEntry(this, data));
 	while (this.entries.length > this.getConfig('max-entries-per-multi')) {
 		this.entries.shift();
+		if (this.read > 1) {
+			//this will always mark the oldest entry as read when you read at least one entry
+			//even if you haven't, but this shouldn't happen under normal circumstances anyway
+			//and IMHO is better than marking such an entry as completely unread
+			this.read--;
+		}
 	}
 };
 
@@ -110,10 +116,12 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		diff.author = util.translate('diff-author', {a: oldEntry.author, b: newEntry.author});
 	}
 	if (oldEntry.date === newEntry.date) {
-		diff.date = util.formatDate(new Date(oldEntry.date));
+		diff.date = util.formatDate(new Date(oldEntry.date), true);
 	} else {
-		diff.date = util.translate('diff-date', {a: (new Date(oldEntry.date)).toLocaleString(),
-			b: (new Date(newEntry.date)).toLocaleString()});
+		diff.date = util.translate('diff-date', {
+			a: util.formatDate(new Date(oldEntry.date), true),
+			b: util.formatDate(new Date(newEntry.date), true)
+		});
 	}
 	if (oldEntry.url === newEntry.url) {
 		diff.url = false;

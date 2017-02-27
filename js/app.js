@@ -1,4 +1,4 @@
-/*global Presenter*/
+/*global Presenter, util*/
 (function () {
 "use strict";
 
@@ -9,11 +9,7 @@ var app = new Presenter({
 	'search-delay': 1000
 });
 
-if (navigator.mozSetMessageHandler) {
-	navigator.mozSetMessageHandler('alarm', function () {
-		app.handleAlarm();
-	});
-}
+util.handleAlarm(app.handleAlarm.bind(app));
 
 window.addEventListener('localized', function () {
 	document.documentElement.lang = document.webL10n.getLanguage();

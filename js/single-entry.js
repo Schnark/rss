@@ -54,7 +54,7 @@ SingleEntry.prototype.show = function (element) {
 	var link;
 	element.getElementsByClassName('title')[0].textContent = this.title || util.translate('no-title');
 	element.getElementsByClassName('author')[0].textContent = this.author;
-	element.getElementsByClassName('date')[0].textContent = util.formatDate(this.date);
+	element.getElementsByClassName('date')[0].textContent = util.formatDate(this.date, true);
 	link = element.getElementsByClassName('browse')[0];
 	link.href = this.url;
 	link.style.display = this.url ? '' : 'none';
