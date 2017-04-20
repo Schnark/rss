@@ -1,0 +1,20 @@
+{
+	"@comment": "Note that the code to transform these data into a webpage is in https://github.com/Schnark/schnark.github.io",
+	"title": {
+		"en": "Firri – Feed reader app for Firefox OS",
+		"de": "Firri – Feed-Reader-App für Firefox OS"
+	},
+	"serviceworker": true,
+	"icon": "icons/icon-128.png",
+	"screenshots": [
+		"2016-11-03-19-01-56.png",
+		"2016-11-03-19-02-16.png",
+		"2016-11-03-19-03-21.png",
+		"2016-11-03-19-05-42.png",
+		"2016-11-03-19-06-13.png"
+	],
+	"desc": {
+		"en": ["Firri is a feed reader for RSS and Atom feeds. The list of subscribed feeds is simply managed locally, the entries of the feeds are saved locally, too, so no online connection is necessary except for reloading the feeds.", "You can import and export feeds via the OPML format."],
+		"de": ["Firri ist ein Feed-Reader für RSS- und Atom-Feeds. Die Liste der abonnierten Feeds wird einfach lokal verwaltet, auch die einzelnen Einträge werden lokal gespeichert, sodass außer zum Neuladen keine Internetverbindung nötig ist.", "Es bestehen Import- und Export-Möglichkeiten über das OPML-Format."]
+	}
+}
