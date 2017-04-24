@@ -1,10 +1,11 @@
 /*global util */
+util.diff =
 (function () {
 "use strict";
 
 function splitWords (text) {
 	var ret = [];
-	text.split(/(\b\S+\b)/).forEach(function (word) {
+	text.split(/(\S+\b|.)/).forEach(function (word) {
 		if (word) {
 			ret.push(word);
 		}
@@ -55,6 +56,16 @@ function nextOtherChangeIndex (i, d) {
 	return -1;
 }
 
+function simplifyDiff (d) {
+	var d2 = d;
+	do {
+		d = d2;
+		d2 = d.replace(/<del>([^<]+)<\/del><ins>([^<]+)<\/ins> <del>([^<]+)<\/del><ins>([^<]+)<\/ins>/,
+			'<del>$1 $3</del><ins>$2 $4</ins>');
+	} while (d2 !== d);
+	return d;
+}
+
 function diff (o, n) {
 	var d, i, j, tags1, tags2, out = [];
 	o = splitHtml(o);
@@ -87,9 +98,9 @@ function diff (o, n) {
 			out.push('</del>');
 		}
 	}
-	return out.join('').replace(/<\/(del|ins)><\1>/g, '');
+
+	return simplifyDiff(out.join('').replace(/<\/(del|ins)><\1>/g, ''));
 }
 
-util.diff = diff;
-
+return diff;
 })();

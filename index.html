@@ -20,7 +20,13 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <script src="js/lib/l10n.js"></script>
 <script src="js/util.js"></script>
 <script src="js/lib/arraydiff.js"></script>
-<script src="js/diff.js"></script>
+<script src="js/util-alarm.js"></script>
+<script src="js/util-date.js"></script>
+<script src="js/util-diff.js"></script>
+<script src="js/util-opml.js"></script>
+<script src="js/util-parse.js"></script>
+<script src="js/util-storage.js"></script>
+<script src="js/util-xhr.js"></script>
 <script src="js/single-entry.js"></script>
 <script src="js/multi-entry.js"></script>
 <script src="js/feed.js"></script>
@@ -37,7 +43,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <div class="wrapper">
 <ul id="collection-list"></ul>
 <p data-l10n-id="no-feeds">(no-feeds)</p>
-<p id="show-timeline" data-l10n-id="show-timeline">(show-timeline)</p>
+<p id="show-timeline"><img src="img/history.png"><span data-l10n-id="show-timeline">(show-timeline)</span><img src="img/search.png"></p>
 </div>
 </section>
 

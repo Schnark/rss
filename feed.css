@@ -279,6 +279,34 @@ button, .button {
 	display: block;
 }
 
+#show-timeline {
+	border: 1px solid #555;
+	border-radius: 1px;
+	margin: 25px 0;
+	height: 2em;
+	line-height: 2em;
+	position: relative;
+}
+
+#show-timeline img {
+	display: block;
+	width: 1.25em;
+	position: absolute;
+	top: 0.375em;
+}
+
+#show-timeline img:first-child {
+	left: 0.375em;
+}
+
+#show-timeline img:last-child {
+	right: 0.375em;
+}
+
+#show-timeline span {
+	padding-left: 2.25em;
+}
+
 #page-feed .last-update,
 #page-feed .counts {
 	font-size: 87.5%;
