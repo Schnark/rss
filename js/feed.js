@@ -210,8 +210,9 @@ Feed.prototype.getCountsHtml = function () {
 	return counts + '/' + total;
 };
 
-Feed.prototype.show = function (element) {
-	var update, li, title, feed, date, i, index;
+Feed.prototype.show = function (element, max) {
+	var update, list, li, title, feed, date, i, index, c = 0;
+	max = max || Infinity;
 	element.getElementsByClassName('feed-title')[0].textContent = this.title;
 	element.getElementsByClassName('counts')[0].innerHTML = this.getCountsHtml();
 	if (this.isUpdating) {
@@ -223,8 +224,8 @@ Feed.prototype.show = function (element) {
 	}
 	element.getElementsByClassName('last-update')[0].textContent = update;
 	element.getElementsByClassName('search')[0].hidden = !this.isTimeline();
-	element = element.getElementsByTagName('ul')[0];
-	element.innerHTML = '';
+	list = element.getElementsByTagName('ul')[0];
+	list.innerHTML = '';
 	for (i = this.entries.length - 1; i >= 0; i--) {
 		if (this.search) {
 			index = this.entries[i].search(this.search);
@@ -232,18 +233,26 @@ Feed.prototype.show = function (element) {
 				continue;
 			}
 		}
-		li = document.createElement('li');
-		title = document.createElement('span');
-		feed = document.createElement('span');
-		date = document.createElement('span');
-		title.className = 'title';
-		feed.className = 'feed';
-		date.className = 'date';
-		li.appendChild(title);
-		li.appendChild(feed);
-		li.appendChild(date);
-		this.entries[i].showList(li, this.isTimeline(), index);
-		element.appendChild(li);
+		c++;
+		if (c <= max) {
+			li = document.createElement('li');
+			title = document.createElement('span');
+			feed = document.createElement('span');
+			date = document.createElement('span');
+			title.className = 'title';
+			feed.className = 'feed';
+			date.className = 'date';
+			li.appendChild(title);
+			li.appendChild(feed);
+			li.appendChild(date);
+			this.entries[i].showList(li, this.isTimeline(), index);
+			list.appendChild(li);
+		}
+	}
+	if (c > max) {
+		element.getElementsByClassName('show-all')[0].style.display = '';
+	} else {
+		element.getElementsByClassName('show-all')[0].style.display = 'none';
 	}
 };
 

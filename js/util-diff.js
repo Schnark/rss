@@ -57,12 +57,48 @@ function nextOtherChangeIndex (i, d) {
 }
 
 function simplifyDiff (d) {
-	var d2 = d;
+	//merge adjacent tags
+	var d2 = d.replace(/<\/(del|ins)><\1>/g, '');
+	//merge changes separated only by punctuation/white space
 	do {
 		d = d2;
-		d2 = d.replace(/<del>([^<]+)<\/del><ins>([^<]+)<\/ins> <del>([^<]+)<\/del><ins>([^<]+)<\/ins>/,
-			'<del>$1 $3</del><ins>$2 $4</ins>');
+		d2 = d.replace(/<del>([^<]+)<\/del><ins>([^<]+)<\/ins>(.\s?)<del>([^<]+)<\/del><ins>([^<]+)<\/ins>/,
+			'<del>$1$3$4</del><ins>$2$3$5</ins>');
 	} while (d2 !== d);
+	do {
+		d = d2;
+		d2 = d.replace(/<del>([^<]+)<\/del><ins>([^<]+)<\/ins>(.\s?)<del>([^<]+)\3<\/del>/,
+			'<del>$1$3$4</del><ins>$2</ins>$3');
+	} while (d2 !== d);
+	do {
+		d = d2;
+		d2 = d.replace(/<ins>([^<]+)<\/ins>(.\s?)<ins>([^<]+)\2<\/ins>/,
+			'<ins>$1$2$3</ins>$2');
+	} while (d2 !== d);
+	do {
+		d = d2;
+		d2 = d.replace(/<del>([^<]+)<\/del>(.\s?)<del>([^<]+)\2<\/del>/,
+			'<del>$1$2$3</del>$2');
+	} while (d2 !== d);
+	do {
+		d = d2;
+		d2 = d.replace(/<del>([^<]+)<\/del>(.\s?)<del>([^<]+)<\/del><ins>([^<]+)<\/ins>/,
+			'<del>$1$2$3</del><ins>$2$4</ins>');
+	} while (d2 !== d);
+	do {
+		d = d2;
+		d2 = d.replace(/<ins>([^<]+)<\/ins>(.\s?)<del>([^<]+)<\/del><ins>([^<]+)<\/ins>/,
+			'<del>$2$3</del><ins>$1$2$4</ins>');
+	} while (d2 !== d);
+	//word diff
+	d = d.replace(/<del>([^< ]{3,})([^< ]{0,3}?)([^< ]*)<\/del><ins>\1([^< ]{0,3})\3<\/ins>/g,
+		'$1<del>$2</del><ins>$4</ins>$3');
+	d = d.replace(/<del>([^< ]*)([^< ]{0,3}?)([^< ]{3,})<\/del><ins>\1([^< ]{0,3})\3<\/ins>/g,
+		'$1<del>$2</del><ins>$4</ins>$3');
+	d = d.replace(/<del>([^< ]{0,3}?)([^< ]{3,})([^< ]{0,3}?)<\/del><ins>([^< ]{0,3})\2([^< ]{0,3})<\/ins>/g,
+		'<del>$1</del><ins>$4</ins>$2<del>$3</del><ins>$5</ins>');
+	//remove empty tags
+	d = d.replace(/<(ins|del)><\/\1>/g, '');
 	return d;
 }
 
@@ -99,7 +135,7 @@ function diff (o, n) {
 		}
 	}
 
-	return simplifyDiff(out.join('').replace(/<\/(del|ins)><\1>/g, ''));
+	return simplifyDiff(out.join(''));
 }
 
 return diff;

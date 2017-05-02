@@ -55,6 +55,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <p><input id="search-input" data-l10n-id="search-input" class="search" placeholder="(search)" type="search"></p>
 <ul id="feed-list"></ul>
 <p data-l10n-id="no-entries">(no-entries)</p>
+<p data-l10n-id="show-all" id="show-all" class="show-all">(show-all)</p>
 </div>
 </section>
 
@@ -73,9 +74,9 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <header><span class="left go-back"><img src="img/back.png"></span><h1 class="feed-title"></h1></header>
 <div class="wrapper">
 <p>
-<label><span data-l10n-id="label-title">(label-title)</span><br><input type="text" required class="title"></label><br>
-<label><span data-l10n-id="label-url">(label-url)</span><br><input type="url" required class="url"></label>
-<label><span data-l10n-id="label-pause">(label-pause)</span><br><input type="number" required min="0" step="1" class="pause"></label>
+<label><span data-l10n-id="label-title">(label-title)</span><br><input type="text" required class="title page-feed-config-save"></label><br>
+<label><span data-l10n-id="label-url">(label-url)</span><br><input type="url" required class="url page-feed-config-save"></label>
+<label><span data-l10n-id="label-pause">(label-pause)</span><br><input type="number" required min="0" step="1" class="pause page-feed-config-save"></label>
 <button id="page-feed-config-save" data-l10n-id="button-save-changes">(button-save-changes)</button>
 </p>
 <p>
@@ -90,15 +91,15 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <div class="wrapper">
 <h1 data-l10n-id="add">(add)</h1>
 <p>
-<label><span data-l10n-id="label-url">(label-url)</span><br><input type="url" class="url"></label>
+<label><span data-l10n-id="label-url">(label-url)</span><br><input type="url" class="url page-config-add"></label>
 <button id="page-config-add" data-l10n-id="button-add">(button-add)</button>
 </p>
 <h1 data-l10n-id="config">(config)</h1>
 <p>
-<label><span data-l10n-id="label-max-multi">(label-max-multi)</span><br><input type="number" required min="1" step="1" class="config-max-multi"></label><br>
-<label><span data-l10n-id="label-max-feed">(label-max-feed)</span><br><input type="number" required min="1" step="1" class="config-max-feed"></label><br>
-<label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><input type="url" class="config-cors-proxy"></label><br>
-<label><span data-l10n-id="label-auto-update">(label-auto-update)</span><br><select class="config-auto-update">
+<label><span data-l10n-id="label-max-multi">(label-max-multi)</span><br><input type="number" required min="1" step="1" class="config-max-multi page-config-save"></label><br>
+<label><span data-l10n-id="label-max-feed">(label-max-feed)</span><br><input type="number" required min="1" step="1" class="config-max-feed page-config-save"></label><br>
+<label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><input type="url" class="config-cors-proxy page-config-save"></label><br>
+<label><span data-l10n-id="label-auto-update">(label-auto-update)</span><br><select class="config-auto-update page-config-save">
 <option value="-1" data-l10n-id="option-no-updates">(option-no-updates)</option>
 <option value="0" data-l10n-id="option-on-start">(option-on-start)</option>
 <option value="15" data-l10n-id="option-15-min">(option-15-min)</option>

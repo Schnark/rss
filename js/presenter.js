@@ -51,6 +51,7 @@ function Presenter (config) {
 	});
 	this.bindSimpleClick({
 		'show-timeline': this.onTimelineClick,
+		'show-all': this.onShowAllClick,
 		'page-feed-config-save': this.onFeedConfigSaveClick,
 		'page-feed-config-read': this.onFeedReadAllClick,
 		'page-feed-config-remove': this.onFeedRemoveClick,
@@ -69,6 +70,9 @@ function Presenter (config) {
 			that.searchTimeout = false;
 		}, that.config['search-delay']);
 	});
+	this.bindEnableSave('page-feed-config-save');
+	this.bindEnableSave('page-config-add');
+	this.bindEnableSave('page-config-save');
 
 	util.storage.get(this.init.bind(this));
 }
@@ -325,6 +329,21 @@ Presenter.prototype.bindTransitionEnd = function (pages) {
 	}
 };
 
+Presenter.prototype.bindEnableSave = function (id) {
+	var i,
+		button = document.getElementById(id),
+		inputs = document.getElementsByClassName(id);
+
+	function handler () {
+		button.disabled = false;
+	}
+
+	for (i = 0; i < inputs.length; i++) {
+		inputs[i].addEventListener('input', handler);
+		inputs[i].addEventListener('change', handler);
+	}
+};
+
 Presenter.prototype.updateAlarm = function () {
 	util.setAlarm(this.getConfig('auto-update') * 60000);
 };
@@ -339,13 +358,13 @@ Presenter.prototype.updatePageCollection = function () {
 	this.collection.show(this.pageCollection.getElementsByTagName('ul')[0]);
 };
 
-Presenter.prototype.updatePageFeed = function (feed) {
+Presenter.prototype.updatePageFeed = function (feed, all) {
 	if (feed) {
 		this.currentFeed = feed;
 		this.scrollTop(this.pageFeed);
 	}
 	if (this.currentFeed) {
-		this.currentFeed.show(this.pageFeed);
+		this.currentFeed.show(this.pageFeed, all ? Infinity : this.getConfig('max-entries-per-feed'));
 	}
 };
 
@@ -371,6 +390,7 @@ Presenter.prototype.updatePageEntry = function (entry, diffToNext) {
 
 Presenter.prototype.updatePageFeedConfig = function () {
 	this.currentFeed.showConfig(this.pageFeedConfig);
+	document.getElementById('page-feed-config-save').disabled = true;
 	this.scrollTop(this.pageFeedConfig);
 };
 
@@ -387,10 +407,12 @@ Presenter.prototype.updatePageConfig = function () {
 	}
 
 	this.pageConfig.getElementsByClassName('url')[0].value = 'http://';
+	document.getElementById('page-config-add').disabled = true;
 	this.pageConfig.getElementsByClassName('config-max-multi')[0].value = this.getConfig('max-entries-per-multi');
 	this.pageConfig.getElementsByClassName('config-max-feed')[0].value = this.getConfig('max-entries-per-feed');
 	this.pageConfig.getElementsByClassName('config-cors-proxy')[0].value = this.getConfig('cors-proxy');
 	setSelectedIndex(this.pageConfig.getElementsByClassName('config-auto-update')[0], this.getConfig('auto-update'));
+	document.getElementById('page-config-save').disabled = true;
 	this.pageConfig.getElementsByClassName('feed-export')[0].href = this.getOpmlDownload();
 	this.scrollTop(this.pageConfig);
 };
@@ -451,6 +473,10 @@ Presenter.prototype.onTimelineClick = function () {
 	this.updatePageFeed(this.collection.getTimeline());
 	this.searchInput.value = '';
 	this.showPageFeed();
+};
+
+Presenter.prototype.onShowAllClick = function () {
+	this.updatePageFeed(null, true);
 };
 
 Presenter.prototype.onSearchUpdate = function (search) {
