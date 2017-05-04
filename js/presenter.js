@@ -137,7 +137,7 @@ Presenter.prototype.doReload = function (list, notification) {
 				util.showNotification();
 				notification = false;
 			}
-		} else {
+		} else if (result !== util.errors.SKIP) {
 			this.showInfo('reload-error', result);
 		}
 	}.bind(this), list !== this.collection);
@@ -649,7 +649,7 @@ Presenter.prototype.getInfo = function (type, details) {
 		return util.translate('reload-new', details[0]);
 	case 'reload-error':
 		switch (details) {
-		case util.errors.SKIP: return util.translate('reload-error-skip');
+		case util.errors.SKIP: return util.translate('reload-error-skip'); //currently not needed
 		case util.errors.HTTP: return util.translate('reload-error-http');
 		case util.errors.XML: return util.translate('reload-error-xml');
 		}

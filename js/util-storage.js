@@ -27,6 +27,9 @@ function openDB (callback) {
 		callback(null);
 		return;
 	}
+	//'store' is a stupid generic name. While this is okay in the packaged app, it is a real mess
+	//in the online app, where it shares the global namespace with all my other apps. But for
+	//backwards compatibility it ca'n't be changed easily.
 	var request = indexedDB.open('store', 1);
 	request.onupgradeneeded = function (e) {
 		var db = e.target.result;

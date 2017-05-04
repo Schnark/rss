@@ -287,14 +287,15 @@ button:disabled {
 .show-all {
 	border: 1px solid #555;
 	border-radius: 1px;
-	margin: 0.375em 0;
+	margin: 25px 0;
+	padding: 0 0.375em;
 	height: 2em;
 	line-height: 2em;
 }
 
 #show-timeline {
-	margin: 25px 0;
 	position: relative;
+	padding: 0;
 }
 
 #show-timeline img {
@@ -412,7 +413,7 @@ del > li {
 	background-color: #fcc;
 	border: 1px solid #f00;
 	border-radius: 5px;
-	padding: 3px;
+	padding: 3px 1px;
 	line-height: 2;
 }
 
@@ -430,6 +431,6 @@ ins > li {
 	background-color: #cfc;
 	border: 1px solid #0f0;
 	border-radius: 5px;
-	padding: 3px;
+	padding: 3px 1px;
 	line-height: 2;
 }

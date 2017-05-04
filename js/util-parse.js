@@ -103,7 +103,7 @@ function parseRssItems (items, fallbackAuthor) {
 			parseMedia(item.getElementsByTagName('media:thumbnail')) +
 			getDataFromXmlElement(item, ['content:encoded', 'description']);
 		content = normalizeContent(content);
-		if (date < new Date()) {
+		if (date <= new Date()) {
 			result.push({title: title, author: author, url: url, content: content, date: date});
 		}
 	}
@@ -133,7 +133,7 @@ function parseAtomItems (items, fallbackAuthor) {
 		date = new Date(parseDate(getDataFromXmlElement(item, ['updated', 'published'])));
 		content = getDataFromXmlElement(item, ['content', 'summary'], maybeEscape);
 		content = normalizeContent(content);
-		if (date < new Date()) {
+		if (date <= new Date()) {
 			result.push({title: title, author: author, url: url, content: content, date: date});
 		}
 	}

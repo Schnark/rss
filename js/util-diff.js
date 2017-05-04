@@ -97,8 +97,14 @@ function simplifyDiff (d) {
 		'$1<del>$2</del><ins>$4</ins>$3');
 	d = d.replace(/<del>([^< ]{0,3}?)([^< ]{3,})([^< ]{0,3}?)<\/del><ins>([^< ]{0,3})\2([^< ]{0,3})<\/ins>/g,
 		'<del>$1</del><ins>$4</ins>$2<del>$3</del><ins>$5</ins>');
+	d = d.replace(/<del>([^< ]{5,})([^< ]*)<\/del><ins>\1([^< ]*)<\/ins>/g,
+		'$1<del>$2</del><ins>$3</ins>');
+	d = d.replace(/<del>([^< ]*?)([^< ]{5,})<\/del><ins>([^< ]*)\2<\/ins>/g,
+		'<del>$1</del><ins>$3</ins>$2');
 	//remove empty tags
 	d = d.replace(/<(ins|del)><\/\1>/g, '');
+	//make sure spaces are always visible
+	d = d.replace(/ (<\/?(?:ins|del)>)/g, '&nbsp;$1').replace(/(<\/?(?:ins|del)>) /g, '$1&nbsp;');
 	return d;
 }
 

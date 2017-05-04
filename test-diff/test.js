@@ -14,25 +14,25 @@ var tests = [
 		t: 'Add word at end',
 		o: 'foo bar',
 		n: 'foo bar baz',
-		d: 'foo bar<ins> baz</ins>'
+		d: 'foo bar<ins>&nbsp;baz</ins>'
 	},
 	{
 		t: 'Remove word in middle',
 		o: 'foo baz bar',
 		n: 'foo bar',
-		d: 'foo <del>baz </del>bar'
+		d: 'foo&nbsp;<del>baz&nbsp;</del>bar'
 	},
 	{
 		t: 'Change attribute',
 		o: 'foo <a href="1">bar</a>',
 		n: 'foo <a href="2">bar</a>',
-		d: 'foo <del><a href="1">bar</a></del><ins><a href="2">bar</a></ins>'
+		d: 'foo&nbsp;<del><a href="1">bar</a></del><ins><a href="2">bar</a></ins>'
 	},
 	{
 		t: 'Change tag',
 		o: 'foo <i>bar</i>',
 		n: 'foo <b>bar</b>',
-		d: 'foo <del><i>bar</i></del><ins><b>bar</b></ins>'
+		d: 'foo&nbsp;<del><i>bar</i></del><ins><b>bar</b></ins>'
 	},
 	{
 		t: 'Change content of tag',
@@ -44,13 +44,13 @@ var tests = [
 		t: 'Change punctuation',
 		o: 'foo, bar',
 		n: 'foo. bar',
-		d: 'foo<del>,</del><ins>.</ins> bar'
+		d: 'foo<del>,</del><ins>.</ins>&nbsp;bar'
 	},
 	{
 		t: 'Word with special characters',
 		o: 'öabcd def',
 		n: 'öfooo def',
-		d: '<del>öabcd</del><ins>öfooo</ins> def'
+		d: '<del>öabcd</del><ins>öfooo</ins>&nbsp;def'
 	},
 	{
 		t: 'Change everything except spaces',
@@ -62,25 +62,25 @@ var tests = [
 		t: 'Add sentence',
 		o: 'First sentence. This comes last.',
 		n: 'First sentence. Added in the middle. This comes last.',
-		d: 'First sentence. <ins>Added in the middle. </ins>This comes last.'
+		d: 'First sentence.&nbsp;<ins>Added in the middle.&nbsp;</ins>This comes last.'
 	},
 	{
 		t: 'Remove sentence',
 		o: 'First sentence. Will be removed. This comes last.',
 		n: 'First sentence. This comes last.',
-		d: 'First sentence. <del>Will be removed. </del>This comes last.'
+		d: 'First sentence.&nbsp;<del>Will be removed.&nbsp;</del>This comes last.'
 	},
 	{
 		t: 'Big change in middle',
 		o: 'Foo 1 2 3 bar',
 		n: 'Foo 4 5 bar',
-		d: 'Foo <del>1 2 3</del><ins>4 5</ins> bar'
+		d: 'Foo&nbsp;<del>1 2 3</del><ins>4 5</ins>&nbsp;bar'
 	},
 	{
 		t: 'Big change in middle (2)',
 		o: 'Foo 1 2 bar',
 		n: 'Foo 3 4 5 bar',
-		d: 'Foo <del>1 2</del><ins>3 4 5</ins> bar'
+		d: 'Foo&nbsp;<del>1 2</del><ins>3 4 5</ins>&nbsp;bar'
 	},
 	{
 		t: 'Changes inside word',
@@ -92,7 +92,7 @@ var tests = [
 		t: 'Changes outside word',
 		o: 'Foo bar baz',
 		n: 'Foo "bar" baz',
-		d: 'Foo <ins>"</ins>bar<ins>"</ins> baz'
+		d: 'Foo&nbsp;<ins>"</ins>bar<ins>"</ins>&nbsp;baz'
 	}
 ];
 QUnit.test('Diff', function (assert) {
