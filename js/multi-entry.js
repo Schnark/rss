@@ -79,7 +79,7 @@ MultiEntry.prototype.add = function (data) {
 	}
 };
 
-MultiEntry.prototype.show = function (element, index) {
+MultiEntry.prototype.show = function (element, index, search) {
 	if (index === undefined) {
 		index = this.entries.length - 1;
 	}
@@ -93,7 +93,7 @@ MultiEntry.prototype.show = function (element, index) {
 		element.getElementsByClassName('navigation')[0].hidden = true;
 	}
 	element.getElementsByClassName('feed-title')[0].textContent = this.parent.getTitle();
-	this.entries[index].show(element);
+	this.entries[index].show(element, search);
 	return index;
 };
 
@@ -155,7 +155,7 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 	util.showHtml(element.getElementsByClassName('content')[0], diff.content, newEntry.url); //FIXME
 };
 
-MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index) {
+MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index, search) {
 	listItem.className = this.getStatus();
 	if (includeFeedTitle) {
 		listItem.getElementsByClassName('feed')[0].textContent = this.parent.getTitle();
@@ -163,7 +163,7 @@ MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index) {
 	if (index === undefined) {
 		index = this.entries.length - 1;
 	}
-	this.entries[index].showList(listItem);
+	this.entries[index].showList(listItem, search);
 };
 
 MultiEntry.prototype.markAsRead = function (index) {

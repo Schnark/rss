@@ -43,27 +43,39 @@ SingleEntry.prototype.getIndex = function () {
 };
 
 SingleEntry.prototype.search = function (search) {
-	search = search.toLowerCase();
-	return this.title.toLowerCase().indexOf(search) > -1 ||
-		this.author.toLowerCase().indexOf(search) > -1 ||
-		this.url.toLowerCase().indexOf(search) > -1 ||
-		this.content.toLowerCase().indexOf(util.escape(search)) > -1;
+	return util.search(search, this.title, true).length ||
+		util.search(search, this.author, true).length ||
+		util.search(search, this.url, true).length ||
+		util.search(util.escape(search), this.content, true).length;
 };
 
-SingleEntry.prototype.show = function (element) {
-	var link;
-	element.getElementsByClassName('title')[0].textContent = this.title || util.translate('no-title');
-	element.getElementsByClassName('author')[0].textContent = this.author;
-	element.getElementsByClassName('date')[0].textContent = util.formatDate(this.date, true);
+SingleEntry.prototype.show = function (element, search) {
+	var link, content;
 	link = element.getElementsByClassName('browse')[0];
 	link.href = this.url;
 	link.style.display = this.url ? '' : 'none';
+	element.getElementsByClassName('date')[0].textContent = util.formatDate(this.date, true);
+	content = this.content;
+	if (search) {
+		element.getElementsByClassName('title')[0].innerHTML =
+			util.highlight(search, util.escape(this.title)) || util.translate('no-title');
+		element.getElementsByClassName('author')[0].innerHTML = util.highlight(search, util.escape(this.author));
+		content = util.highlight(search, content);
+	} else {
+		element.getElementsByClassName('title')[0].textContent = this.title || util.translate('no-title');
+		element.getElementsByClassName('author')[0].textContent = this.author;
+	}
 	util.showHtml(element.getElementsByClassName('content')[0],
-		this.content || util.translate('no-content'), this.url); //FIXME relative to feed URL ?
+		content || util.translate('no-content'), this.url); //FIXME relative to feed URL ?
 };
 
-SingleEntry.prototype.showList = function (listItem) {
-	listItem.getElementsByClassName('title')[0].textContent = this.title || util.translate('no-title');
+SingleEntry.prototype.showList = function (listItem, search) {
+	if (search) {
+		listItem.getElementsByClassName('title')[0].innerHTML =
+			util.highlight(search, util.escape(this.title)) || util.translate('no-title');
+	} else {
+		listItem.getElementsByClassName('title')[0].textContent = this.title || util.translate('no-title');
+	}
 	listItem.getElementsByClassName('date')[0].textContent = util.formatDate(this.date);
 };
 

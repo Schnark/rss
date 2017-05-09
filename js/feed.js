@@ -137,10 +137,10 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 		this.parent.reload(callback);
 		return;
 	}
-	if (this.isUpdating) {
-		return;
-	}
-	if (!force && Number(new Date()) - Number(this.date) < this.pause * 1000 * 60 * 60) {
+	if (
+		this.isUpdating ||
+		(!force && Number(new Date()) - Number(this.date) < this.pause * 1000 * 60 * 60)
+	) {
 		setTimeout(function () {
 			callback(util.errors.SKIP, this, 0, 0);
 		}.bind(this), 0);
@@ -245,7 +245,7 @@ Feed.prototype.show = function (element, max) {
 			li.appendChild(title);
 			li.appendChild(feed);
 			li.appendChild(date);
-			this.entries[i].showList(li, this.isTimeline(), index);
+			this.entries[i].showList(li, this.isTimeline(), index, this.search);
 			list.appendChild(li);
 		}
 	}

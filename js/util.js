@@ -28,6 +28,17 @@ util = {
 	titleFromUrl: function (url) {
 		return url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
 	},
+	search: function (needle, haystack, onlyFirst) {
+		var matches = [], index;
+		needle = needle.toLowerCase();
+		haystack = haystack.toLowerCase();
+		index = haystack.indexOf(needle);
+		while (index !== -1) {
+			matches.push([index, index + needle.length]);
+			index = onlyFirst ? -1 : haystack.indexOf(needle, index + 1);
+		}
+		return matches;
+	},
 	getParentNode: function (node, type) {
 		while (node && node.tagName && node.tagName.toLowerCase() !== type) {
 			node = node.parentNode;

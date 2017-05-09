@@ -2,8 +2,8 @@
 (function () {
 "use strict";
 
-QUnit.module('Diff');
-var tests = [
+QUnit.module('RSS');
+var diffs = [
 	{
 		t: 'Equal',
 		o: 'foo',
@@ -91,10 +91,79 @@ var tests = [
 	{
 		t: 'Changes outside word',
 		o: 'Foo bar baz',
-		n: 'Foo "bar" baz',
-		d: 'Foo&nbsp;<ins>"</ins>bar<ins>"</ins>&nbsp;baz'
+		n: 'Foo \'bar\' baz',
+		d: 'Foo&nbsp;<ins>\'</ins>bar<ins>\'</ins>&nbsp;baz'
+	},
+	{
+		t: 'Inserting space',
+		o: 'Foo barbaz',
+		n: 'Foo bar baz',
+		d: 'Foo bar<ins>&nbsp;</ins>baz'
+	},
+	{
+		t: 'Special characters',
+		o: 'Foo &lt; baz',
+		n: 'Foo &gt; baz',
+		d: 'Foo&nbsp;<del>&lt;</del><ins>&gt;</ins>&nbsp;baz'
+	}
+],
+highlights = [
+	{
+		t: 'No match',
+		n: 'foo',
+		h: 'Bar baz',
+		r: 'Bar baz'
+	},
+	{
+		t: 'One match',
+		n: 'foo',
+		h: 'Bar foo baz',
+		r: 'Bar <mark>foo</mark> baz'
+	},
+	{
+		t: 'Two matches',
+		n: 'foo',
+		h: 'Foo bar foo',
+		r: '<mark>Foo</mark> bar <mark>foo</mark>'
+	},
+	{
+		t: 'Adjacent matches',
+		n: 'foo',
+		h: 'Foofoo barfoobaz',
+		r: '<mark>Foo</mark><mark>foo</mark> bar<mark>foo</mark>baz'
+	},
+	{
+		t: 'Match inside tag content',
+		n: 'foo',
+		h: 'Bar <a>foo baz</a>',
+		r: 'Bar <a><mark>foo</mark> baz</a>'
+	},
+	{
+		t: 'Match inside tag attributes',
+		n: 'foo',
+		h: 'Bar <a href="foo">baz</a>',
+		r: 'Bar <mark><a href="foo">baz</a></mark>'
+	},
+	{
+		t: 'Match inside tag name',
+		n: 'foo',
+		h: 'Bar <foo>baz</foo>',
+		r: 'Bar <mark><foo>baz</foo></mark>'
+	},
+	{
+		t: 'Match inside tag and its content',
+		n: 'foo',
+		h: 'Bar <a href="foo">foo baz</a>',
+		r: 'Bar <mark><a href="foo">foo baz</a></mark>'
+	},
+	{
+		t: 'Special character',
+		n: '<',
+		h: 'B&lt;r <a>foo</a>',
+		r: 'B<mark>&lt;</mark>r <a>foo</a>'
 	}
 ];
+
 QUnit.test('Diff', function (assert) {
 	var i;
 
@@ -102,13 +171,26 @@ QUnit.test('Diff', function (assert) {
 		assert.equal(util.diff(oldContent, newContent), diff, name);
 	}
 
-	assert.expect(tests.length * 2);
-	for (i = 0; i < tests.length; i++) {
-		diffTest(tests[i].o, tests[i].n, tests[i].d, tests[i].t);
-		diffTest(tests[i].n, tests[i].o, tests[i].d
+	assert.expect(diffs.length * 2);
+	for (i = 0; i < diffs.length; i++) {
+		diffTest(diffs[i].o, diffs[i].n, diffs[i].d, diffs[i].t);
+		diffTest(diffs[i].n, diffs[i].o, diffs[i].d
 			.replace(/ins/g, '_').replace(/del/g, 'ins').replace(/_/g, 'del')
 			.replace(/(<ins>.*?<\/ins>)(<del>.*?<\/del>)/g, '$2$1'),
-		tests[i].t + ' - reverse');
+		diffs[i].t + ' - reverse');
+	}
+});
+
+QUnit.test('Highlight', function (assert) {
+	var i;
+
+	function highlightTest (needle, haystack, result, name) {
+		assert.equal(util.highlight(needle, haystack), result, name);
+	}
+
+	assert.expect(highlights.length);
+	for (i = 0; i < highlights.length; i++) {
+		highlightTest(highlights[i].n, highlights[i].h, highlights[i].r, highlights[i].t);
 	}
 });
 

@@ -111,14 +111,15 @@ Collection.prototype.remove = function (feed) {
 };
 
 Collection.prototype.reload = function (callback) {
-	var i;
-	for (i = 0; i < this.feeds.length; i++) {
-		this.feeds[i].reload(callback);
-	}
-	if (this.feeds.length === 0) {
+	var i, c = this.feeds.length;
+	if (c === 0) {
 		setTimeout(function () {
 			callback(util.errors.NOFEED);
 		}, 0);
+		return;
+	}
+	for (i = 0; i < c; i++) {
+		this.feeds[i].reload(callback);
 	}
 };
 

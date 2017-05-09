@@ -137,7 +137,7 @@ Presenter.prototype.doReload = function (list, notification) {
 				util.showNotification();
 				notification = false;
 			}
-		} else if (result !== util.errors.SKIP) {
+		} else if (result !== util.errors.SKIP) { //TODO notify if all feeds are skipped
 			this.showInfo('reload-error', result);
 		}
 	}.bind(this), list !== this.collection);
@@ -368,7 +368,7 @@ Presenter.prototype.updatePageFeed = function (feed, all) {
 	}
 };
 
-Presenter.prototype.updatePageEntry = function (entry, diffToNext) {
+Presenter.prototype.updatePageEntry = function (entry, diffToNext, search) {
 	var index;
 	if (diffToNext) {
 		this.currentEntry.showDiff(this.pageEntry, entry, entry + 1);
@@ -382,7 +382,7 @@ Presenter.prototype.updatePageEntry = function (entry, diffToNext) {
 		} else if (entry) {
 			this.currentEntry = entry;
 		}
-		this.currentEntryIndex = this.currentEntry.show(this.pageEntry, index);
+		this.currentEntryIndex = this.currentEntry.show(this.pageEntry, index, search);
 	}
 	this.currentEntryDiff = diffToNext;
 	this.scrollTop(this.pageEntry);
@@ -430,7 +430,7 @@ Presenter.prototype.onFeedHold = function (index) {
 
 Presenter.prototype.onEntryClick = function (index) {
 	this.searchInput.blur();
-	this.updatePageEntry(this.currentFeed.getEntryByIndex(index));
+	this.updatePageEntry(this.currentFeed.getEntryByIndex(index), undefined, this.searchInput.value);
 	this.currentEntry.markAsRead();
 	this.showPageEntry();
 	this.updatePageCollection();

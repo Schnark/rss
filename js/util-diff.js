@@ -1,11 +1,10 @@
 /*global util */
-util.diff =
 (function () {
 "use strict";
 
 function splitWords (text) {
 	var ret = [];
-	text.split(/(\S+\b|.)/).forEach(function (word) {
+	text.split(/(&(?:#?[a-zA-Z0-9]+);|\S+\b|.)/).forEach(function (word) {
 		if (word) {
 			ret.push(word);
 		}
@@ -13,13 +12,13 @@ function splitWords (text) {
 	return ret;
 }
 
-function splitHtml (html) {
+function splitHtml (html, noWordSplit) {
 	var div = document.createElement('div'), ret = [];
 	div.innerHTML = html;
 	[].map.call(div.childNodes, function (node) {
-		return node.outerHTML || node.textContent;
+		return node.outerHTML || util.escape(node.textContent);
 	}).forEach(function (node) {
-		if (node.charAt(0) === '<') {
+		if (noWordSplit || node.charAt(0) === '<') {
 			ret.push(node);
 		} else {
 			ret = ret.concat(splitWords(node));
@@ -91,15 +90,15 @@ function simplifyDiff (d) {
 			'<del>$2$3</del><ins>$1$2$4</ins>');
 	} while (d2 !== d);
 	//word diff
-	d = d.replace(/<del>([^< ]{3,})([^< ]{0,3}?)([^< ]*)<\/del><ins>\1([^< ]{0,3})\3<\/ins>/g,
+	d = d.replace(/<del>([^<& ]{3,})([^<&]{0,3}?)([^<& ]*)<\/del><ins>\1([^<&]{0,3})\3<\/ins>/g,
 		'$1<del>$2</del><ins>$4</ins>$3');
-	d = d.replace(/<del>([^< ]*)([^< ]{0,3}?)([^< ]{3,})<\/del><ins>\1([^< ]{0,3})\3<\/ins>/g,
+	d = d.replace(/<del>([^<& ]*)([^<&]{0,3}?)([^<& ]{3,})<\/del><ins>\1([^<&]{0,3})\3<\/ins>/g,
 		'$1<del>$2</del><ins>$4</ins>$3');
-	d = d.replace(/<del>([^< ]{0,3}?)([^< ]{3,})([^< ]{0,3}?)<\/del><ins>([^< ]{0,3})\2([^< ]{0,3})<\/ins>/g,
+	d = d.replace(/<del>([^<& ]{0,3}?)([^<& ]{3,})([^<& ]{0,3}?)<\/del><ins>([^<& ]{0,3})\2([^<& ]{0,3})<\/ins>/g,
 		'<del>$1</del><ins>$4</ins>$2<del>$3</del><ins>$5</ins>');
-	d = d.replace(/<del>([^< ]{5,})([^< ]*)<\/del><ins>\1([^< ]*)<\/ins>/g,
+	d = d.replace(/<del>([^<& ]{5,})([^<& ]*)<\/del><ins>\1([^<& ]*)<\/ins>/g,
 		'$1<del>$2</del><ins>$3</ins>');
-	d = d.replace(/<del>([^< ]*?)([^< ]{5,})<\/del><ins>([^< ]*)\2<\/ins>/g,
+	d = d.replace(/<del>([^<& ]*?)([^<& ]{5,})<\/del><ins>([^<& ]*)\2<\/ins>/g,
 		'<del>$1</del><ins>$3</ins>$2');
 	//remove empty tags
 	d = d.replace(/<(ins|del)><\/\1>/g, '');
@@ -144,5 +143,40 @@ function diff (o, n) {
 	return simplifyDiff(out.join(''));
 }
 
-return diff;
+function tagHighlight (needle, haystack) {
+	var tags = splitTags(haystack);
+	if (util.search(needle, tags[0], true).length || util.search(needle, tags[2], true).length) {
+		return '<mark>' + haystack + '</mark>';
+	}
+	return tags[0] + recursiveHighlight(needle, tags[1]) + tags[2];
+}
+
+function textHighlight (needle, haystack) {
+	var result = '', cur = 0;
+	util.search(needle, haystack).forEach(function (pos) {
+		result += haystack.slice(cur, pos[0]);
+		result += '<mark>';
+		result += haystack.slice(pos[0], pos[1]);
+		result += '</mark>';
+		cur = pos[1];
+	});
+	return result + haystack.slice(cur);
+}
+
+function recursiveHighlight (needle, haystack) {
+	return splitHtml(haystack, true).map(function (part) {
+		if (part.charAt(0) === '<') {
+			return tagHighlight(needle, part);
+		} else {
+			return textHighlight(needle, part);
+		}
+	}).join('');
+}
+
+function highlight (needle, haystack) {
+	return recursiveHighlight(util.escape(needle), haystack);
+}
+
+util.diff = diff;
+util.highlight = highlight;
 })();
