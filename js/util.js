@@ -62,6 +62,9 @@ util = {
 		el.innerHTML = html; //FIXME use sandboxed iframe instead
 		links = el.getElementsByTagName('a');
 		for (i = 0; i < links.length; i++) {
+			if ((links[i].getAttribute('href') || '').charAt(0) === '#') {
+				continue;
+			}
 			links[i].target = '_blank';
 			makeAbsolute(links[i], 'href', base);
 		}

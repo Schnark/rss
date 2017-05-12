@@ -222,7 +222,7 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 		});
 	} else {
 		list.addEventListener('mousedown', function (e) {
-			if (this.className.indexOf('disabled') > -1) {
+			if (e.button || this.className.indexOf('disabled') > -1) {
 				return;
 			}
 			start({
@@ -430,7 +430,7 @@ Presenter.prototype.onFeedHold = function (index) {
 
 Presenter.prototype.onEntryClick = function (index) {
 	this.searchInput.blur();
-	this.updatePageEntry(this.currentFeed.getEntryByIndex(index), undefined, this.searchInput.value);
+	this.updatePageEntry(this.currentFeed.getEntryByIndex(index), undefined, this.currentFeed.search);
 	this.currentEntry.markAsRead();
 	this.showPageEntry();
 	this.updatePageCollection();

@@ -118,43 +118,43 @@ highlights = [
 		t: 'One match',
 		n: 'foo',
 		h: 'Bar foo baz',
-		r: 'Bar <mark>foo</mark> baz'
+		r: 'Bar&nbsp;<mark>foo</mark>&nbsp;baz'
 	},
 	{
 		t: 'Two matches',
 		n: 'foo',
 		h: 'Foo bar foo',
-		r: '<mark>Foo</mark> bar <mark>foo</mark>'
+		r: '<mark>Foo</mark>&nbsp;bar&nbsp;<mark>foo</mark>'
 	},
 	{
 		t: 'Adjacent matches',
 		n: 'foo',
 		h: 'Foofoo barfoobaz',
-		r: '<mark>Foo</mark><mark>foo</mark> bar<mark>foo</mark>baz'
+		r: '<mark>Foo</mark><mark>foo</mark>&nbsp;bar<mark>foo</mark>baz'
 	},
 	{
 		t: 'Match inside tag content',
 		n: 'foo',
 		h: 'Bar <a>foo baz</a>',
-		r: 'Bar <a><mark>foo</mark> baz</a>'
+		r: 'Bar <a><mark>foo</mark>&nbsp;baz</a>'
 	},
 	{
 		t: 'Match inside tag attributes',
 		n: 'foo',
 		h: 'Bar <a href="foo">baz</a>',
-		r: 'Bar <mark><a href="foo">baz</a></mark>'
+		r: 'Bar&nbsp;<mark><a href="foo">baz</a></mark>'
 	},
 	{
 		t: 'Match inside tag name',
 		n: 'foo',
 		h: 'Bar <foo>baz</foo>',
-		r: 'Bar <mark><foo>baz</foo></mark>'
+		r: 'Bar&nbsp;<mark><foo>baz</foo></mark>'
 	},
 	{
 		t: 'Match inside tag and its content',
 		n: 'foo',
 		h: 'Bar <a href="foo">foo baz</a>',
-		r: 'Bar <mark><a href="foo">foo baz</a></mark>'
+		r: 'Bar&nbsp;<mark><a href="foo">foo baz</a></mark>'
 	},
 	{
 		t: 'Special character',
