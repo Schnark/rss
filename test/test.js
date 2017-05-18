@@ -161,6 +161,12 @@ highlights = [
 		n: '<',
 		h: 'B&lt;r <a>foo</a>',
 		r: 'B<mark>&lt;</mark>r <a>foo</a>'
+	},
+	{
+		t: 'Overlapping matches',
+		n: '00',
+		h: '0-00-000-0000-00000',
+		r: '0-<mark>00</mark>-<mark>00</mark>0-<mark>00</mark><mark>00</mark>-<mark>00</mark><mark>00</mark>0'
 	}
 ];
 

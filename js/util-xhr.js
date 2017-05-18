@@ -6,7 +6,7 @@ util.getXML =
 var xhrQueue = [],
 	xhrRunning = 0,
 	maxXhrRunning = 3,
-	simulationUrls = ['testdata/mozilla1.rss', 'testdata/mozilla2.rss'];
+	simulationUrls = ['test/mozilla1.rss', 'test/mozilla2.rss'];
 
 function workXhrQueue (xhr) {
 	if (!xhr) {

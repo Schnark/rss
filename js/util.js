@@ -35,7 +35,7 @@ util = {
 		index = haystack.indexOf(needle);
 		while (index !== -1) {
 			matches.push([index, index + needle.length]);
-			index = onlyFirst ? -1 : haystack.indexOf(needle, index + 1);
+			index = onlyFirst ? -1 : haystack.indexOf(needle, index + needle.length);
 		}
 		return matches;
 	},

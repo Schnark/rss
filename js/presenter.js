@@ -358,13 +358,13 @@ Presenter.prototype.updatePageCollection = function () {
 	this.collection.show(this.pageCollection.getElementsByTagName('ul')[0]);
 };
 
-Presenter.prototype.updatePageFeed = function (feed, all) {
+Presenter.prototype.updatePageFeed = function (feed) {
 	if (feed) {
 		this.currentFeed = feed;
 		this.scrollTop(this.pageFeed);
 	}
 	if (this.currentFeed) {
-		this.currentFeed.show(this.pageFeed, all ? Infinity : this.getConfig('max-entries-per-feed'));
+		this.currentFeed.show(this.pageFeed, this.showAllEntries ? Infinity : this.getConfig('max-entries-per-feed'));
 	}
 };
 
@@ -476,7 +476,8 @@ Presenter.prototype.onTimelineClick = function () {
 };
 
 Presenter.prototype.onShowAllClick = function () {
-	this.updatePageFeed(null, true);
+	this.showAllEntries = true;
+	this.updatePageFeed();
 };
 
 Presenter.prototype.onSearchUpdate = function (search) {
@@ -611,6 +612,7 @@ Presenter.prototype.showPage = function (id, hideToRight) {
 };
 
 Presenter.prototype.showPageCollection = function () {
+	this.showAllEntries = false; //reset "show all"
 	this.showPage('pageCollection', true);
 };
 
