@@ -174,7 +174,7 @@ function recursiveHighlight (needle, haystack) {
 }
 
 function highlight (needle, haystack) {
-	return recursiveHighlight(util.escape(needle), haystack)
+	return recursiveHighlight(needle, haystack)
 		.replace(/ (<\/?mark>)/g, '&nbsp;$1').replace(/(<\/?mark>) /g, '$1&nbsp;');
 }
 

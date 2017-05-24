@@ -163,6 +163,18 @@ highlights = [
 		r: 'B<mark>&lt;</mark>r <a>foo</a>'
 	},
 	{
+		t: 'Entity',
+		n: 'lt',
+		h: 'B&lt;r <a>foolt</a>',
+		r: 'B&lt;r <a>foo<mark>lt</mark></a>'
+	},
+	{
+		t: 'Entity 2',
+		n: 'lt;',
+		h: '&lt;lt;<hr>',
+		r: '&lt;<mark>lt;</mark><hr>'
+	},
+	{
 		t: 'Overlapping matches',
 		n: '00',
 		h: '0-00-000-0000-00000',

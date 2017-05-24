@@ -152,7 +152,7 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		link.href = oldEntry.url;
 		link.style.display = oldEntry.url ? '' : 'none';
 	}
-	util.showHtml(element.getElementsByClassName('content')[0], diff.content, newEntry.url); //FIXME
+	util.showHtml(element.getElementsByClassName('content')[0], diff.content, newEntry.url, this.getConfig('cors-proxy')); //FIXME
 };
 
 MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index, search) {

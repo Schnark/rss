@@ -43,10 +43,10 @@ SingleEntry.prototype.getIndex = function () {
 };
 
 SingleEntry.prototype.search = function (search) {
-	return util.search(search, this.title, true).length ||
-		util.search(search, this.author, true).length ||
-		util.search(search, this.url, true).length ||
-		util.search(util.escape(search), this.content, true).length;
+	return util.search(search, util.escape(this.title), true).length ||
+		util.search(search, util.escape(this.author), true).length ||
+		util.search(search, util.escape(this.url), true).length ||
+		util.search(search, this.content, true).length;
 };
 
 SingleEntry.prototype.show = function (element, search) {
@@ -65,8 +65,12 @@ SingleEntry.prototype.show = function (element, search) {
 		element.getElementsByClassName('title')[0].textContent = this.title || util.translate('no-title');
 		element.getElementsByClassName('author')[0].textContent = this.author;
 	}
-	util.showHtml(element.getElementsByClassName('content')[0],
-		content || util.translate('no-content'), this.url); //FIXME relative to feed URL ?
+	util.showHtml(
+		element.getElementsByClassName('content')[0],
+		content || util.translate('no-content'),
+		this.url, //FIXME relative to feed URL ?
+		this.getConfig('cors-proxy') //use proxy for http if necessary
+	);
 };
 
 SingleEntry.prototype.showList = function (listItem, search) {

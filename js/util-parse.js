@@ -42,10 +42,13 @@ function normalizeContent (content) {
 		'data-rel="lightbox-gallery-ABC0"'); //WordPress lightbox, id changes every time
 }
 
-function buildMedia (url, type, attr) {
-	url = util.escape(url);
-	type = util.escape(type);
+function buildMedia (content, url, type, attr) {
+	url = util.escape(url || '');
+	type = util.escape(type || '');
 	attr = attr ? ' ' + attr : '';
+	if (!url || content.indexOf('src="' + url + '"') > -1) { //media seems already present
+		return '';
+	}
 	switch (type.replace(/\/.*$/, '')) {
 	case 'audio':
 		return '<p><audio controls' + attr + '><source src="' + url + '" type="' + type + '"></audio></p>';
@@ -58,18 +61,19 @@ function buildMedia (url, type, attr) {
 	}
 }
 
-function parseEnclosure (enclosures) {
+function parseEnclosure (enclosures, content) {
 	var i, html = [];
 	for (i = 0; i < enclosures.length; i++) {
 		html.push(buildMedia(
-			enclosures[i].getAttribute('url') || '',
-			enclosures[i].getAttribute('type') || ''
+			content,
+			enclosures[i].getAttribute('url'),
+			enclosures[i].getAttribute('type')
 		));
 	}
 	return html.join('');
 }
 
-function parseMedia (media) {
+function parseMedia (media, content) {
 	var i, html = [], attr;
 	for (i = 0; i < media.length; i++) {
 		attr = {
@@ -82,7 +86,8 @@ function parseMedia (media) {
 			attr = '';
 		}
 		html.push(buildMedia(
-			media[i].getAttribute('url') || '',
+			content,
+			media[i].getAttribute('url'),
 			'image',
 			attr
 		));
@@ -98,10 +103,13 @@ function parseRssItems (items, fallbackAuthor) {
 		author = getDataFromXmlElement(item, ['author', 'dc:creator']) || fallbackAuthor;
 		url = getDataFromXmlElement(item, ['feedburner:origLink', 'link']);
 		date = new Date(parseDate(getDataFromXmlElement(item, ['pubDate', 'dc:date'])));
+		content = getDataFromXmlElement(item, ['content:encoded', 'description']);
 		content =
-			parseEnclosure(item.getElementsByTagName('enclosure')) +
-			parseMedia(item.getElementsByTagName('media:thumbnail')) +
-			getDataFromXmlElement(item, ['content:encoded', 'description']);
+			parseMedia(item.getElementsByTagName('media:thumbnail'), content) +
+			content;
+		content =
+			parseEnclosure(item.getElementsByTagName('enclosure'), content) +
+			content;
 		content = normalizeContent(content);
 		if (date <= new Date()) {
 			result.push({title: title, author: author, url: url, content: content, date: date});

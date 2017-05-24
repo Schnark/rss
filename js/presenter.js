@@ -406,7 +406,7 @@ Presenter.prototype.updatePageConfig = function () {
 		}
 	}
 
-	this.pageConfig.getElementsByClassName('url')[0].value = 'http://';
+	this.pageConfig.getElementsByClassName('url')[0].value = 'https://';
 	document.getElementById('page-config-add').disabled = true;
 	this.pageConfig.getElementsByClassName('config-max-multi')[0].value = this.getConfig('max-entries-per-multi');
 	this.pageConfig.getElementsByClassName('config-max-feed')[0].value = this.getConfig('max-entries-per-feed');

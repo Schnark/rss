@@ -28,14 +28,37 @@ util = {
 	titleFromUrl: function (url) {
 		return url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
 	},
+	//needle is text, haystack HTML
 	search: function (needle, haystack, onlyFirst) {
+
+		//whether a position in haystack is inside an entity
+		function isInsideEntity (position) {
+			var ampPos, semiPos;
+			if (position === 0) {
+				return false;
+			}
+			ampPos = haystack.lastIndexOf('&', position - 1);
+			if (ampPos === -1) {
+				return false;
+			}
+			semiPos = haystack.indexOf(';', position);
+			if (semiPos === -1) {
+				return false;
+			}
+			return (/^&(?:#\d+|#[xX][a-fA-F0-9]+|\w+);$/).test(haystack.slice(ampPos, semiPos + 1));
+		}
+
 		var matches = [], index;
-		needle = needle.toLowerCase();
+		needle = util.escape(needle).toLowerCase();
 		haystack = haystack.toLowerCase();
 		index = haystack.indexOf(needle);
 		while (index !== -1) {
-			matches.push([index, index + needle.length]);
-			index = onlyFirst ? -1 : haystack.indexOf(needle, index + needle.length);
+			if (!isInsideEntity(index) && !isInsideEntity(index + needle.length)) {
+				matches.push([index, index + needle.length]);
+				index = onlyFirst ? -1 : haystack.indexOf(needle, index + needle.length);
+			} else { //not a real match
+				index = haystack.indexOf(needle, index + 1);
+			}
 		}
 		return matches;
 	},
@@ -45,17 +68,18 @@ util = {
 		}
 		return node && node.tagName ? node : null;
 	},
-	showHtml: function (el, html, base) {
+	showHtml: function (el, html, base, proxy) {
 		var links, i;
 
-		function makeAbsolute (el, attr, base) {
+		function makeAbsolute (el, attr, base, proxy) {
 			var url = el.getAttribute(attr) || '';
-			if (url.charAt(0) === '.' || url.charAt(0) === '/') {
-				try {
-					url = new URL(url, base);
-					el.setAttribute(attr, url.toString());
-				} catch (e) {
+			try {
+				url = new URL(url, base);
+				if (proxy && location.protocol === 'https:' && url.indexOf('http:') === 0) {
+					url = proxy + url;
 				}
+				el.setAttribute(attr, url.toString());
+			} catch (e) {
 			}
 		}
 
@@ -66,11 +90,14 @@ util = {
 				continue;
 			}
 			links[i].target = '_blank';
+			if (links[i].relList) {
+				links[i].relList.add('noopener');
+			}
 			makeAbsolute(links[i], 'href', base);
 		}
 		links = el.getElementsByTagName('img');
 		for (i = 0; i < links.length; i++) {
-			makeAbsolute(links[i], 'src', base);
+			makeAbsolute(links[i], 'src', base, proxy);
 		}
 	},
 	errors: {
