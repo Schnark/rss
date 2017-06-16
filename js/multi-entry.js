@@ -102,7 +102,7 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		diff = {}, link;
 
 	function makeLink (url) {
-		return '<a href="' + util.escape(url) + '" target="_blank">' + util.escape(url) + '</a>';
+		return '<a href="' + util.escape(url) + '" target="_blank" rel="noopener">' + util.escape(url) + '</a>';
 	}
 
 	if (oldEntry.title === newEntry.title) {
@@ -152,7 +152,8 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		link.href = oldEntry.url;
 		link.style.display = oldEntry.url ? '' : 'none';
 	}
-	util.showHtml(element.getElementsByClassName('content')[0], diff.content, newEntry.url, this.getConfig('cors-proxy')); //FIXME
+	util.showHtml(element.getElementsByClassName('content')[0], diff.content,
+		newEntry.url, this.getConfig('cors-proxy')); //FIXME
 };
 
 MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index, search) {

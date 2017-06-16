@@ -7,7 +7,17 @@ function getFile (callback) {
 	var pick;
 	if (window.MozActivity) {
 		pick = new MozActivity({
-			name: 'pick'
+			name: 'pick',
+			data: {
+				type: [
+					'application/xml',
+					'text/xml',
+					'text/x-opml',
+					//no Firefox OS app allows explicitely allows picking the above types
+					//but actually exactly those that allow PDF are good
+					'application/pdf'
+				]
+			}
 		});
 
 		pick.onsuccess = function () {
