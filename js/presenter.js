@@ -89,6 +89,7 @@ Presenter.prototype.init = function (data) {
 Presenter.prototype.run = function () {
 	if (this.canRun) {
 		this.updatePageCollection();
+		this.updateThemes();
 		document.getElementById('page-loading').hidden = true;
 		this.showPageCollection();
 		if (this.startWithAlaram) {
@@ -348,6 +349,12 @@ Presenter.prototype.updateAlarm = function () {
 	util.setAlarm(this.getConfig('auto-update') * 60000);
 };
 
+Presenter.prototype.updateThemes = function () {
+	document.body.className = this.getConfig('themes').map(function (theme) {
+		return 'theme-' + theme;
+	}).join(' ');
+};
+
 Presenter.prototype.scrollTop = function (page) {
 	setTimeout(function () { //wait until visible
 		page.getElementsByClassName('wrapper')[0].scrollTop = 0;
@@ -395,6 +402,7 @@ Presenter.prototype.updatePageFeedConfig = function () {
 };
 
 Presenter.prototype.updatePageConfig = function () {
+	var themes;
 
 	function setSelectedIndex (select, val) {
 		var options = select.getElementsByTagName('option'), i;
@@ -412,6 +420,9 @@ Presenter.prototype.updatePageConfig = function () {
 	this.pageConfig.getElementsByClassName('config-max-feed')[0].value = this.getConfig('max-entries-per-feed');
 	this.pageConfig.getElementsByClassName('config-cors-proxy')[0].value = this.getConfig('cors-proxy');
 	setSelectedIndex(this.pageConfig.getElementsByClassName('config-auto-update')[0], this.getConfig('auto-update'));
+	themes = this.getConfig('themes');
+	this.pageConfig.getElementsByClassName('config-theme-dark')[0].checked = (themes.indexOf('dark') > -1);
+	this.pageConfig.getElementsByClassName('config-theme-large')[0].checked = (themes.indexOf('large') > -1);
 	document.getElementById('page-config-save').disabled = true;
 	this.pageConfig.getElementsByClassName('feed-export')[0].href = this.getOpmlDownload();
 	this.scrollTop(this.pageConfig);
@@ -561,7 +572,7 @@ Presenter.prototype.onReadAllClick = function () {
 };
 
 Presenter.prototype.onConfigSaveClick = function () {
-	var input;
+	var input, themes = [];
 	input = this.pageConfig.getElementsByClassName('config-max-multi')[0];
 	if (input.checkValidity()) {
 		this.collection.setConfig('max-entries-per-multi', Number(input.value));
@@ -576,8 +587,18 @@ Presenter.prototype.onConfigSaveClick = function () {
 	}
 	input = this.pageConfig.getElementsByClassName('config-auto-update')[0];
 	this.collection.setConfig('auto-update', Number(input.options[input.selectedIndex].value));
+	input = this.pageConfig.getElementsByClassName('config-theme-dark')[0];
+	if (input.checked) {
+		themes.push('dark');
+	}
+	input = this.pageConfig.getElementsByClassName('config-theme-large')[0];
+	if (input.checked) {
+		themes.push('large');
+	}
+	this.collection.setConfig('themes', themes);
 	this.saveData();
 	this.updateAlarm();
+	this.updateThemes();
 	this.showPageCollection();
 };
 

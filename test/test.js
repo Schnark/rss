@@ -14,25 +14,25 @@ var diffs = [
 		t: 'Add word at end',
 		o: 'foo bar',
 		n: 'foo bar baz',
-		d: 'foo bar<ins>&nbsp;baz</ins>'
+		d: 'foo bar<ins> baz</ins>'
 	},
 	{
 		t: 'Remove word in middle',
 		o: 'foo baz bar',
 		n: 'foo bar',
-		d: 'foo&nbsp;<del>baz&nbsp;</del>bar'
+		d: 'foo <del>baz </del>bar'
 	},
 	{
 		t: 'Change attribute',
 		o: 'foo <a href="1">bar</a>',
 		n: 'foo <a href="2">bar</a>',
-		d: 'foo&nbsp;<del><a href="1">bar</a></del><ins><a href="2">bar</a></ins>'
+		d: 'foo <del><a href="1">bar</a></del><ins><a href="2">bar</a></ins>'
 	},
 	{
 		t: 'Change tag',
 		o: 'foo <i>bar</i>',
 		n: 'foo <b>bar</b>',
-		d: 'foo&nbsp;<del><i>bar</i></del><ins><b>bar</b></ins>'
+		d: 'foo <del><i>bar</i></del><ins><b>bar</b></ins>'
 	},
 	{
 		t: 'Change content of tag',
@@ -44,13 +44,13 @@ var diffs = [
 		t: 'Change punctuation',
 		o: 'foo, bar',
 		n: 'foo. bar',
-		d: 'foo<del>,</del><ins>.</ins>&nbsp;bar'
+		d: 'foo<del>,</del><ins>.</ins> bar'
 	},
 	{
 		t: 'Word with special characters',
 		o: 'öabcd def',
 		n: 'öfooo def',
-		d: '<del>öabcd</del><ins>öfooo</ins>&nbsp;def'
+		d: '<del>öabcd</del><ins>öfooo</ins> def'
 	},
 	{
 		t: 'Change everything except spaces',
@@ -62,25 +62,25 @@ var diffs = [
 		t: 'Add sentence',
 		o: 'First sentence. This comes last.',
 		n: 'First sentence. Added in the middle. This comes last.',
-		d: 'First sentence.&nbsp;<ins>Added in the middle.&nbsp;</ins>This comes last.'
+		d: 'First sentence. <ins>Added in the middle. </ins>This comes last.'
 	},
 	{
 		t: 'Remove sentence',
 		o: 'First sentence. Will be removed. This comes last.',
 		n: 'First sentence. This comes last.',
-		d: 'First sentence.&nbsp;<del>Will be removed.&nbsp;</del>This comes last.'
+		d: 'First sentence. <del>Will be removed. </del>This comes last.'
 	},
 	{
 		t: 'Big change in middle',
 		o: 'Foo 1 2 3 bar',
 		n: 'Foo 4 5 bar',
-		d: 'Foo&nbsp;<del>1 2 3</del><ins>4 5</ins>&nbsp;bar'
+		d: 'Foo <del>1 2 3</del><ins>4 5</ins> bar'
 	},
 	{
 		t: 'Big change in middle (2)',
 		o: 'Foo 1 2 bar',
 		n: 'Foo 3 4 5 bar',
-		d: 'Foo&nbsp;<del>1 2</del><ins>3 4 5</ins>&nbsp;bar'
+		d: 'Foo <del>1 2</del><ins>3 4 5</ins> bar'
 	},
 	{
 		t: 'Changes inside word',
@@ -92,19 +92,19 @@ var diffs = [
 		t: 'Changes outside word',
 		o: 'Foo bar baz',
 		n: 'Foo \'bar\' baz',
-		d: 'Foo&nbsp;<ins>\'</ins>bar<ins>\'</ins>&nbsp;baz'
+		d: 'Foo <ins>\'</ins>bar<ins>\'</ins> baz'
 	},
 	{
 		t: 'Inserting space',
 		o: 'Foo barbaz',
 		n: 'Foo bar baz',
-		d: 'Foo bar<ins>&nbsp;</ins>baz'
+		d: 'Foo bar<ins> </ins>baz'
 	},
 	{
 		t: 'Special characters',
 		o: 'Foo &lt; baz',
 		n: 'Foo &gt; baz',
-		d: 'Foo&nbsp;<del>&lt;</del><ins>&gt;</ins>&nbsp;baz'
+		d: 'Foo <del>&lt;</del><ins>&gt;</ins> baz'
 	}
 ],
 highlights = [
@@ -118,43 +118,43 @@ highlights = [
 		t: 'One match',
 		n: 'foo',
 		h: 'Bar foo baz',
-		r: 'Bar&nbsp;<mark>foo</mark>&nbsp;baz'
+		r: 'Bar <mark>foo</mark> baz'
 	},
 	{
 		t: 'Two matches',
 		n: 'foo',
 		h: 'Foo bar foo',
-		r: '<mark>Foo</mark>&nbsp;bar&nbsp;<mark>foo</mark>'
+		r: '<mark>Foo</mark> bar <mark>foo</mark>'
 	},
 	{
 		t: 'Adjacent matches',
 		n: 'foo',
 		h: 'Foofoo barfoobaz',
-		r: '<mark>Foo</mark><mark>foo</mark>&nbsp;bar<mark>foo</mark>baz'
+		r: '<mark>Foo</mark><mark>foo</mark> bar<mark>foo</mark>baz'
 	},
 	{
 		t: 'Match inside tag content',
 		n: 'foo',
 		h: 'Bar <a>foo baz</a>',
-		r: 'Bar <a><mark>foo</mark>&nbsp;baz</a>'
+		r: 'Bar <a><mark>foo</mark> baz</a>'
 	},
 	{
 		t: 'Match inside tag attributes',
 		n: 'foo',
 		h: 'Bar <a href="foo">baz</a>',
-		r: 'Bar&nbsp;<mark><a href="foo">baz</a></mark>'
+		r: 'Bar <mark><a href="foo">baz</a></mark>'
 	},
 	{
 		t: 'Match inside tag name',
 		n: 'foo',
 		h: 'Bar <foo>baz</foo>',
-		r: 'Bar&nbsp;<mark><foo>baz</foo></mark>'
+		r: 'Bar <mark><foo>baz</foo></mark>'
 	},
 	{
 		t: 'Match inside tag and its content',
 		n: 'foo',
 		h: 'Bar <a href="foo">foo baz</a>',
-		r: 'Bar&nbsp;<mark><a href="foo">foo baz</a></mark>'
+		r: 'Bar <mark><a href="foo">foo baz</a></mark>'
 	},
 	{
 		t: 'Special character',

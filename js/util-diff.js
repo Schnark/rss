@@ -102,8 +102,6 @@ function simplifyDiff (d) {
 		'<del>$1</del><ins>$3</ins>$2');
 	//remove empty tags
 	d = d.replace(/<(ins|del)><\/\1>/g, '');
-	//make sure spaces are always visible
-	d = d.replace(/ (<\/?(?:ins|del)>)/g, '&nbsp;$1').replace(/(<\/?(?:ins|del)>) /g, '$1&nbsp;');
 	return d;
 }
 
@@ -174,8 +172,7 @@ function recursiveHighlight (needle, haystack) {
 }
 
 function highlight (needle, haystack) {
-	return recursiveHighlight(needle, haystack)
-		.replace(/ (<\/?mark>)/g, '&nbsp;$1').replace(/(<\/?mark>) /g, '$1&nbsp;');
+	return recursiveHighlight(needle, haystack);
 }
 
 util.diff = diff;

@@ -14,7 +14,8 @@ https://cors-anywhere.herokuapp.com/
 http://jsonp.afeld.me/?url=
 http://cors-proxy.htmldriven.com/?url=
 */
-		'auto-update': 0 //-1: no auto update, 0: update on start, > 0: update every n minutes
+		'auto-update': 0, //-1: no auto update, 0: update on start, > 0: update every n minutes
+		themes: []
 	};
 
 function openDB (callback) {

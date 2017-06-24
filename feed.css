@@ -404,6 +404,7 @@ button:disabled {
 del,
 ins {
 	text-decoration: none;
+	white-space: pre-wrap;
 }
 
 del,
@@ -449,8 +450,81 @@ mark {
 	padding: 3px 1px;
 	line-height: 2;
 	color: inherit; /*override browser style*/
+	white-space: pre-wrap;
 }
 
 #feed-list mark {
 	line-height: inherit;
+}
+
+/*Themes*/
+/*large*/
+body.theme-large #page-entry .wrapper {
+	font-size: 120%;
+}
+
+/*dark*/
+body.theme-dark section {
+	background-color: #333;
+	color: #ccc;
+}
+
+body.theme-dark a {
+	color: #88f;
+}
+
+body.theme-dark a:visited {
+	color: #daf;
+}
+
+body.theme-dark #collection-list li,
+body.theme-dark #feed-list li,
+body.theme-dark #show-timeline,
+body.theme-dark .show-all {
+	border-color: #aaa;
+}
+
+body.theme-dark #collection-list li.updated,
+body.theme-dark #feed-list li.updated {
+	border-color: blue;
+}
+
+body.theme-dark #collection-list li.unread,
+body.theme-dark #feed-list li.unread {
+	border-color: red;
+}
+
+body.theme-dark #collection-list li.updating {
+	color: #888;
+	border-color: #888;
+}
+
+body.theme-dark #show-timeline img:first-child {
+	background-color: #ddd;
+	border-radius: 50%;
+}
+
+body.theme-dark #page-feed .last-update,
+body.theme-dark #page-feed .counts {
+	color: #aaa;
+}
+
+body.theme-dark #page-feed .counts {
+	border-color: #aaa;
+}
+
+body.theme-dark #page-entry .disabled {
+	color: #555;
+}
+
+body.theme-dark del {
+	background-color: #500;
+}
+
+body.theme-dark ins {
+	background-color: #050;
+}
+
+body.theme-dark mark {
+	background-color: #550;
 }
