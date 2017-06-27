@@ -134,7 +134,7 @@ button, .button {
 	display: block;
 	width: 100%;
 	line-height: 2;
-	margin-top: 0.5em;
+	margin-top: 0.75em;
 	margin-bottom: 0.5em;
 	border: none;
 	border-radius: 2px;
@@ -152,6 +152,10 @@ button, .button {
 
 button:disabled {
 	background-color: gray;
+}
+
+.label-checkbox {
+	line-height: 2.25;
 }
 
 #page-loading img {
@@ -459,7 +463,7 @@ mark {
 
 /*Themes*/
 /*large*/
-body.theme-large #page-entry .wrapper {
+body.theme-large section {
 	font-size: 120%;
 }
 
@@ -477,6 +481,10 @@ body.theme-dark a:visited {
 	color: #daf;
 }
 
+body.theme-dark  .button {
+	color: white;
+}
+
 body.theme-dark #collection-list li,
 body.theme-dark #feed-list li,
 body.theme-dark #show-timeline,
@@ -486,12 +494,28 @@ body.theme-dark .show-all {
 
 body.theme-dark #collection-list li.updated,
 body.theme-dark #feed-list li.updated {
-	border-color: blue;
+	border-color: #39d;
+}
+
+body.theme-dark #collection-list li.updated .count {
+	background-color: #39d;
+}
+
+body.theme-dark #page-feed .counts .updated {
+	color: #39d;
 }
 
 body.theme-dark #collection-list li.unread,
 body.theme-dark #feed-list li.unread {
-	border-color: red;
+	border-color: #d00;
+}
+
+body.theme-dark #collection-list li.unread .count {
+	background-color: #d00;
+}
+
+body.theme-dark #page-feed .counts .unread {
+	color: #d00;
 }
 
 body.theme-dark #collection-list li.updating {
@@ -500,8 +524,13 @@ body.theme-dark #collection-list li.updating {
 }
 
 body.theme-dark #show-timeline img:first-child {
-	background-color: #ddd;
+	background-color: #ccc;
 	border-radius: 50%;
+}
+
+body.theme-dark #show-timeline img:last-child {
+	background-color: #ccc;
+	border-radius: 40% 60%;
 }
 
 body.theme-dark #page-feed .last-update,
@@ -517,11 +546,36 @@ body.theme-dark #page-entry .disabled {
 	color: #555;
 }
 
-body.theme-dark del {
+body.theme-dark #page-entry .content pre {
+	background-color: #555;
+	color: #ccc;
+}
+
+body.theme-dark del,
+body.theme-dark del > p,
+body.theme-dark del > h1,
+body.theme-dark del > h2,
+body.theme-dark del > h3,
+body.theme-dark del > h4,
+body.theme-dark del > h5,
+body.theme-dark del > h6,
+body.theme-dark del > ul,
+body.theme-dark del > ol,
+body.theme-dark del > li {
 	background-color: #500;
 }
 
-body.theme-dark ins {
+body.theme-dark ins,
+body.theme-dark ins > p,
+body.theme-dark ins > h1,
+body.theme-dark ins > h2,
+body.theme-dark ins > h3,
+body.theme-dark ins > h4,
+body.theme-dark ins > h5,
+body.theme-dark ins > h6,
+body.theme-dark ins > ul,
+body.theme-dark ins > ol,
+body.theme-dark ins > li {
 	background-color: #050;
 }
 
