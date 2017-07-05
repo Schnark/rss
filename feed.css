@@ -24,6 +24,10 @@ input, select {
 	width: 100%;
 }
 
+input[type="checkbox"] {
+	width: auto;
+}
+
 dt {
 	font-weight: bold;
 }
@@ -459,11 +463,12 @@ mark {
 
 #feed-list mark {
 	line-height: inherit;
+	white-space: pre;
 }
 
 /*Themes*/
 /*large*/
-body.theme-large section {
+body.theme-large section > .wrapper > * {
 	font-size: 120%;
 }
 
