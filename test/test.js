@@ -104,7 +104,7 @@ var diffs = [
 		t: 'Special characters',
 		o: 'Foo &lt; baz',
 		n: 'Foo &gt; baz',
-		d: 'Foo <del>&lt;</del><ins>&gt;</ins> baz'
+		d: 'Foo <del>&lt;</del><wbr><ins>&gt;</ins> baz'
 	}
 ],
 highlights = [
@@ -194,7 +194,7 @@ QUnit.test('Diff', function (assert) {
 		diffTest(diffs[i].o, diffs[i].n, diffs[i].d, diffs[i].t);
 		diffTest(diffs[i].n, diffs[i].o, diffs[i].d
 			.replace(/ins/g, '_').replace(/del/g, 'ins').replace(/_/g, 'del')
-			.replace(/(<ins>.*?<\/ins>)(<del>.*?<\/del>)/g, '$2$1'),
+			.replace(/(<ins>.*?<\/ins>)(<wbr>)?(<del>.*?<\/del>)/g, '$3$2$1'),
 		diffs[i].t + ' - reverse');
 	}
 });

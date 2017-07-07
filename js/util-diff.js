@@ -102,6 +102,8 @@ function simplifyDiff (d) {
 		'<del>$1</del><ins>$3</ins>$2');
 	//remove empty tags
 	d = d.replace(/<(ins|del)><\/\1>/g, '');
+	//allow breaks
+	d = d.replace(/( <del>[^ ]+<\/del>)(<ins>[^ ]+<\/ins> )/g, '$1<wbr>$2');
 	return d;
 }
 

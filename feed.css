@@ -81,7 +81,7 @@ section.hide-to-right {
 header {
 	background-color: #e3702d;
 	color: white;
-	height: 3em;
+	height: 3rem;
 	line-height: 2;
 	overflow: hidden;
 	position: relative;
@@ -89,14 +89,21 @@ header {
 
 header h1 {
 	line-height: 2;
+	margin: 0 2em;
+	height: 2em;
+	font-size: 150%;
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 header .left, header .right {
 	position: absolute;
 	top: 0;
 	display: block;
-	width: 3em;
-	height: 3em;
+	width: 3rem;
+	height: 3rem;
 	line-height: 3;
 	cursor: pointer;
 	color: white;
@@ -118,18 +125,8 @@ header .right img {
 	vertical-align: middle;
 }
 
-header h1 {
-	margin: 0 2em;
-	height: 2em;
-	font-size: 150%;
-	text-align: center;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
 section .wrapper {
-	height: calc((100% - 3em) - (2 * 5px));
+	height: calc((100% - 3rem) - (2 * 5px));
 	padding: 5px;
 	overflow: auto;
 }
@@ -468,7 +465,7 @@ mark {
 
 /*Themes*/
 /*large*/
-body.theme-large section > .wrapper > * {
+body.theme-large section > .wrapper {
 	font-size: 120%;
 }
 
