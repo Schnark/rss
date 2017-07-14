@@ -84,7 +84,7 @@ util = {
 		}
 
 		el.innerHTML = html; //FIXME use sandboxed iframe instead
-		links = el.getElementsByTagName('a');
+		links = el.querySelectorAll('[href]'); //el.getElementsByTagName('a')
 		for (i = 0; i < links.length; i++) {
 			if ((links[i].getAttribute('href') || '').charAt(0) === '#') {
 				continue;
@@ -95,7 +95,7 @@ util = {
 			}
 			makeAbsolute(links[i], 'href', base);
 		}
-		links = el.getElementsByTagName('img');
+		links = el.querySelectorAll('[src]'); //el.getElementsByTagName('img')
 		for (i = 0; i < links.length; i++) {
 			makeAbsolute(links[i], 'src', base, proxy);
 		}

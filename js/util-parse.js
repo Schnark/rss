@@ -43,19 +43,23 @@ function normalizeContent (content) {
 }
 
 function buildMedia (content, url, type, attr) {
+	var name, download;
 	url = util.escape(url || '');
 	type = util.escape(type || '');
 	attr = attr ? ' ' + attr : '';
 	if (!url || content.indexOf('src="' + url + '"') > -1) { //media seems already present
 		return '';
 	}
+	name = url.replace(/.*\//, '');
+	download = '<a href="' + url + '" target="_blank" rel="noopener" download="' + name + '">' +
+		util.translate('download', {type: type}) + '</a>';
 	switch (type.replace(/\/.*$/, '')) {
 	case 'audio':
-		return '<p><audio controls' + attr + '><source src="' + url + '" type="' + type + '"></audio></p>';
+		return '<p><audio controls' + attr + '><source src="' + url + '" type="' + type + '"></audio><br>' + download + '</p>';
 	case 'video':
-		return '<p><video controls' + attr + '><source src="' + url + '" type="' + type + '"></video></p>';
+		return '<p><video controls' + attr + '><source src="' + url + '" type="' + type + '"></video><br>' + download + '</p>';
 	case 'image':
-		return '<p><img alt="" src="' + url + '"' + attr + '></p>';
+		return '<p><img alt="" src="' + url + '"' + attr + '><br>' + download + '</p>';
 	default:
 		return '';
 	}

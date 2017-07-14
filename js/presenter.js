@@ -402,7 +402,7 @@ Presenter.prototype.updatePageFeedConfig = function () {
 };
 
 Presenter.prototype.updatePageConfig = function () {
-	var themes;
+	var themes, feedExport;
 
 	function setSelectedIndex (select, val) {
 		var options = select.getElementsByTagName('option'), i;
@@ -424,7 +424,11 @@ Presenter.prototype.updatePageConfig = function () {
 	this.pageConfig.getElementsByClassName('config-theme-dark')[0].checked = (themes.indexOf('dark') > -1);
 	this.pageConfig.getElementsByClassName('config-theme-large')[0].checked = (themes.indexOf('large') > -1);
 	document.getElementById('page-config-save').disabled = true;
-	this.pageConfig.getElementsByClassName('feed-export')[0].href = this.getOpmlDownload();
+	feedExport = this.pageConfig.getElementsByClassName('feed-export')[0];
+	if (feedExport.href) {
+		URL.revokeObjectURL(feedExport.href);
+	}
+	feedExport.href = this.getOpmlDownload();
 	this.scrollTop(this.pageConfig);
 };
 
