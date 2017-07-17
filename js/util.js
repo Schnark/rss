@@ -74,30 +74,37 @@ util = {
 		function makeAbsolute (el, attr, base, proxy) {
 			var url = el.getAttribute(attr) || '';
 			try {
-				url = new URL(url, base);
+				url = (new URL(url, base)).toString();
 				if (proxy && location.protocol === 'https:' && url.indexOf('http:') === 0) {
 					url = proxy + url;
 				}
-				el.setAttribute(attr, url.toString());
+				el.setAttribute(attr, url);
 			} catch (e) {
 			}
 		}
 
-		el.innerHTML = html; //FIXME use sandboxed iframe instead
+		el.innerHTML = html; //FIXME use sandboxed iframe instead ?
 		links = el.querySelectorAll('[href]'); //el.getElementsByTagName('a')
 		for (i = 0; i < links.length; i++) {
 			if ((links[i].getAttribute('href') || '').charAt(0) === '#') {
+				continue;
+			}
+			makeAbsolute(links[i], 'href', base);
+			if (links[i].download) {
 				continue;
 			}
 			links[i].target = '_blank';
 			if (links[i].relList) {
 				links[i].relList.add('noopener');
 			}
-			makeAbsolute(links[i], 'href', base);
 		}
 		links = el.querySelectorAll('[src]'); //el.getElementsByTagName('img')
 		for (i = 0; i < links.length; i++) {
 			makeAbsolute(links[i], 'src', base, proxy);
+		}
+		links = el.querySelectorAll('[data-translate-download]');
+		for (i = 0; i < links.length; i++) {
+			links[i].innerHTML = util.translate('download', {type: links[i].innerHTML});
 		}
 	},
 	errors: {

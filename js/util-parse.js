@@ -51,15 +51,14 @@ function buildMedia (content, url, type, attr) {
 		return '';
 	}
 	name = url.replace(/.*\//, '');
-	download = '<a href="' + url + '" target="_blank" rel="noopener" download="' + name + '">' +
-		util.translate('download', {type: type}) + '</a>';
+	download = '<a href="' + url + '" download="' + name + '" data-translate-download="true">' + type + '</a>';
 	switch (type.replace(/\/.*$/, '')) {
 	case 'audio':
 		return '<p><audio controls' + attr + '><source src="' + url + '" type="' + type + '"></audio><br>' + download + '</p>';
 	case 'video':
 		return '<p><video controls' + attr + '><source src="' + url + '" type="' + type + '"></video><br>' + download + '</p>';
 	case 'image':
-		return '<p><img alt="" src="' + url + '"' + attr + '><br>' + download + '</p>';
+		return '<p><img alt="" src="' + url + '"' + attr + '>' + (type === 'image' ? '' : '<br>' + download) + '</p>';
 	default:
 		return '';
 	}
