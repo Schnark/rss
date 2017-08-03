@@ -105,6 +105,19 @@ var diffs = [
 		o: 'Foo &lt; baz',
 		n: 'Foo &gt; baz',
 		d: 'Foo <del>&lt;</del><wbr><ins>&gt;</ins> baz'
+	},
+	{
+		t: 'Real world example (merge tags)',
+		o: 'Abgasreinigung bei Dieselfahrzeugen : Deutschlands Autobauer als geheimes Kartell?',
+		n: '&quot;Geheimes Kartell&quot; deutscher Autobauer: Auch Daimler und Porsche mit dabei?',
+		d: '<del>Abgasreinigung bei Dieselfahrzeugen : Deutschlands Autobauer als geheimes Kartell</del>' +
+			'<ins>&quot;Geheimes Kartell&quot; deutscher Autobauer: Auch Daimler und Porsche mit dabei</ins>?'
+	},
+	{
+		t: 'Quoted, unquoted',
+		o: 'Foo &quot;quoted text&quot; bar',
+		n: 'Foo quoted text bar',
+		d: 'Foo <del>&quot;</del>quoted text<del>&quot;</del> bar'
 	}
 ],
 highlights = [
