@@ -192,6 +192,12 @@ highlights = [
 		n: '00',
 		h: '0-00-000-0000-00000',
 		r: '0-<mark>00</mark>-<mark>00</mark>0-<mark>00</mark><mark>00</mark>-<mark>00</mark><mark>00</mark>0'
+	},
+	{
+		t: 'Table',
+		n: 'x',
+		h: 'fooxbar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table> baz',
+		r: 'foo<mark>x</mark>bar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table> baz'
 	}
 ];
 

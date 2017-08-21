@@ -12,8 +12,8 @@ function splitWords (text) {
 	return ret;
 }
 
-function splitHtml (html, noWordSplit) {
-	var div = document.createElement('div'), ret = [];
+function splitHtml (html, noWordSplit, parent) {
+	var div = document.createElement(parent || 'div'), ret = [];
 	div.innerHTML = html;
 	[].map.call(div.childNodes, function (node) {
 		return node.outerHTML || util.escape(node.textContent);
@@ -36,6 +36,10 @@ function splitTags (s) {
 		pos2 = s.length;
 	}
 	return [s.slice(0, pos1 + 1), s.slice(pos1 + 1, pos2), s.slice(pos2)];
+}
+
+function tagName (tag) {
+	return tag.replace(/<([a-z-]+).*/, '$1');
 }
 
 function nextOtherChangeIndex (i, d) {
@@ -109,10 +113,10 @@ function simplifyDiff (d) {
 	return d;
 }
 
-function diff (o, n) {
+function diff (o, n, parent) {
 	var d, i, j, tags1, tags2, out = [];
-	o = splitHtml(o);
-	n = splitHtml(n);
+	o = splitHtml(o, false, parent);
+	n = splitHtml(n, false, parent);
 	d = util.diffArrays(o, n);
 	for (i = 0; i < d.length; i++) {
 		if (d[i].value.charAt(0) === '<') {
@@ -122,7 +126,7 @@ function diff (o, n) {
 				tags2 = splitTags(d[j].value);
 				if (tags1[0] === tags2[0] && tags1[2] === tags2[2]) {
 					out.push(tags1[0]);
-					out.push(diff(tags1[1], tags2[1]));
+					out.push(diff(tags1[1], tags2[1], tagName(tags1[0])));
 					out.push(tags1[2]);
 					d[j] = {value: ''};
 					continue;
@@ -150,7 +154,7 @@ function tagHighlight (needle, haystack) {
 	if (util.search(needle, tags[0], true).length || util.search(needle, tags[2], true).length) {
 		return '<mark>' + haystack + '</mark>';
 	}
-	return tags[0] + recursiveHighlight(needle, tags[1]) + tags[2];
+	return tags[0] + recursiveHighlight(needle, tags[1], tagName(tags[0])) + tags[2];
 }
 
 function textHighlight (needle, haystack) {
@@ -165,8 +169,8 @@ function textHighlight (needle, haystack) {
 	return result + haystack.slice(cur);
 }
 
-function recursiveHighlight (needle, haystack) {
-	return splitHtml(haystack, true).map(function (part) {
+function recursiveHighlight (needle, haystack, parent) {
+	return splitHtml(haystack, true, parent).map(function (part) {
 		if (part.charAt(0) === '<') {
 			return tagHighlight(needle, part);
 		} else {
