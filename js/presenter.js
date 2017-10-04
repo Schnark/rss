@@ -1,5 +1,5 @@
 /*global Presenter: true, Collection, util*/
-/*global URL, Blob*/
+/*global URL, Blob, Event*/
 Presenter =
 (function () {
 "use strict";
@@ -73,6 +73,10 @@ function Presenter (config) {
 	this.bindEnableSave('page-feed-config-save');
 	this.bindEnableSave('page-config-add');
 	this.bindEnableSave('page-config-save');
+
+	this.initSuggestor(document.getElementById('pause-input'), document.getElementById('pause-suggest'));
+	this.initSuggestor(document.getElementById('max-multi-input'), document.getElementById('max-multi-suggest'));
+	this.initSuggestor(document.getElementById('max-feed-input'), document.getElementById('max-feed-suggest'));
 
 	util.storage.get(this.init.bind(this));
 }
@@ -345,6 +349,30 @@ Presenter.prototype.bindEnableSave = function (id) {
 	}
 };
 
+Presenter.prototype.initSuggestor = function (input, select) {
+	select.addEventListener('change', function () {
+		if (select.value) {
+			input.value = select.value;
+			input.dispatchEvent(new Event('input'));
+			input.style.display = 'none';
+		} else {
+			input.style.display = '';
+			input.focus();
+		}
+	});
+	input.addEventListener('blur', function () {
+		select.value = input.value;
+		if (select.value === input.value) {
+			input.style.display = 'none';
+		} else {
+			select.value = '';
+			input.style.display = '';
+		}
+	});
+	input.value = select.value;
+	input.style.display = 'none';
+};
+
 Presenter.prototype.updateAlarm = function () {
 	util.setAlarm(this.getConfig('auto-update') * 60000);
 };
@@ -402,24 +430,18 @@ Presenter.prototype.updatePageFeedConfig = function () {
 };
 
 Presenter.prototype.updatePageConfig = function () {
-	var themes, feedExport;
-
-	function setSelectedIndex (select, val) {
-		var options = select.getElementsByTagName('option'), i;
-		for (i = 0; i < options.length; i++) {
-			if (Number(options[i].value) === val) {
-				select.selectedIndex = i;
-				return;
-			}
-		}
-	}
+	var input, themes, feedExport;
 
 	this.pageConfig.getElementsByClassName('url')[0].value = 'https://';
 	document.getElementById('page-config-add').disabled = true;
-	this.pageConfig.getElementsByClassName('config-max-multi')[0].value = this.getConfig('max-entries-per-multi');
-	this.pageConfig.getElementsByClassName('config-max-feed')[0].value = this.getConfig('max-entries-per-feed');
+	input = this.pageConfig.getElementsByClassName('config-max-multi')[0];
+	input.value = this.getConfig('max-entries-per-multi');
+	input.dispatchEvent(new Event('blur'));
+	input = this.pageConfig.getElementsByClassName('config-max-feed')[0];
+	input.value = this.getConfig('max-entries-per-feed');
+	input.dispatchEvent(new Event('blur'));
 	this.pageConfig.getElementsByClassName('config-cors-proxy')[0].value = this.getConfig('cors-proxy');
-	setSelectedIndex(this.pageConfig.getElementsByClassName('config-auto-update')[0], this.getConfig('auto-update'));
+	this.pageConfig.getElementsByClassName('config-auto-update')[0].value = this.getConfig('auto-update');
 	themes = this.getConfig('themes');
 	this.pageConfig.getElementsByClassName('config-theme-dark')[0].checked = (themes.indexOf('dark') > -1);
 	this.pageConfig.getElementsByClassName('config-theme-large')[0].checked = (themes.indexOf('large') > -1);
@@ -590,7 +612,7 @@ Presenter.prototype.onConfigSaveClick = function () {
 		this.collection.setConfig('cors-proxy', input.value);
 	}
 	input = this.pageConfig.getElementsByClassName('config-auto-update')[0];
-	this.collection.setConfig('auto-update', Number(input.options[input.selectedIndex].value));
+	this.collection.setConfig('auto-update', Number(input.value));
 	input = this.pageConfig.getElementsByClassName('config-theme-dark')[0];
 	if (input.checked) {
 		themes.push('dark');

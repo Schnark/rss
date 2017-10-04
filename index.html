@@ -76,7 +76,13 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <p>
 <label><span data-l10n-id="label-title">(label-title)</span><br><input type="text" required class="title page-feed-config-save"></label><br>
 <label><span data-l10n-id="label-url">(label-url)</span><br><input type="url" required class="url page-feed-config-save"></label>
-<label><span data-l10n-id="label-pause">(label-pause)</span><br><input type="number" required min="0" step="1" class="pause page-feed-config-save"></label>
+<label><span data-l10n-id="label-pause">(label-pause)</span><br><select id="pause-suggest">
+<option value="0" data-l10n-id="suggest-always">(suggest-always)</option>
+<option value="1" data-l10n-id="suggest-hourly">(suggest-hourly)</option>
+<option value="23" data-l10n-id="suggest-daily">(suggest-daily)</option>
+<option value="" data-l10n-id="suggest-other">(suggest-other)</option>
+</select></label>
+<input type="number" required min="0" step="1" id="pause-input" class="pause page-feed-config-save">
 <button id="page-feed-config-save" data-l10n-id="button-save-changes">(button-save-changes)</button>
 </p>
 <p>
@@ -97,8 +103,22 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <hr>
 <h1 data-l10n-id="config">(config)</h1>
 <p>
-<label><span data-l10n-id="label-max-multi">(label-max-multi)</span><br><input type="number" required min="1" step="1" class="config-max-multi page-config-save"></label><br>
-<label><span data-l10n-id="label-max-feed">(label-max-feed)</span><br><input type="number" required min="1" step="1" class="config-max-feed page-config-save"></label><br>
+<label><span data-l10n-id="label-max-multi">(label-max-multi)</span><br><select id="max-multi-suggest">
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="50">50</option>
+<option value="" data-l10n-id="suggest-other">(suggest-other)</option>
+</select></label>
+<input type="number" required min="1" step="1" id="max-multi-input" class="config-max-multi page-config-save"><br>
+<label><span data-l10n-id="label-max-feed">(label-max-feed)</span><br><select id="max-feed-suggest">
+<option value="50">50</option>
+<option value="100">100</option>
+<option value="200">200</option>
+<option value="500">500</option>
+<option value="1000">1000</option>
+<option value="" data-l10n-id="suggest-other">(suggest-other)</option>
+</select></label>
+<input type="number" required min="1" step="1" id="max-feed-input" class="config-max-feed page-config-save"><br>
 <label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><input type="url" class="config-cors-proxy page-config-save"></label><br>
 <label><span data-l10n-id="label-auto-update">(label-auto-update)</span><br><select class="config-auto-update page-config-save">
 <option value="-1" data-l10n-id="option-no-updates">(option-no-updates)</option>

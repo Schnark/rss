@@ -14,7 +14,7 @@
 		"2016-11-03-19-06-13.png"
 	],
 	"desc": {
-		"en": ["Firri is a feed reader for RSS and Atom feeds. The list of subscribed feeds is simply managed locally, the entries of the feeds are saved locally, too, so no online connection is necessary except for reloading the feeds.", "You can import and export feeds via the OPML format."],
-		"de": ["Firri ist ein Feed-Reader für RSS- und Atom-Feeds. Die Liste der abonnierten Feeds wird einfach lokal verwaltet, auch die einzelnen Einträge werden lokal gespeichert, sodass außer zum Neuladen keine Internetverbindung nötig ist.", "Es bestehen Import- und Export-Möglichkeiten über das OPML-Format."]
+		"en": ["Firri is a feed reader for RSS and Atom feeds. The list of subscribed feeds is simply managed locally, the entries of the feeds are saved locally, too, so no online connection is necessary except for reloading the feeds.", "You can import and export feeds via the OPML format.", "Please note that the feeds are fetched via a proxy, so in theory a third party could see which feeds you read. You can change the proxy in the settings."],
+		"de": ["Firri ist ein Feed-Reader für RSS- und Atom-Feeds. Die Liste der abonnierten Feeds wird einfach lokal verwaltet, auch die einzelnen Einträge werden lokal gespeichert, sodass außer zum Neuladen keine Internetverbindung nötig ist.", "Es bestehen Import- und Export-Möglichkeiten über das OPML-Format.", "Bitte beachte, dass die Feeds über einen Proxy geholt werden, sodass es theoretisch möglich ist, dass Dritte sehen, welche Feeds du liest. Du kannst den Proxy in den Einstellungen ändern."]
 	}
 }

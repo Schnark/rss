@@ -39,7 +39,7 @@ function splitTags (s) {
 }
 
 function tagName (tag) {
-	return tag.replace(/<([a-z-]+).*/, '$1');
+	return tag.replace(/<([a-z\-]+).*/, '$1');
 }
 
 function nextOtherChangeIndex (i, d) {

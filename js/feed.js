@@ -1,4 +1,5 @@
 /*global Feed: true, MultiEntry, util*/
+/*global Event*/
 Feed =
 (function () {
 "use strict";
@@ -280,10 +281,13 @@ Feed.prototype.showList = function (listItem) {
 };
 
 Feed.prototype.showConfig = function (element) {
+	var input;
 	element.getElementsByClassName('feed-title')[0].textContent = this.title;
 	element.getElementsByClassName('title')[0].value = this.title;
 	element.getElementsByClassName('url')[0].value = this.url;
-	element.getElementsByClassName('pause')[0].value = this.pause;
+	input = element.getElementsByClassName('pause')[0];
+	input.value = this.pause;
+	input.dispatchEvent(new Event('blur'));
 };
 
 Feed.prototype.markAsRead = function () {
