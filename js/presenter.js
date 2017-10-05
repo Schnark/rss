@@ -350,6 +350,7 @@ Presenter.prototype.bindEnableSave = function (id) {
 };
 
 Presenter.prototype.initSuggestor = function (input, select) {
+	var ignoreBlur = false;
 	select.addEventListener('change', function () {
 		if (select.value) {
 			input.value = select.value;
@@ -357,10 +358,19 @@ Presenter.prototype.initSuggestor = function (input, select) {
 			input.style.display = 'none';
 		} else {
 			input.style.display = '';
+			ignoreBlur = true;
 			input.focus();
+			setTimeout(function () {
+				ignoreBlur = false;
+			}, 0);
 		}
 	});
 	input.addEventListener('blur', function () {
+		if (ignoreBlur) {
+			//strange bug, where blur events are fired on number inputs for no apparent reason
+			ignoreBlur = false;
+			return;
+		}
 		select.value = input.value;
 		if (select.value === input.value) {
 			input.style.display = 'none';
