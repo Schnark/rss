@@ -74,6 +74,8 @@ function Presenter (config) {
 	this.bindEnableSave('page-config-add');
 	this.bindEnableSave('page-config-save');
 
+	document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+
 	this.initSuggestor(document.getElementById('pause-input'), document.getElementById('pause-suggest'));
 	this.initSuggestor(document.getElementById('max-multi-input'), document.getElementById('max-multi-suggest'));
 	this.initSuggestor(document.getElementById('max-feed-input'), document.getElementById('max-feed-suggest'));
@@ -659,6 +661,12 @@ Presenter.prototype.onAlarm = function () {
 	this.updateAlarm();
 };
 
+Presenter.prototype.onVisibilityChange = function () {
+	if (!document.hidden) {
+		this.showInfo();
+	}
+};
+
 Presenter.prototype.showPage = function (id, hideToRight) {
 	if (this.currentPage) {
 		this.currentPage.className = hideToRight ? 'hide-to-right' : 'hide-to-left';
@@ -730,10 +738,15 @@ Presenter.prototype.showInfo = function (type, details) {
 	if (this.showInfoTimeout) {
 		clearTimeout(this.showInfoTimeout);
 	}
-	this.infoBanner.innerHTML = this.getInfo(type, details);
-	this.infoBanner.className = 'visible';
+	if (type) {
+		this.infoBanner.innerHTML = this.getInfo(type, details);
+		this.infoBanner.className = 'visible';
+	}
 	this.showInfoTimeout = setTimeout(function () {
 		this.showInfoTimeout = false;
+		if (document.hidden) {
+			return;
+		}
 		this.infoBanner.className = '';
 	}.bind(this), this.config['banner-timeout']);
 };
