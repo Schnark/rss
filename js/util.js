@@ -69,7 +69,7 @@ util = {
 		return node && node.tagName ? node : null;
 	},
 	showHtml: function (el, html, base, proxy) {
-		var links, i;
+		var els, i;
 
 		function makeAbsolute (el, attr, base, proxy) {
 			var url = el.getAttribute(attr) || '';
@@ -84,27 +84,32 @@ util = {
 		}
 
 		el.innerHTML = html; //FIXME use sandboxed iframe instead ?
-		links = el.querySelectorAll('[href]'); //el.getElementsByTagName('a')
-		for (i = 0; i < links.length; i++) {
-			if ((links[i].getAttribute('href') || '').charAt(0) === '#') {
+		els = el.querySelectorAll('[href]'); //el.getElementsByTagName('a')
+		for (i = 0; i < els.length; i++) {
+			if ((els[i].getAttribute('href') || '').charAt(0) === '#') {
 				continue;
 			}
-			makeAbsolute(links[i], 'href', base);
-			if (links[i].download) {
+			makeAbsolute(els[i], 'href', base);
+			if (els[i].download) {
 				continue;
 			}
-			links[i].target = '_blank';
-			if (links[i].relList) {
-				links[i].relList.add('noopener');
+			els[i].target = '_blank';
+			if (els[i].relList) {
+				els[i].relList.add('noopener');
 			}
 		}
-		links = el.querySelectorAll('[src]'); //el.getElementsByTagName('img')
-		for (i = 0; i < links.length; i++) {
-			makeAbsolute(links[i], 'src', base, proxy);
+		els = el.getElementsByTagName('form'); //TODO also formaction, formtarget?
+		for (i = 0; i < els.length; i++) {
+			makeAbsolute(els[i], 'action', base);
+			els[i].target = '_blank';
 		}
-		links = el.querySelectorAll('[data-translate-download]');
-		for (i = 0; i < links.length; i++) {
-			links[i].innerHTML = util.translate('download', {type: links[i].innerHTML});
+		els = el.querySelectorAll('[src]'); //el.getElementsByTagName('img')
+		for (i = 0; i < els.length; i++) {
+			makeAbsolute(els[i], 'src', base, proxy);
+		}
+		els = el.querySelectorAll('[data-translate-download]');
+		for (i = 0; i < els.length; i++) {
+			els[i].innerHTML = util.translate('download', {type: els[i].innerHTML});
 		}
 	},
 	errors: {

@@ -13,6 +13,9 @@ function splitWords (text) {
 }
 
 function splitHtml (html, noWordSplit, parent) {
+	if (!html) {
+		return [];
+	}
 	var div = document.createElement(parent || 'div'), ret = [];
 	div.innerHTML = html;
 	[].map.call(div.childNodes, function (node) {
@@ -39,7 +42,7 @@ function splitTags (s) {
 }
 
 function tagName (tag) {
-	return tag.replace(/<([a-z\-]+).*/, '$1');
+	return tag.replace(/<([a-z\-]+)[\s\S]*/, '$1');
 }
 
 function nextOtherChangeIndex (i, d) {

@@ -11,6 +11,7 @@ var cachedDB,
 		'cors-proxy': 'https://crossorigin.me/',
 /* Alternatives (though not all for permanent public use):
 https://cors-anywhere.herokuapp.com/
+https://thingproxy.freeboard.io/fetch/
 http://jsonp.afeld.me/?url=
 http://cors-proxy.htmldriven.com/?url=
 */

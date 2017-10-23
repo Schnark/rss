@@ -198,6 +198,12 @@ highlights = [
 		n: 'x',
 		h: 'fooxbar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table> baz',
 		r: 'foo<mark>x</mark>bar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table> baz'
+	},
+	{
+		t: 'Input with linebreak (used by PayPal)',
+		n: 'x',
+		h: '<input name="encrypted" value="\n">',
+		r: '<input name="encrypted" value="\n">'
 	}
 ];
 
