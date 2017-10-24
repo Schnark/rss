@@ -119,7 +119,24 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <option value="" data-l10n-id="suggest-other">(suggest-other)</option>
 </select></label>
 <input type="number" required min="1" step="1" id="max-feed-input" class="config-max-feed page-config-save"><br>
-<label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><input type="url" class="config-cors-proxy page-config-save"></label><br>
+<label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><select id="cors-proxy-suggest">
+<optgroup data-l10n-id="proxy-group-suggested" label="(proxy-group-suggested)">
+<option value="https://crossorigin.me/">crossorigin.me</option>
+<option value="https://thingproxy.freeboard.io/fetch/">thingproxy.freeboard.io</option>
+<option value="https://jsonp.afeld.me/?url=">jsonp.afeld.me</option>
+<option value="https://jsonproxy.herokuapp.com/?url=">jsonproxy.herokuapp.com</option>
+</optgroup>
+<optgroup data-l10n-id="proxy-group-testing" label="(proxy-group-testing)">
+<option value="https://cors-anywhere.herokuapp.com/">cors-anywhere.herokuapp.com</option>
+</optgroup>
+<optgroup data-l10n-id="proxy-group-http" label="(proxy-group-http)">
+<option value="http://cors-proxy.htmldriven.com/?url=">cors-proxy.htmldriven.com</option>
+</optgroup>
+<optgroup data-l10n-id="proxy-group-manual" label="(proxy-group-manual)">
+<option value="" data-l10n-id="suggest-other">(suggest-other)</option>
+</optgroup>
+</select></label>
+<input type="url" id="cors-proxy-input" class="config-cors-proxy page-config-save"><br>
 <label><span data-l10n-id="label-auto-update">(label-auto-update)</span><br><select class="config-auto-update page-config-save">
 <option value="-1" data-l10n-id="option-no-updates">(option-no-updates)</option>
 <option value="0" data-l10n-id="option-on-start">(option-on-start)</option>

@@ -79,6 +79,7 @@ function Presenter (config) {
 	this.initSuggestor(document.getElementById('pause-input'), document.getElementById('pause-suggest'));
 	this.initSuggestor(document.getElementById('max-multi-input'), document.getElementById('max-multi-suggest'));
 	this.initSuggestor(document.getElementById('max-feed-input'), document.getElementById('max-feed-suggest'));
+	this.initSuggestor(document.getElementById('cors-proxy-input'), document.getElementById('cors-proxy-suggest'));
 
 	util.storage.get(this.init.bind(this));
 }
@@ -362,6 +363,7 @@ Presenter.prototype.initSuggestor = function (input, select) {
 			input.style.display = '';
 			ignoreBlur = true;
 			input.focus();
+			input.select();
 			setTimeout(function () {
 				ignoreBlur = false;
 			}, 0);
@@ -374,7 +376,7 @@ Presenter.prototype.initSuggestor = function (input, select) {
 			return;
 		}
 		select.value = input.value;
-		if (select.value === input.value) {
+		if (input.value && (select.value === input.value)) {
 			input.style.display = 'none';
 		} else {
 			select.value = '';

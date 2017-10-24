@@ -8,13 +8,7 @@ var cachedDB,
 	defaultConfig = {
 		'max-entries-per-multi': 10,
 		'max-entries-per-feed': 100,
-		'cors-proxy': 'https://crossorigin.me/',
-/* Alternatives (though not all for permanent public use):
-https://cors-anywhere.herokuapp.com/
-https://thingproxy.freeboard.io/fetch/
-http://jsonp.afeld.me/?url=
-http://cors-proxy.htmldriven.com/?url=
-*/
+		'cors-proxy': 'https://crossorigin.me/', //for alternatives see suggestions in html
 		'auto-update': 0, //-1: no auto update, 0: update on start, > 0: update every n minutes
 		themes: []
 	};
