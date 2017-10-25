@@ -454,7 +454,9 @@ Presenter.prototype.updatePageConfig = function () {
 	input = this.pageConfig.getElementsByClassName('config-max-feed')[0];
 	input.value = this.getConfig('max-entries-per-feed');
 	input.dispatchEvent(new Event('blur'));
-	this.pageConfig.getElementsByClassName('config-cors-proxy')[0].value = this.getConfig('cors-proxy');
+	input = this.pageConfig.getElementsByClassName('config-cors-proxy')[0];
+	input.value = this.getConfig('cors-proxy');
+	input.dispatchEvent(new Event('blur'));
 	this.pageConfig.getElementsByClassName('config-auto-update')[0].value = this.getConfig('auto-update');
 	themes = this.getConfig('themes');
 	this.pageConfig.getElementsByClassName('config-theme-dark')[0].checked = (themes.indexOf('dark') > -1);
