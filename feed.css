@@ -420,6 +420,10 @@ ins {
 	white-space: pre-wrap;
 }
 
+/* ideally something like
+del:has(block element) { display: block; }
+and the other styles just for del
+*/
 del,
 del > p,
 del > h1,

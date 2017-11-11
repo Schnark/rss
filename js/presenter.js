@@ -5,10 +5,11 @@ Presenter =
 "use strict";
 
 function Presenter (config) {
-	var that = this;
 	this.config = config;
 
 	this.useTouch = 'ontouchstart' in document.documentElement;
+
+	document.body.addEventListener('click', this.globalClickHandler.bind(this), true);
 
 	this.pageCollection = document.getElementById('page-collection');
 	this.pageFeed = document.getElementById('page-feed');
@@ -22,8 +23,6 @@ function Presenter (config) {
 	this.bindClickHold('collection-list', this.onFeedClick, this.onFeedHold);
 	this.bindClickHold('feed-list', this.onEntryClick, this.onEntryHold);
 
-	this.bindShield(this.pageFeedConfig);
-
 	this.bindClickHold('navigate-prev', function () {
 		this.onPrevNextClick(-1);
 	}, function () {
@@ -34,6 +33,11 @@ function Presenter (config) {
 	}, function () {
 		this.onPrevNextHold(1);
 	});
+	this.bindClickHold('open-share', null, function () {
+		var el = document.getElementById('open-share');
+		this.ignoreClick();
+		util.share(el.dataset.title, el.href);
+	});
 	this.bindMulti('reload', this.onReloadClick, function (index) {
 		return index === 0;
 	});
@@ -41,14 +45,14 @@ function Presenter (config) {
 		return index !== 1;
 	});
 	document.getElementById('page-config-add').addEventListener('click', function () {
-		var url = that.pageConfig.getElementsByClassName('url')[0];
+		var url = this.pageConfig.getElementsByClassName('url')[0];
 		if (url.checkValidity()) {
 			url = url.value;
 		} else {
 			url = '';
 		}
-		that.onAddClick(url);
-	});
+		this.addFeedFromUrl(url);
+	}.bind(this));
 	this.bindSimpleClick({
 		'show-timeline': this.onTimelineClick,
 		'show-all': this.onShowAllClick,
@@ -62,14 +66,14 @@ function Presenter (config) {
 	});
 	this.searchInput = document.getElementById('search-input');
 	this.searchInput.addEventListener('keyup', function () {
-		if (that.searchTimeout) {
-			clearTimeout(that.searchTimeout);
+		if (this.searchTimeout) {
+			clearTimeout(this.searchTimeout);
 		}
-		that.searchTimeout = setTimeout(function () {
-			that.onSearchUpdate(that.searchInput.value);
-			that.searchTimeout = false;
-		}, that.config['search-delay']);
-	});
+		this.searchTimeout = setTimeout(function () {
+			this.onSearchUpdate(this.searchInput.value);
+			this.searchTimeout = false;
+		}.bind(this), this.config['search-delay']);
+	}.bind(this));
 	this.bindEnableSave('page-feed-config-save');
 	this.bindEnableSave('page-config-add');
 	this.bindEnableSave('page-config-save');
@@ -104,6 +108,9 @@ Presenter.prototype.run = function () {
 		} else if (this.getConfig('auto-update') === 0) {
 			this.doReload(this.collection);
 		}
+		if (this.startWithActivity) {
+			this.onActivity(this.startWithActivity);
+		}
 		this.isReady = true;
 	} else {
 		this.canRun = true;
@@ -115,6 +122,14 @@ Presenter.prototype.handleAlarm = function () {
 		this.onAlarm();
 	} else {
 		this.startWithAlaram = true;
+	}
+};
+
+Presenter.prototype.handleActivity = function (data) {
+	if (this.isReady) {
+		this.onActivity(data);
+	} else {
+		this.startWithActivity = data;
 	}
 };
 
@@ -154,6 +169,21 @@ Presenter.prototype.doReload = function (list, notification) {
 	this.showInfo('reload-start', list === this.collection);
 };
 
+Presenter.prototype.globalClickHandler = function (e) {
+	if (this.ignoreClickFlag) {
+		e.preventDefault();
+		e.stopPropagation();
+		this.ignoreClickFlag = false;
+	}
+};
+
+Presenter.prototype.ignoreClick = function () {
+	this.ignoreClickFlag = true;
+	setTimeout(function () {
+		this.ignoreClickFlag = false;
+	}.bind(this), 1000);
+};
+
 Presenter.prototype.bindClickHold = function (id, click, hold) {
 	var that = this, list = document.getElementById(id), status = {},
 		isList = list.tagName.toLowerCase() === 'ul',
@@ -173,10 +203,7 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 		status.index = data.index;
 		status.timeout = setTimeout(function () {
 			status.timeout = false;
-			that.ignoreTouchstart = true;
-			setTimeout(function () {
-				that.ignoreTouchstart = false;
-			}, 500);
+			that.ignoreClick();
 			hold.call(that, status.index);
 		}, tapTime);
 	}
@@ -222,6 +249,9 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 			});
 		});
 		list.addEventListener('touchend', function (e) {
+			if (!click) {
+				return;
+			}
 			e.preventDefault();
 			if (!status.timeout) {
 				return;
@@ -248,6 +278,9 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 			});
 		});
 		list.addEventListener('mouseup', function (e) {
+			if (!click) {
+				return;
+			}
 			e.preventDefault();
 			if (!status.timeout) {
 				return;
@@ -284,39 +317,6 @@ Presenter.prototype.bindSimpleClick = function (map) {
 		if (map.hasOwnProperty(id)) {
 			document.getElementById(id).addEventListener('click', getHandler(id));
 		}
-	}
-};
-
-Presenter.prototype.bindShield = function (element) {
-	var acceptEnd = false;
-	if (this.useTouch) {
-		element.addEventListener('touchstart', function () {
-			if (this.ignoreTouchstart) {
-				this.ignoreTouchstart = false;
-			} else {
-				acceptEnd = true;
-			}
-		});
-		element.addEventListener('touchend', function (e) {
-			if (!acceptEnd) {
-				e.preventDefault();
-			}
-			acceptEnd = false;
-		});
-	} else {
-		element.addEventListener('mousedown', function () {
-			if (this.ignoreTouchstart) {
-				this.ignoreTouchstart = false;
-			} else {
-				acceptEnd = true;
-			}
-		});
-		element.addEventListener('mouseup', function (e) {
-			if (!acceptEnd) {
-				e.preventDefault();
-			}
-			acceptEnd = false;
-		});
 	}
 };
 
@@ -551,7 +551,7 @@ Presenter.prototype.onBackClick = function (toCollection) {
 	}
 };
 
-Presenter.prototype.onAddClick = function (url) {
+Presenter.prototype.addFeedFromUrl = function (url) {
 	if (!url) {
 		this.showInfo('feed-add-error');
 		return;
@@ -644,8 +644,8 @@ Presenter.prototype.onConfigSaveClick = function () {
 	this.showPageCollection();
 };
 
-Presenter.prototype.onConfigImportClick = function () {
-	util.getOpmlFile(function (xml) {
+Presenter.prototype.importOpml = function (file) {
+	util.readFile(file, function (xml) {
 		var added;
 		if (!xml) {
 			this.showInfo('no-opml');
@@ -660,9 +660,23 @@ Presenter.prototype.onConfigImportClick = function () {
 	}.bind(this));
 };
 
+Presenter.prototype.onConfigImportClick = function () {
+	util.getOpmlFile(this.importOpml);
+};
+
 Presenter.prototype.onAlarm = function () {
 	this.doReload(this.collection, true);
 	this.updateAlarm();
+};
+
+Presenter.prototype.onActivity = function (data) {
+	switch (data.name) {
+	case 'share':
+		this.addFeedFromUrl(data.data.url);
+		break;
+	case 'open':
+		this.importOpml(data.data.blob);
+	}
 };
 
 Presenter.prototype.onVisibilityChange = function () {

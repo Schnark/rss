@@ -53,6 +53,7 @@ SingleEntry.prototype.show = function (element, search) {
 	var link, content;
 	link = element.getElementsByClassName('browse')[0];
 	link.href = this.url;
+	link.dataset.title = this.title || '';
 	link.style.display = this.url ? '' : 'none';
 	element.getElementsByClassName('date')[0].textContent = util.formatDate(this.date, true);
 	content = this.content;

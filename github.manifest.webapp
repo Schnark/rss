@@ -1,8 +1,8 @@
 {
-	"version": "1.29",
+	"version": "1.30",
 	"name": "Firri",
 	"description": "Feed reader",
-	"size": 78149,
+	"size": 79060,
 	"package_path": "https://schnark.github.io/rss/rss.zip",
 	"icons": {
 		"128": "/icons/icon-128.png",
@@ -12,7 +12,6 @@
 		"name": "Michael Müller",
 		"url": "https://github.com/Schnark"
 	},
-	"installs_allowed_from": ["*"],
 	"default_locale": "en",
 	"permissions": {
 		"alarms": {
@@ -23,6 +22,39 @@
 		},
 		"storage": {
 			"description": "Storage without size limitations"
+		}
+	},
+	"activities": {
+		"share": {
+			"filters": {
+				"type": "url",
+				"url": {
+					"required": true
+				},
+				"firri": {
+					"pattern": "[^x]",
+					"regexp": "[^x]"
+				}
+			},
+			"disposition": "window",
+			"returnValue": false,
+			"href": "/index.html"
+		},
+		"open": {
+			"filters": {
+				"type": [
+					"text/xml",
+					"text/x-opml",
+					""
+				],
+				"filename": {
+					"pattern": ".*\\.opml",
+					"regexp": "\\.opml$"
+				}
+			},
+			"disposition": "window",
+			"returnValue": false,
+			"href": "/index.html"
 		}
 	},
 	"messages": [{

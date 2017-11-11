@@ -150,6 +150,7 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		diff.content = diff.url + '<br>' + diff.content;
 	} else {
 		link.href = oldEntry.url;
+		link.dataset.title = newEntry.title || oldEntry.title || '';
 		link.style.display = oldEntry.url ? '' : 'none';
 	}
 	util.showHtml(element.getElementsByClassName('content')[0], diff.content,

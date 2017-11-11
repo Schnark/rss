@@ -1,5 +1,5 @@
 /*global util: true*/
-/*global URL*/
+/*global URL, MozActivity*/
 util =
 (function () {
 "use strict";
@@ -68,8 +68,9 @@ util = {
 		}
 		return node && node.tagName ? node : null;
 	},
+
 	showHtml: function (el, html, base, proxy) {
-		var els, i;
+		var doc, els, i;
 
 		function makeAbsolute (el, attr, base, proxy) {
 			var url = el.getAttribute(attr) || '';
@@ -83,33 +84,59 @@ util = {
 			}
 		}
 
-		el.innerHTML = html; //FIXME use sandboxed iframe instead ?
-		els = el.querySelectorAll('[href]'); //el.getElementsByTagName('a')
-		for (i = 0; i < els.length; i++) {
-			if ((els[i].getAttribute('href') || '').charAt(0) === '#') {
-				continue;
+		try {
+			doc = (new DOMParser()).parseFromString(html, 'text/html');
+
+			els = doc.querySelectorAll('[href]'); //doc.getElementsByTagName('a')
+			for (i = 0; i < els.length; i++) {
+				if ((els[i].getAttribute('href') || '').charAt(0) === '#') {
+					continue;
+				}
+				makeAbsolute(els[i], 'href', base);
+				if (els[i].download) {
+					continue;
+				}
+				els[i].target = '_blank';
+				if (els[i].relList) {
+					els[i].relList.add('noopener');
+				}
 			}
-			makeAbsolute(els[i], 'href', base);
-			if (els[i].download) {
-				continue;
+			els = doc.getElementsByTagName('form'); //TODO also formaction, formtarget?
+			for (i = 0; i < els.length; i++) {
+				makeAbsolute(els[i], 'action', base);
+				els[i].target = '_blank';
 			}
-			els[i].target = '_blank';
-			if (els[i].relList) {
-				els[i].relList.add('noopener');
+			els = doc.querySelectorAll('[src]'); //doc.getElementsByTagName('img')
+			for (i = 0; i < els.length; i++) {
+				makeAbsolute(els[i], 'src', base, proxy);
 			}
+			els = doc.querySelectorAll('[data-translate-download]');
+			for (i = 0; i < els.length; i++) {
+				els[i].innerHTML = util.translate('download', {type: els[i].innerHTML});
+			}
+			//TODO also remove onFoo attributes, script tags, etc.?
+			html = doc.body.innerHTML;
+		} catch (e) {
 		}
-		els = el.getElementsByTagName('form'); //TODO also formaction, formtarget?
-		for (i = 0; i < els.length; i++) {
-			makeAbsolute(els[i], 'action', base);
-			els[i].target = '_blank';
-		}
-		els = el.querySelectorAll('[src]'); //el.getElementsByTagName('img')
-		for (i = 0; i < els.length; i++) {
-			makeAbsolute(els[i], 'src', base, proxy);
-		}
-		els = el.querySelectorAll('[data-translate-download]');
-		for (i = 0; i < els.length; i++) {
-			els[i].innerHTML = util.translate('download', {type: els[i].innerHTML});
+		el.innerHTML = html; //TODO use sandboxed iframe instead ?
+	},
+	share: function (title, url) {
+		if (navigator.share) {
+			navigator.share({
+				title: title,
+				url: url
+			});
+		} else if (window.MozActivity) {
+			/*jshint nonew: false*/
+			new MozActivity({
+				name: 'share',
+				data: {
+					type: 'url',
+					title: title, //ignored
+					url: url,
+					firri: 'x' //to avoid sharing to ourselves
+				}
+			});
 		}
 	},
 	errors: {

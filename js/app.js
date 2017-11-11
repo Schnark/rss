@@ -11,6 +11,12 @@ var app = new Presenter({
 
 util.handleAlarm(app.handleAlarm.bind(app));
 
+if (navigator.mozSetMessageHandler) {
+	navigator.mozSetMessageHandler('activity', function (request) {
+		app.handleActivity(request.source || {});
+	});
+}
+
 window.addEventListener('localized', function () {
 	document.documentElement.lang = document.webL10n.getLanguage();
 	document.documentElement.dir = document.webL10n.getDirection();

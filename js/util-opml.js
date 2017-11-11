@@ -3,7 +3,7 @@
 (function () {
 "use strict";
 
-function getFile (callback) {
+function getOpmlFile (callback) {
 	var pick;
 	if (window.MozActivity) {
 		pick = new MozActivity({
@@ -49,24 +49,19 @@ function getFile (callback) {
 	}
 }
 
-function getOpmlFile (callback) {
-	getFile(function (file) {
-		if (!file) {
+function readFile (file, callback) {
+	var reader = new FileReader();
+	reader.onload = function (e) {
+		var doc = new DOMParser().parseFromString(e.target.result, 'application/xml');
+		if (doc.getElementsByTagName('parsererror').length) {
 			callback(false);
 		}
-		var reader = new FileReader();
-		reader.onload = function (e) {
-			var doc = new DOMParser().parseFromString(e.target.result, 'application/xml');
-			if (doc.getElementsByTagName('parsererror').length) {
-				callback(false);
-			}
-			callback(doc);
-		};
-		reader.onerror = function () {
-			callback(false);
-		};
-		reader.readAsText(file);
-	});
+		callback(doc);
+	};
+	reader.onerror = function () {
+		callback(false);
+	};
+	reader.readAsText(file);
 }
 
 function parseOpml (xml) {
@@ -84,6 +79,7 @@ function parseOpml (xml) {
 }
 
 util.getOpmlFile = getOpmlFile;
+util.readFile = readFile;
 util.parseOpml = parseOpml;
 
 })();
