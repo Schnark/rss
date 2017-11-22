@@ -1,8 +1,8 @@
 {
-	"version": "1.30",
+	"version": "1.31",
 	"name": "Firri",
 	"description": "Feed reader",
-	"size": 79060,
+	"size": 79729,
 	"package_path": "http://localhost:8080/rss.zip",
 	"icons": {
 		"128": "/icons/icon-128.png",

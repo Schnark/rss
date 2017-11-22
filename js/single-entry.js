@@ -55,6 +55,7 @@ SingleEntry.prototype.show = function (element, search) {
 	link.href = this.url;
 	link.dataset.title = this.title || '';
 	link.style.display = this.url ? '' : 'none';
+	element.getElementsByClassName('author')[0].dataset.url = this.url;
 	element.getElementsByClassName('date')[0].textContent = util.formatDate(this.date, true);
 	content = this.content;
 	if (search) {

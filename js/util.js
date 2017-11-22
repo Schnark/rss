@@ -28,6 +28,23 @@ util = {
 	titleFromUrl: function (url) {
 		return url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
 	},
+	//get a random color for a string
+	//based on code from QUnit
+	getColor: function (str) {
+		/*jshint bitwise: false*/
+		var hex, i, hash = 0;
+
+		for (i = 0; i < str.length; i++) {
+			hash = ((hash << 5) - hash) + str.charCodeAt(i);
+			hash |= 0;
+		}
+
+		hex = (0x100000000 + hash).toString(16);
+		if (hex.length < 6) {
+			hex = '00000' + hex;
+		}
+		return '#' + hex.slice(-6);
+	},
 	//needle is text, haystack HTML
 	search: function (needle, haystack, onlyFirst) {
 

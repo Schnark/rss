@@ -5,11 +5,22 @@ Presenter =
 "use strict";
 
 function Presenter (config) {
+	var passiveSupported = false;
 	this.config = config;
 
 	this.useTouch = 'ontouchstart' in document.documentElement;
 
-	document.body.addEventListener('click', this.globalClickHandler.bind(this), true);
+	try {
+		window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
+			get: function () {
+				passiveSupported = true;
+			}
+		}));
+	} catch (e) {
+	}
+	this.noPassive = passiveSupported ? {passive: false} : false;
+
+	this.boundGlobalPreventHandler = this.globalPreventHandler.bind(this);
 
 	this.pageCollection = document.getElementById('page-collection');
 	this.pageFeed = document.getElementById('page-feed');
@@ -169,19 +180,26 @@ Presenter.prototype.doReload = function (list, notification) {
 	this.showInfo('reload-start', list === this.collection);
 };
 
-Presenter.prototype.globalClickHandler = function (e) {
-	if (this.ignoreClickFlag) {
-		e.preventDefault();
-		e.stopPropagation();
-		this.ignoreClickFlag = false;
+Presenter.prototype.globalPreventHandler = function (e) {
+	e.preventDefault();
+	e.stopPropagation();
+	if (e.type === 'click') {
+		document.body.removeEventListener('click', this.boundGlobalPreventHandler, true);
+		document.body.removeEventListener('touchstart', this.boundGlobalPreventHandler, this.noPassive);
+		document.body.removeEventListener('touchend', this.boundGlobalPreventHandler, true);
 	}
 };
 
 Presenter.prototype.ignoreClick = function () {
-	this.ignoreClickFlag = true;
+	//it's not really clear why all these and only these are needed, but this seems to work
+	document.body.addEventListener('click', this.boundGlobalPreventHandler, true);
+	document.body.addEventListener('touchstart', this.boundGlobalPreventHandler, this.noPassive);
+	document.body.addEventListener('touchend', this.boundGlobalPreventHandler, true);
 	setTimeout(function () {
-		this.ignoreClickFlag = false;
-	}.bind(this), 1000);
+		document.body.removeEventListener('click', this.boundGlobalPreventHandler, true);
+		document.body.removeEventListener('touchstart', this.boundGlobalPreventHandler, this.noPassive);
+		document.body.removeEventListener('touchend', this.boundGlobalPreventHandler, true);
+	}.bind(this), 700); //animation takes 500ms
 };
 
 Presenter.prototype.bindClickHold = function (id, click, hold) {
@@ -257,6 +275,10 @@ Presenter.prototype.bindClickHold = function (id, click, hold) {
 				return;
 			}
 			end();
+		});
+		list.addEventListener('contextmenu', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
 		});
 	} else {
 		list.addEventListener('mousedown', function (e) {
@@ -461,6 +483,7 @@ Presenter.prototype.updatePageConfig = function () {
 	themes = this.getConfig('themes');
 	this.pageConfig.getElementsByClassName('config-theme-dark')[0].checked = (themes.indexOf('dark') > -1);
 	this.pageConfig.getElementsByClassName('config-theme-large')[0].checked = (themes.indexOf('large') > -1);
+	this.pageConfig.getElementsByClassName('config-theme-expandurl')[0].checked = (themes.indexOf('expandurl') > -1);
 	document.getElementById('page-config-save').disabled = true;
 	feedExport = this.pageConfig.getElementsByClassName('feed-export')[0];
 	if (feedExport.href) {
@@ -637,6 +660,10 @@ Presenter.prototype.onConfigSaveClick = function () {
 	if (input.checked) {
 		themes.push('large');
 	}
+	input = this.pageConfig.getElementsByClassName('config-theme-expandurl')[0];
+	if (input.checked) {
+		themes.push('expandurl');
+	}
 	this.collection.setConfig('themes', themes);
 	this.saveData();
 	this.updateAlarm();
@@ -661,7 +688,7 @@ Presenter.prototype.importOpml = function (file) {
 };
 
 Presenter.prototype.onConfigImportClick = function () {
-	util.getOpmlFile(this.importOpml);
+	util.getOpmlFile(this.importOpml.bind(this));
 };
 
 Presenter.prototype.onAlarm = function () {

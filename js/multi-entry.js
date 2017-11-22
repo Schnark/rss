@@ -148,19 +148,25 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		link.href = '';
 		link.style.display = 'none';
 		diff.content = diff.url + '<br>' + diff.content;
+		element.getElementsByClassName('author')[0].dataset.url = '';
 	} else {
 		link.href = oldEntry.url;
 		link.dataset.title = newEntry.title || oldEntry.title || '';
 		link.style.display = oldEntry.url ? '' : 'none';
+		element.getElementsByClassName('author')[0].dataset.url = oldEntry.url;
 	}
 	util.showHtml(element.getElementsByClassName('content')[0], diff.content,
 		newEntry.url, this.getConfig('cors-proxy')); //FIXME
 };
 
 MultiEntry.prototype.showList = function (listItem, includeFeedTitle, index, search) {
+	var marker, title;
 	listItem.className = this.getStatus();
 	if (includeFeedTitle) {
-		listItem.getElementsByClassName('feed')[0].textContent = this.parent.getTitle();
+		marker = listItem.getElementsByClassName('feed')[0];
+		title = this.parent.getTitle();
+		marker.textContent = title;
+		marker.style.borderColor = util.getColor(title);
 	}
 	if (index === undefined) {
 		index = this.entries.length - 1;
