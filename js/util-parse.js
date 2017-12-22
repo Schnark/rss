@@ -34,7 +34,7 @@ function parseDate (dateString) {
 	if (isNaN(date)) {
 		date = Date.now();
 	}
-	return date;
+	return new Date(date);
 }
 
 function normalizeContent (content) {
@@ -91,7 +91,7 @@ function parseMedia (media, content) {
 		html.push(buildMedia(
 			content,
 			media[i].getAttribute('url'),
-			'image',
+			media[i].getAttribute('type') || 'image',
 			attr
 		));
 	}
@@ -105,10 +105,13 @@ function parseRssItems (items, fallbackAuthor) {
 		title = getDataFromXmlElement(item, 'title');
 		author = getDataFromXmlElement(item, ['author', 'dc:creator']) || fallbackAuthor;
 		url = getDataFromXmlElement(item, ['feedburner:origLink', 'link']);
-		date = new Date(parseDate(getDataFromXmlElement(item, ['pubDate', 'dc:date'])));
+		date = parseDate(getDataFromXmlElement(item, ['pubDate', 'dc:date']));
 		content = getDataFromXmlElement(item, ['content:encoded', 'description']);
 		content =
 			parseMedia(item.getElementsByTagName('media:thumbnail'), content) +
+			content;
+		content =
+			parseMedia(item.getElementsByTagName('media:content'), content) +
 			content;
 		content =
 			parseEnclosure(item.getElementsByTagName('enclosure'), content) +
@@ -141,7 +144,7 @@ function parseAtomItems (items, fallbackAuthor) {
 		title = getDataFromXmlElement(item, 'title');
 		author = getDataFromXmlElement(item, ['name', 'author', 'dc:creator']) || fallbackAuthor;
 		url = getDataFromXmlElement(item, 'link', getHrefAttr);
-		date = new Date(parseDate(getDataFromXmlElement(item, ['updated', 'published'])));
+		date = parseDate(getDataFromXmlElement(item, ['updated', 'published']));
 		content = getDataFromXmlElement(item, ['content', 'summary'], maybeEscape);
 		content = normalizeContent(content);
 		if (date <= new Date()) {

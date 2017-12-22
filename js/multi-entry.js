@@ -102,7 +102,8 @@ MultiEntry.prototype.showDiff = function (element, i1, i2) {
 		diff = {}, link;
 
 	function makeLink (url) {
-		return '<a href="' + util.escape(url) + '" target="_blank" rel="noopener">' + util.escape(url) + '</a>';
+		return '<a href="' + util.escape(url) + '" target="_blank" rel="noopener" class="noexpand">' +
+			util.escape(url) + '</a>';
 	}
 
 	if (oldEntry.title === newEntry.title) {

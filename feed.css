@@ -24,8 +24,42 @@ input, select {
 	width: 100%;
 }
 
-input[type="checkbox"] {
+/*input[type="checkbox"] {
 	width: auto;
+}*/
+
+[type="checkbox"] {
+	position: absolute;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	width: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
+}
+
+[type="checkbox"] + span::before {
+	content: "";
+	display: inline-block;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 1.2em;
+	height: 1.2em;
+	border: 1px solid;
+	border-radius: 5px;
+	vertical-align: middle;
+	text-align: center;
+	line-height: 1;
+	margin-right: 0.5em;
+}
+
+[type="checkbox"]:checked + span::before {
+	content: "✓";
+}
+
+[type="checkbox"]:focus + span::before {
+	outline: 1px dotted;
 }
 
 dt {
@@ -211,6 +245,10 @@ button:disabled {
 	cursor: pointer;
 }
 
+#feed-list li {
+	padding-right: 3px;
+}
+
 #collection-list li .title,
 #feed-list li .title {
 	display: inline-block;
@@ -236,7 +274,7 @@ button:disabled {
 	color: #fff;
 	padding: 2px 5px;
 	margin: 2px;
-	border: 1px solid #555;
+	border: 1px solid;
 	border-left-width: 4px;
 	font-size: 81%;
 	max-width: 45%;
@@ -544,6 +582,10 @@ body.theme-dark #collection-list li.updating {
 	border-color: #888;
 }
 
+body.theme-dark #show-timeline img {
+	filter: invert(100%);
+}
+/* fallback for browsers without invert filter */
 body.theme-dark #show-timeline img:first-child {
 	background-color: #ccc;
 	border-radius: 50%;
@@ -604,7 +646,7 @@ body.theme-dark mark {
 	background-color: #550;
 }
 
-body.theme-expandurl #page-entry a[href]:not([href=""]):not([href^="#"])::after {
+body.theme-expandurl #page-entry a[href]:not([href=""]):not([href^="#"]):not(.noexpand)::after {
 	content: " (" attr(href) ")";
 	font-size: 90%;
 }

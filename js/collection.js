@@ -41,6 +41,10 @@ Collection.prototype.getOPML = function () {
 		'</opml>';
 };
 
+Collection.prototype.getLength = function () {
+	return this.feeds.length;
+};
+
 Collection.prototype.getTimeline = function () {
 	return new Feed(this, {title: util.translate('timeline')});
 };

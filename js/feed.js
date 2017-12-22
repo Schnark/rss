@@ -41,6 +41,14 @@ Feed.prototype.getJSON = function () {
 	};
 };
 
+Feed.prototype.getLength = function () {
+	if (this.isTimeline) {
+		return this.parent.getLength();
+	} else {
+		return 1;
+	}
+};
+
 Feed.prototype.getOPML = function () {
 	return '<outline type="rss" xmlUrl="' + util.escape(this.url) + '" ' +
 		'title="' + util.escape(this.title) + '" ' +

@@ -1,7 +1,7 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html><head><title data-l10n-id="title">Firri</title>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, user-scalable=no">
+<meta name="viewport" content="width=device-width">
 <link rel="apple-touch-icon" sizes="180x180" href="more-icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="more-icons/favicon-32x32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="more-icons/favicon-16x16.png" sizes="16x16">
@@ -17,38 +17,39 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 	navigator.serviceWorker.register('sw.js');
 }
 </script>
-<script src="js/lib/l10n.js"></script>
-<script src="js/util.js"></script>
-<script src="js/lib/arraydiff.js"></script>
-<script src="js/util-alarm.js"></script>
-<script src="js/util-date.js"></script>
-<script src="js/util-diff.js"></script>
-<script src="js/util-opml.js"></script>
-<script src="js/util-parse.js"></script>
-<script src="js/util-storage.js"></script>
-<script src="js/util-xhr.js"></script>
-<script src="js/single-entry.js"></script>
-<script src="js/multi-entry.js"></script>
-<script src="js/feed.js"></script>
-<script src="js/collection.js"></script>
-<script src="js/presenter.js"></script>
+<script src="js/lib/l10n.js" defer></script>
+<script src="js/util.js" defer></script>
+<script src="js/lib/arraydiff.js" defer></script>
+<script src="js/util-alarm.js" defer></script>
+<script src="js/util-date.js" defer></script>
+<script src="js/util-diff.js" defer></script>
+<script src="js/util-opml.js" defer></script>
+<script src="js/util-parse.js" defer></script>
+<script src="js/util-storage.js" defer></script>
+<script src="js/util-xhr.js" defer></script>
+<script src="js/single-entry.js" defer></script>
+<script src="js/multi-entry.js" defer></script>
+<script src="js/feed.js" defer></script>
+<script src="js/collection.js" defer></script>
+<script src="js/presenter.js" defer></script>
+<script src="js/app.js" defer></script>
 </head><body>
 
 <section id="page-loading">
-<img src="icons/icon-512.png">
+<img src="icons/icon-512.png" alt="">
 </section>
 
 <section id="page-collection" hidden>
-<header><span id="button-config" class="left"><img src="img/config.png"></span><h1 data-l10n-id="title">(title)</h1><span class="right reload"><img src="img/reload.png"></span></header>
+<header><span id="button-config" class="left"><img src="img/config.png" alt="⚙"></span><h1 data-l10n-id="title">(title)</h1><span class="right reload"><img src="img/reload.png" alt="🔃"></span></header>
 <div class="wrapper">
 <ul id="collection-list"></ul>
 <p data-l10n-id="no-feeds">(no-feeds)</p>
-<p id="show-timeline"><img src="img/history.png"><span data-l10n-id="show-timeline">(show-timeline)</span><img src="img/search.png"></p>
+<p id="show-timeline"><img src="img/history.png" alt=""><span data-l10n-id="show-timeline">(show-timeline)</span><img src="img/search.png" alt=""></p>
 </div>
 </section>
 
 <section id="page-feed" hidden>
-<header><span class="left go-back"><img src="img/back.png"></span><h1 class="feed-title"></h1><span class="right reload"><img src="img/reload.png"></span></header>
+<header><span class="left go-back"><img src="img/back.png" alt="&lt;"></span><h1 class="feed-title"></h1><span class="right reload"><img src="img/reload.png" alt="🔃"></span></header>
 <div class="wrapper">
 <p class="last-update"></p>
 <p class="counts"></p>
@@ -60,7 +61,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 </section>
 
 <section id="page-entry" hidden>
-<header><span class="left go-back"><img src="img/back.png"></span><h1 class="feed-title"></h1><a id="open-share" class="right browse" target="_blank" rel="noopener"><img src="img/open.png"></a></header>
+<header><span class="left go-back"><img src="img/back.png" alt="&lt;"></span><h1 class="feed-title"></h1><a id="open-share" class="right browse" target="_blank" rel="noopener"><img src="img/open.png" alt="⇗"></a></header>
 <div class="wrapper">
 <p class="date"></p>
 <p class="navigation"><span id="navigate-prev" class="prev">←</span><span class="update"></span><span id="navigate-next" class="next">→</span></p>
@@ -71,7 +72,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 </section>
 
 <section id="page-feed-config" hidden>
-<header><span class="left go-back"><img src="img/back.png"></span><h1 class="feed-title"></h1></header>
+<header><span class="left go-back"><img src="img/back.png" alt="&lt;"></span><h1 class="feed-title"></h1></header>
 <div class="wrapper">
 <p>
 <label><span data-l10n-id="label-title">(label-title)</span><br><input type="text" required class="title page-feed-config-save"></label><br>
@@ -80,6 +81,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <option value="0" data-l10n-id="suggest-always">(suggest-always)</option>
 <option value="1" data-l10n-id="suggest-hourly">(suggest-hourly)</option>
 <option value="23" data-l10n-id="suggest-daily">(suggest-daily)</option>
+<option value="1000000" data-l10n-id="suggest-never">(suggest-never)</option>
 <option value="" data-l10n-id="suggest-other">(suggest-other)</option>
 </select></label>
 <input type="number" required min="0" step="1" id="pause-input" class="pause page-feed-config-save">
@@ -93,7 +95,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 </section>
 
 <section id="page-config" hidden>
-<header><span class="left go-back"><img src="img/back.png"></span><h1 data-l10n-id="title">(title)</h1></header>
+<header><span class="left go-back"><img src="img/back.png" alt="&lt;"></span><h1 data-l10n-id="title">(title)</h1></header>
 <div class="wrapper">
 <h1 data-l10n-id="add">(add)</h1>
 <p>
@@ -159,7 +161,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 </p>
 <hr>
 <h1 data-l10n-id="faq">(faq)</h1>
-<p><dl>
+<dl>
 <dt data-l10n-id="faq-1-q">(faq-1-q)</dt>
 <dd data-l10n-id="faq-1-a">(faq-1-a)</dd>
 <dt data-l10n-id="faq-2-q">(faq-2-q)</dt>
@@ -172,12 +174,11 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <dd data-l10n-id="faq-4-a">(faq-4-a)</dd>
 <dt data-l10n-id="faq-5-q">(faq-5-q)</dt>
 <dd data-l10n-id="faq-5-a">(faq-5-a)</dd>
-</dl></p>
+</dl>
 </div>
 </section>
 
 <footer id="info-banner">
 </footer>
 
-<script src="js/app.js"></script>
 </body></html>
