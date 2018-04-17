@@ -90,7 +90,9 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <p>
 <button id="page-feed-config-read" data-l10n-id="button-all-read">(button-all-read)</button>
 <button id="page-feed-config-remove" class="destructive" data-l10n-id="button-remove">(button-remove)</button>
+<button id="page-feed-config-raw" data-l10n-id="button-raw">(button-raw)</button>
 </p>
+<div id="page-feed-config-raw-container"></div>
 </div>
 </section>
 
@@ -125,14 +127,17 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <optgroup data-l10n-id="proxy-group-suggested" label="(proxy-group-suggested)">
 <option value="https://crossorigin.me/">crossorigin.me</option>
 <option value="https://thingproxy.freeboard.io/fetch/">thingproxy.freeboard.io</option>
-<option value="https://jsonp.afeld.me/?url=">jsonp.afeld.me</option>
-<option value="https://jsonproxy.herokuapp.com/?url=">jsonproxy.herokuapp.com</option>
+<!--<option value="https://jsonp.afeld.me/?url=">jsonp.afeld.me</option>
+<option value="https://jsonproxy.herokuapp.com/?url=">jsonproxy.herokuapp.com</option>-->
 </optgroup>
 <optgroup data-l10n-id="proxy-group-testing" label="(proxy-group-testing)">
 <option value="https://cors-anywhere.herokuapp.com/">cors-anywhere.herokuapp.com</option>
 </optgroup>
 <optgroup data-l10n-id="proxy-group-http" label="(proxy-group-http)">
 <option value="http://cors-proxy.htmldriven.com/?url=">cors-proxy.htmldriven.com</option>
+</optgroup>
+<optgroup data-l10n-id="proxy-group-json" label="(proxy-group-json)">
+<option value="https://lit-beach-8985.herokuapp.com/?url=">lit-beach-8985.herokuapp.com</option>
 </optgroup>
 <optgroup data-l10n-id="proxy-group-manual" label="(proxy-group-manual)">
 <option value="" data-l10n-id="suggest-other">(suggest-other)</option>

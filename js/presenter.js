@@ -70,6 +70,7 @@ function Presenter (config) {
 		'page-feed-config-save': this.onFeedConfigSaveClick,
 		'page-feed-config-read': this.onFeedReadAllClick,
 		'page-feed-config-remove': this.onFeedRemoveClick,
+		'page-feed-config-raw': this.onFeedRawClick,
 		'button-config': this.onConfigClick,
 		'page-config-read': this.onReadAllClick,
 		'page-config-save': this.onConfigSaveClick,
@@ -628,6 +629,13 @@ Presenter.prototype.onFeedRemoveClick = function () {
 	}
 };
 
+Presenter.prototype.onFeedRawClick = function () {
+	var pre = document.createElement('pre');
+	pre.textContent = this.currentFeed.getRaw();
+	document.getElementById('page-feed-config-raw-container').appendChild(pre);
+	document.getElementById('page-feed-config-raw').disabled = true;
+};
+
 Presenter.prototype.onConfigClick = function () {
 	this.updatePageConfig();
 	this.showPageConfig();
@@ -740,6 +748,8 @@ Presenter.prototype.showPageEntry = function () {
 };
 
 Presenter.prototype.showPageFeedConfig = function () {
+	document.getElementById('page-feed-config-raw-container').innerHTML = '';
+	document.getElementById('page-feed-config-raw').disabled = !this.currentFeed.getRaw();
 	this.showPage('pageFeedConfig');
 };
 

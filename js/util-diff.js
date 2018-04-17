@@ -112,7 +112,7 @@ function simplifyDiff (d) {
 	//merge tags
 	d = d.replace(/<\/(ins|del)><\1>/g, '');
 	//allow breaks
-	d = d.replace(/( <del>[^ ]+<\/del>)(<ins>[^ ]+<\/ins> )/g, '$1<wbr>$2');
+	d = d.replace(/((?:^|\W)<del>[^ ]+<\/del>)(<ins>[^ ]+<\/ins>(?:\W|$))/g, '$1<wbr>$2');
 	return d;
 }
 

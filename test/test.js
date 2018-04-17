@@ -32,13 +32,13 @@ var diffs = [
 		t: 'Change tag',
 		o: 'foo <i>bar</i>',
 		n: 'foo <b>bar</b>',
-		d: 'foo <del><i>bar</i></del><ins><b>bar</b></ins>'
+		d: 'foo <del><i>bar</i></del><wbr><ins><b>bar</b></ins>'
 	},
 	{
 		t: 'Change content of tag',
 		o: 'foo <i>bar</i>',
 		n: 'foo <i>baz</i>',
-		d: 'foo <i><del>bar</del><ins>baz</ins></i>'
+		d: 'foo <i><del>bar</del><wbr><ins>baz</ins></i>'
 	},
 	{
 		t: 'Change punctuation',
@@ -50,7 +50,7 @@ var diffs = [
 		t: 'Word with special characters',
 		o: 'öabcd def',
 		n: 'öfooo def',
-		d: '<del>öabcd</del><ins>öfooo</ins> def'
+		d: '<del>öabcd</del><wbr><ins>öfooo</ins> def'
 	},
 	{
 		t: 'Change everything except spaces',
@@ -196,8 +196,10 @@ highlights = [
 	{
 		t: 'Table',
 		n: 'x',
-		h: 'fooxbar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table> baz',
-		r: 'foo<mark>x</mark>bar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr><tr><td>c</td><td>d</td></tr></tbody></table> baz'
+		h: 'fooxbar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr>' +
+			'<tr><td>c</td><td>d</td></tr></tbody></table> baz',
+		r: 'foo<mark>x</mark>bar <table><tbody><tr><th>1</th><th>2</th></tr><tr><td>a</td><td>b</td></tr>' +
+			'<tr><td>c</td><td>d</td></tr></tbody></table> baz'
 	},
 	{
 		t: 'Input with linebreak (used by PayPal)',

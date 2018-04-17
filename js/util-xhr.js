@@ -31,13 +31,26 @@ function getXmlViaProxy (url, proxy, callback) {
 		xhr = new XMLHttpRequest();
 	}
 	xhr.onload = function () {
+		var xml = xhr.responseXML, text = xhr.responseText;
+		if (!xml) {
+			try {
+				//for pure JSON proxy
+				text = JSON.parse(text).error;
+				xml = (new DOMParser()).parseFromString(text, 'application/xml');
+			} catch (e) {
+			}
+		}
+		text = xhr.status + ' ' + xhr.statusText + '\n\n' + xhr.getAllResponseHeaders() + '\n\n' + text;
 		workXhrQueue();
-		callback(xhr.responseXML);
+		callback(xml, text);
 	};
 	xhr.onerror = function () {
 		workXhrQueue();
 		callback();
 	};
+	if (proxy.indexOf('?') > -1) {
+		url = encodeURIComponent(url);
+	}
 	url = proxy + url;
 	if (proxy) {
 		if (url.indexOf('?') > -1) {
@@ -52,7 +65,7 @@ function getXmlViaProxy (url, proxy, callback) {
 }
 
 function getXMLViaSimulation (url, callback) {
-	getXmlViaProxy(simulationUrls.shift() || 'http://foo.invalid/', '', callback); //FIXME
+	getXmlViaProxy(simulationUrls.shift() || 'http://foo.invalid/', '', callback);
 }
 
 function getXML (url, proxy, callback) {

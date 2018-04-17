@@ -51,6 +51,7 @@ input, select {
 	vertical-align: middle;
 	text-align: center;
 	line-height: 1;
+	overflow: hidden;
 	margin-right: 0.5em;
 }
 
@@ -452,11 +453,15 @@ button:disabled {
 	margin: 0 auto;
 }
 
-#page-entry .content pre {
+pre {
 	border-left: 4px solid #39d;
 	padding: 0.4em;
 	background-color: #eee;
 	color: #000;
+/*duplicated from above for source code, which isn't in #page-entry .content*/
+	width: auto;
+	max-width: 100%;
+	overflow: auto;
 }
 
 del,
@@ -649,9 +654,11 @@ body.theme-dark mark {
 body.theme-expandurl #page-entry a[href]:not([href=""]):not([href^="#"]):not(.noexpand)::after {
 	content: " (" attr(href) ")";
 	font-size: 90%;
+	word-wrap: break-word;
 }
 
 body.theme-expandurl #page-entry .author[data-url]:not([data-url=""])::after {
 	content: " (" attr(data-url) ")";
 	font-size: 90%;
+	word-wrap: break-word;
 }

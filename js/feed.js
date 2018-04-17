@@ -75,6 +75,10 @@ Feed.prototype.sortKey = function (alt) {
 	return alt ? this.url : this.title.toLowerCase();
 };
 
+Feed.prototype.getRaw = function () {
+	return this.rawData;
+};
+
 Feed.prototype.getEntryByIndex = function (index, onlyEntry) {
 	var entry, i;
 	if (this.search) {
@@ -148,7 +152,7 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 	}
 	if (
 		this.isUpdating ||
-		(!force && Number(new Date()) - Number(this.date) < this.pause * 1000 * 60 * 60)
+		(!force && Number(new Date()) - Number(this.date) < (this.pause * 1000 * 60 * 60 || 5))
 	) {
 		setTimeout(function () {
 			callback(util.errors.SKIP, this, 0, 0);
@@ -157,12 +161,15 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 	}
 	this.isUpdating = true;
 	oldCounts = this.getCounts(true);
-	util.getXML(this.url, this.getConfig('cors-proxy'), function (xml) {
+	util.getXML(this.url, this.getConfig('cors-proxy'), function (xml, raw) {
 		var data;
 		this.isUpdating = false;
 		if (!xml) {
 			callback(util.errors.HTTP, this, 0, 0);
 			return;
+		}
+		if (raw) {
+			this.rawData = raw;
 		}
 		data = util.parseFeed(xml);
 		if (!data) {
