@@ -2,6 +2,13 @@
 (function () {
 "use strict";
 
+function isToday (date) {
+	var now = new Date();
+	return now.getFullYear() === date.getFullYear() &&
+		now.getMonth() === date.getMonth() &&
+		now.getDate() === date.getDate();
+}
+
 function pad (n) {
 	return n < 10 ? '0' + String(n) : String(n);
 }
@@ -42,14 +49,39 @@ function formatRelativeDate (date) {
 }
 
 function formatDate (date, long) {
-	return util.translate(long ? 'date-time-long' : 'date-time-short', {
+	var msg = 'date-time-long';
+	if (!long) {
+		msg = isToday(date) ? 'date-time-today' : 'date-time-short';
+	}
+	return util.translate(msg, {
 		date: formatDayMonth(date),
 		time: formatHourMinute(date),
 		relative: formatRelativeDate(date)
 	});
 }
 
+function tz (diff) {
+	var sign = diff <= 0 ? '+' : '-',
+		h, m;
+	diff = Math.abs(diff);
+	m = diff % 60;
+	h = (diff - m) / 60;
+	return sign + pad(h) + pad(m);
+}
+
+function formatOpmlDate (date) {
+	return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()] + ', ' +
+		date.getDate() + ' ' +
+		['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.getMonth()] + ' ' +
+		date.getFullYear() + ' ' +
+		pad(date.getHours()) + ':' +
+		pad(date.getMinutes()) + ':' +
+		pad(date.getSeconds()) + ' ' +
+		tz(date.getTimezoneOffset());
+}
+
 util.formatRelativeDate = formatRelativeDate;
 util.formatDate = formatDate;
+util.formatOpmlDate = formatOpmlDate;
 
 })();

@@ -28,10 +28,14 @@ Collection.prototype.getJSON = function () {
 };
 
 Collection.prototype.getOPML = function () {
+	var date = util.escape(util.formatOpmlDate(new Date()));
 	return '<?xml version="1.0"?>\n' +
 		'<opml version="1.0">\n' +
+		//well, actually 2.0, but for whatever reason, everybody uses 1.0, so let's do the same
 		'\t<head>\n' +
 		'\t\t<title>' + util.escape(util.translate('export-title')) + '</title>\n' +
+		'\t\t<dateCreated>' + date + '</dateCreated>\n' +
+		'\t\t<dateModified>' + date + '</dateModified>\n' +
 		'\t</head>\n' +
 		'\t<body>\n' +
 		this.feeds.map(function (feed) {

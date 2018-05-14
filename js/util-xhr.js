@@ -69,7 +69,7 @@ function getXMLViaSimulation (url, callback) {
 }
 
 function getXML (url, proxy, callback) {
-	if (location.protocol === 'file:') { //allow testing without internet connection
+	if (proxy !== '' && location.protocol === 'file:') { //allow testing without internet connection
 		getXMLViaSimulation(url, callback);
 	} else {
 		getXmlViaProxy(url, proxy, callback);

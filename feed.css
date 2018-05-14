@@ -453,6 +453,16 @@ button:disabled {
 	margin: 0 auto;
 }
 
+/*reset styles from above*/
+#page-entry .content section,
+#page-entry .content header {
+	position: static;
+	width: auto;
+	height: auto;
+	background-color: transparent;
+	color: inherit;
+}
+
 pre {
 	border-left: 4px solid #39d;
 	padding: 0.4em;

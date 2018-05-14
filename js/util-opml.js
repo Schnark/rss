@@ -78,7 +78,13 @@ function parseOpml (xml) {
 	return feeds;
 }
 
-util.getOpmlFile = getOpmlFile;
+function openOpml (callback) {
+	getOpmlFile(function (file) {
+		readFile(file, callback);
+	});
+}
+
+util.openOpml = openOpml;
 util.readFile = readFile;
 util.parseOpml = parseOpml;
 

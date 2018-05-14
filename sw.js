@@ -2,7 +2,7 @@
 (function (worker) {
 "use strict";
 
-var VERSION = 'v1.33',
+var VERSION = 'v1.34',
 	FILES = [
 		'feed.css',
 		'index.html',
@@ -31,7 +31,9 @@ var VERSION = 'v1.33',
 		'js/lib/l10n.js',
 		'l10n/de.properties',
 		'l10n/en.properties',
-		'l10n/locales.ini'
+		'l10n/locales.ini',
+		'opml/de.opml',
+		'opml/en.opml'
 	];
 
 worker.addEventListener('install', function (e) {

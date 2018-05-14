@@ -74,7 +74,8 @@ function Presenter (config) {
 		'button-config': this.onConfigClick,
 		'page-config-read': this.onReadAllClick,
 		'page-config-save': this.onConfigSaveClick,
-		'page-config-import': this.onConfigImportClick
+		'page-config-import': this.onConfigImportClick,
+		'import-default': this.onDefaultImportClick
 	});
 	this.searchInput = document.getElementById('search-input');
 	this.searchInput.addEventListener('keyup', function () {
@@ -684,24 +685,26 @@ Presenter.prototype.onConfigSaveClick = function () {
 	this.showPageCollection();
 };
 
-Presenter.prototype.importOpml = function (file) {
-	util.readFile(file, function (xml) {
-		var added;
-		if (!xml) {
-			this.showInfo('no-opml');
-			return;
-		}
-		added = this.collection.addFromOPML(xml);
-		if (added) {
-			this.updatePageCollection();
-			this.saveData();
-		}
-		this.showInfo('opml-imported', added);
-	}.bind(this));
+Presenter.prototype.importOpml = function (xml) {
+	var added;
+	if (!xml) {
+		this.showInfo('no-opml');
+		return;
+	}
+	added = this.collection.addFromOPML(xml);
+	if (added) {
+		this.updatePageCollection();
+		this.saveData();
+	}
+	this.showInfo('opml-imported', added);
 };
 
 Presenter.prototype.onConfigImportClick = function () {
-	util.getOpmlFile(this.importOpml.bind(this));
+	util.openOpml(this.importOpml.bind(this));
+};
+
+Presenter.prototype.onDefaultImportClick = function () {
+	util.getXML('opml/' + util.translate('default-opml'), '', this.importOpml.bind(this));
 };
 
 Presenter.prototype.onAlarm = function () {
@@ -715,7 +718,7 @@ Presenter.prototype.onActivity = function (data) {
 		this.addFeedFromUrl(data.data.url);
 		break;
 	case 'open':
-		this.importOpml(data.data.blob);
+		util.readFile(data.data.blob, this.importOpml.bind(this));
 	}
 };
 

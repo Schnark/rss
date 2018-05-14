@@ -1,5 +1,5 @@
 NAME = rss
-CONTENTS = icons img js l10n feed.css index.html LICENSE.txt manifest.webapp
+CONTENTS = icons img js l10n opml feed.css index.html LICENSE.txt manifest.webapp
 ICONPRE = icons/icon-
 
 .PHONY: all
