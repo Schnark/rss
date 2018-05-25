@@ -2,7 +2,7 @@
 (function (worker) {
 "use strict";
 
-var VERSION = 'v1.34',
+var VERSION = 'v1.35',
 	FILES = [
 		'feed.css',
 		'index.html',

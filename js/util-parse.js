@@ -128,7 +128,10 @@ function parseAtomItems (items, fallbackAuthor) {
 	var i, result = [], item, title, author, url, content, date;
 
 	function maybeEscape (el, content) {
-		var type = el.getAttribute('type') || 'text';
+		var type;
+		type = el.getAttributeNS('http://www.w3.org/2005/Atom', 'type') ||
+			el.getAttribute('type') ||
+			'text';
 		if (type === 'text') {
 			content = util.escape(content);
 		}
@@ -136,7 +139,7 @@ function parseAtomItems (items, fallbackAuthor) {
 	}
 
 	function getHrefAttr (el) {
-		return el.getAttribute('href') || '';
+		return el.getAttributeNS('http://www.w3.org/2005/Atom', 'href') || el.getAttribute('href') || '';
 	}
 
 	for (i = 0; i < items.length; i++) {
