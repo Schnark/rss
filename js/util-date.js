@@ -9,6 +9,11 @@ function isToday (date) {
 		now.getDate() === date.getDate();
 }
 
+function isLongAgo (date) {
+	var now = new Date();
+	return Number(now) - Number(date) > 1000 * 60 * 60 * 24 * 300;
+}
+
 function pad (n) {
 	return n < 10 ? '0' + String(n) : String(n);
 }
@@ -49,12 +54,16 @@ function formatRelativeDate (date) {
 }
 
 function formatDate (date, long) {
-	var msg = 'date-time-long';
+	var msg = 'date-time-long', dateStr;
 	if (!long) {
 		msg = isToday(date) ? 'date-time-today' : 'date-time-short';
 	}
+	dateStr = formatDayMonth(date);
+	if (isLongAgo(date)) {
+		dateStr = util.translate('year-format', {date: dateStr, year: date.getFullYear()});
+	}
 	return util.translate(msg, {
-		date: formatDayMonth(date),
+		date: dateStr,
 		time: formatHourMinute(date),
 		relative: formatRelativeDate(date)
 	});

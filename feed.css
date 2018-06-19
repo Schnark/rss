@@ -263,6 +263,7 @@ button:disabled {
 #feed-list li .title {
 	padding: 5px 0;
 	width: 100%;
+	line-height: 1.2;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
