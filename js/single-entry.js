@@ -38,6 +38,13 @@ SingleEntry.prototype.compareWith = function (other) {
 		(this.content === other.content ? 1 : 0)) / 5;
 };
 
+SingleEntry.prototype.isSimpleUpdate = function (other) {
+	return (this.title === other.title) &&
+		(this.author === other.author) &&
+		(this.url === other.url) &&
+		(this.content === other.content);
+};
+
 SingleEntry.prototype.getIndex = function () {
 	return this.parent.getIndex(this);
 };

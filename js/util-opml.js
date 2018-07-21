@@ -13,7 +13,7 @@ function getOpmlFile (callback) {
 					'application/xml',
 					'text/xml',
 					'text/x-opml',
-					//no Firefox OS app allows explicitely allows picking the above types
+					//no Firefox OS app explicitely allows picking the above types
 					//but actually exactly those that allow PDF are good
 					'application/pdf'
 				]

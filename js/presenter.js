@@ -8,6 +8,8 @@ function Presenter (config) {
 	var passiveSupported = false;
 	this.config = config;
 
+	this.resetReloadData();
+
 	this.useTouch = 'ontouchstart' in document.documentElement;
 
 	try {
@@ -150,8 +152,21 @@ Presenter.prototype.saveData = function () {
 	util.storage.set(this.collection.getJSON());
 };
 
+Presenter.prototype.resetReloadData = function () {
+	this.reloadData = {
+		counts: [0, 0],
+		skipped: 0,
+		done: 0,
+		length: 0,
+		timeout: false
+	};
+};
+
 Presenter.prototype.doReload = function (list, notification) {
-	var counts = [0, 0], skipped = 0, length = list.getLength();
+	if (this.reloadData.timeout) {
+		clearTimeout(this.reloadData.timeout);
+	}
+	this.reloadData.length += list.getLength();
 	list.reload(function (result, feed, newCount, updateCount) {
 		if (result === util.errors.NOFEED) {
 			this.showInfo('reload-nofeed');
@@ -166,20 +181,24 @@ Presenter.prototype.doReload = function (list, notification) {
 		}
 		if (result === util.errors.OK) {
 			this.saveData();
-			counts[0] += newCount;
-			counts[1] += updateCount;
-			this.showInfo('reload-success', counts);
-			if (notification && counts[0]) {
+			this.reloadData.counts[0] += newCount;
+			this.reloadData.counts[1] += updateCount;
+			this.showInfo('reload-success', this.reloadData.counts);
+			if (notification && this.reloadData.counts[0]) {
 				util.showNotification();
 				notification = false;
 			}
 		} else if (result === util.errors.SKIP) {
-			skipped++;
-			if (skipped === length) {
+			this.reloadData.skipped++;
+			if (this.reloadData.skipped === this.reloadData.length) {
 				this.showInfo('reload-error', util.errors.SKIP);
 			}
 		} else {
 			this.showInfo('reload-error', result);
+		}
+		this.reloadData.done++;
+		if (this.reloadData.done === this.reloadData.length) {
+			this.reloadData.timeout = setTimeout(this.resetReloadData.bind(this), this.config['banner-timeout']);
 		}
 	}.bind(this), list !== this.collection);
 	this.updatePageCollection();
@@ -483,6 +502,7 @@ Presenter.prototype.updatePageConfig = function () {
 	input = this.pageConfig.getElementsByClassName('config-max-feed')[0];
 	input.value = this.getConfig('max-entries-per-feed');
 	input.dispatchEvent(new Event('blur'));
+	this.pageConfig.getElementsByClassName('config-show-updates')[0].value = this.getConfig('show-updates');
 	input = this.pageConfig.getElementsByClassName('config-cors-proxy')[0];
 	input.value = this.getConfig('cors-proxy');
 	input.dispatchEvent(new Event('blur'));
@@ -660,6 +680,8 @@ Presenter.prototype.onConfigSaveClick = function () {
 	if (input.checkValidity()) {
 		this.collection.setConfig('max-entries-per-feed', Number(input.value));
 	}
+	input = this.pageConfig.getElementsByClassName('config-show-updates')[0];
+	this.collection.setConfig('show-updates', Number(input.value));
 	input = this.pageConfig.getElementsByClassName('config-cors-proxy')[0];
 	if (input.checkValidity()) {
 		this.collection.setConfig('cors-proxy', input.value);

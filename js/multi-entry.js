@@ -67,7 +67,17 @@ MultiEntry.prototype.shouldAdd = function (data) {
 };
 
 MultiEntry.prototype.add = function (data) {
+	var showUpdates;
 	this.entries.push(new SingleEntry(this, data));
+	if (this.read === this.entries.length - 1) {
+		showUpdates = this.getConfig('show-updates');
+		if (
+			showUpdates === 0 ||
+			(showUpdates === 1 && this.entries[this.entries.length - 2].isSimpleUpdate(data))
+		) {
+			this.read++;
+		}
+	}
 	while (this.entries.length > this.getConfig('max-entries-per-multi')) {
 		this.entries.shift();
 		if (this.read > 1) {

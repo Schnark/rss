@@ -42,7 +42,7 @@ Feed.prototype.getJSON = function () {
 };
 
 Feed.prototype.getLength = function () {
-	if (this.isTimeline) {
+	if (this.isTimeline()) {
 		return this.parent.getLength();
 	} else {
 		return 1;

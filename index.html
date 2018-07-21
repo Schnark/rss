@@ -124,6 +124,11 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <option value="" data-l10n-id="suggest-other">(suggest-other)</option>
 </select></label>
 <input type="number" required min="1" step="1" id="max-feed-input" class="config-max-feed page-config-save"><br>
+<label><span data-l10n-id="label-show-updates">(label-show-updates)</span><br><select class="config-show-updates page-config-save">
+<option value="0" data-l10n-id="show-updates-never">(show-updates-never)</option>
+<option value="1" data-l10n-id="show-updates-except-timestamp">(show-updates-except-timestamp)</option>
+<option value="2" data-l10n-id="show-updates-always">(show-updates-always)</option>
+</select></label>
 <label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><select id="cors-proxy-suggest">
 <optgroup data-l10n-id="proxy-group-suggested" label="(proxy-group-suggested)">
 <option value="https://crossorigin.me/">crossorigin.me</option>
