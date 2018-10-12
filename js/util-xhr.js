@@ -45,8 +45,10 @@ function getXmlViaProxy (url, proxy, callback) {
 		callback(xml, text);
 	};
 	xhr.onerror = function () {
+		var text = xhr.responseText || '';
 		workXhrQueue();
-		callback();
+		text = xhr.status + ' ' + xhr.statusText + '\n\n' + xhr.getAllResponseHeaders() + '\n\n' + text;
+		callback(false, text);
 	};
 	if (proxy.indexOf('?') > -1) {
 		url = encodeURIComponent(url);

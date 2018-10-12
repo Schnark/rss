@@ -164,12 +164,12 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 	util.getXML(this.url, this.getConfig('cors-proxy'), function (xml, raw) {
 		var data;
 		this.isUpdating = false;
+		if (raw) {
+			this.rawData = raw;
+		}
 		if (!xml) {
 			callback(util.errors.HTTP, this, 0, 0);
 			return;
-		}
-		if (raw) {
-			this.rawData = raw;
 		}
 		data = util.parseFeed(xml);
 		if (!data) {
