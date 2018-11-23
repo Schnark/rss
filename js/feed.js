@@ -168,14 +168,17 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 			this.rawData = raw;
 		}
 		if (!xml) {
+			this.loadingFailed = true;
 			callback(util.errors.HTTP, this, 0, 0);
 			return;
 		}
 		data = util.parseFeed(xml);
 		if (!data) {
+			this.loadingFailed = true;
 			callback(util.errors.XML, this, 0, 0);
 			return;
 		}
+		this.loadingFailed = false;
 		this.date = new Date();
 		if (updateTitle && data.title) {
 			this.title = data.title;
@@ -289,6 +292,9 @@ Feed.prototype.showList = function (listItem) {
 			status = 'read';
 			count = '';
 		}
+	}
+	if (this.loadingFailed && !this.isUpdating) {
+		count += ' !';
 	}
 	listItem.className = status;
 	listItem.getElementsByClassName('title')[0].textContent = this.title;
