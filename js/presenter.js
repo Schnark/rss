@@ -488,6 +488,7 @@ Presenter.prototype.updatePageEntry = function (entry, diffToNext, search) {
 Presenter.prototype.updatePageFeedConfig = function () {
 	this.currentFeed.showConfig(this.pageFeedConfig);
 	document.getElementById('page-feed-config-save').disabled = true;
+	document.getElementById('page-feed-config-read').disabled = !this.currentFeed.hasUnread();
 	this.scrollTop(this.pageFeedConfig);
 };
 
@@ -512,6 +513,7 @@ Presenter.prototype.updatePageConfig = function () {
 	this.pageConfig.getElementsByClassName('config-theme-large')[0].checked = (themes.indexOf('large') > -1);
 	this.pageConfig.getElementsByClassName('config-theme-expandurl')[0].checked = (themes.indexOf('expandurl') > -1);
 	document.getElementById('page-config-save').disabled = true;
+	document.getElementById('page-config-read').disabled = !this.collection.hasUnread();
 	feedExport = this.pageConfig.getElementsByClassName('feed-export')[0];
 	if (feedExport.href) {
 		URL.revokeObjectURL(feedExport.href);
@@ -655,6 +657,7 @@ Presenter.prototype.onFeedRawClick = function () {
 	pre.textContent = this.currentFeed.getRaw();
 	document.getElementById('page-feed-config-raw-container').appendChild(pre);
 	document.getElementById('page-feed-config-raw').disabled = true;
+	this.scrollTop(this.pageFeedConfig);
 };
 
 Presenter.prototype.onConfigClick = function () {

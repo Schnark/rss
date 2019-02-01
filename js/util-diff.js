@@ -3,13 +3,9 @@
 "use strict";
 
 function splitWords (text) {
-	var ret = [];
-	text.split(/(&(?:#?[a-zA-Z0-9]+);|[^\s&]+\b|.)/).forEach(function (word) {
-		if (word) {
-			ret.push(word);
-		}
+	return text.split(/(&(?:#?[a-zA-Z0-9]+);|[^\s&]+\b|.)/).filter(function (word) {
+		return word;
 	});
-	return ret;
 }
 
 function splitHtml (html, noWordSplit, parent) {
@@ -113,6 +109,9 @@ function simplifyDiff (d) {
 	d = d.replace(/<\/(ins|del)><\1>/g, '');
 	//allow breaks
 	d = d.replace(/((?:^|\W)<del>[^ ]+<\/del>)(<ins>[^ ]+<\/ins>(?:\W|$))/g, '$1<wbr>$2');
+	d = d.replace(/((?:^|\W)<del>[^ ]+<\/del>)(<ins>.+ .*<\/ins>)/g, '$1<wbr>$2');
+	d = d.replace(/(<del>.* .+<\/del>)(<ins>[^ ]+<\/ins>(?:\W|$))/g, '$1<wbr>$2');
+	d = d.replace(/(<del>.* .+<\/del>)(<ins>.+ .*<\/ins>)/g, '$1<wbr>$2');
 	return d;
 }
 

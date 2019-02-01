@@ -34,8 +34,11 @@ function getXmlViaProxy (url, proxy, callback) {
 		var xml = xhr.responseXML, text = xhr.responseText;
 		if (!xml) {
 			try {
-				//for pure JSON proxy
-				text = JSON.parse(text).error;
+				//for pure JSON proxy or wrong MIME
+				try {
+					text = JSON.parse(text).error;
+				} catch (e) {
+				}
 				xml = (new DOMParser()).parseFromString(text, 'application/xml');
 			} catch (e) {
 			}

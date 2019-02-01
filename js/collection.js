@@ -147,6 +147,16 @@ Collection.prototype.show = function (element) {
 	}
 };
 
+Collection.prototype.hasUnread = function () {
+	var i;
+	for (i = 0; i < this.feeds.length; i++) {
+		if (this.feeds[i].hasUnread()) {
+			return true;
+		}
+	}
+	return false;
+};
+
 Collection.prototype.markAsRead = function () {
 	var i;
 	for (i = 0; i < this.feeds.length; i++) {

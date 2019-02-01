@@ -26,7 +26,7 @@ var diffs = [
 		t: 'Change attribute',
 		o: 'foo <a href="1">bar</a>',
 		n: 'foo <a href="2">bar</a>',
-		d: 'foo <del><a href="1">bar</a></del><ins><a href="2">bar</a></ins>'
+		d: 'foo <del><a href="1">bar</a></del><wbr><ins><a href="2">bar</a></ins>'
 	},
 	{
 		t: 'Change tag',
@@ -56,7 +56,7 @@ var diffs = [
 		t: 'Change everything except spaces',
 		o: 'a b c',
 		n: 'x y z',
-		d: '<del>a b c</del><ins>x y z</ins>'
+		d: '<del>a b c</del><wbr><ins>x y z</ins>'
 	},
 	{
 		t: 'Add sentence',
@@ -74,13 +74,13 @@ var diffs = [
 		t: 'Big change in middle',
 		o: 'Foo 1 2 3 bar',
 		n: 'Foo 4 5 bar',
-		d: 'Foo <del>1 2 3</del><ins>4 5</ins> bar'
+		d: 'Foo <del>1 2 3</del><wbr><ins>4 5</ins> bar'
 	},
 	{
 		t: 'Big change in middle (2)',
 		o: 'Foo 1 2 bar',
 		n: 'Foo 3 4 5 bar',
-		d: 'Foo <del>1 2</del><ins>3 4 5</ins> bar'
+		d: 'Foo <del>1 2</del><wbr><ins>3 4 5</ins> bar'
 	},
 	{
 		t: 'Changes inside word',
@@ -110,7 +110,7 @@ var diffs = [
 		t: 'Real world example (merge tags)',
 		o: 'Abgasreinigung bei Dieselfahrzeugen : Deutschlands Autobauer als geheimes Kartell?',
 		n: '&quot;Geheimes Kartell&quot; deutscher Autobauer: Auch Daimler und Porsche mit dabei?',
-		d: '<del>Abgasreinigung bei Dieselfahrzeugen : Deutschlands Autobauer als geheimes Kartell</del>' +
+		d: '<del>Abgasreinigung bei Dieselfahrzeugen : Deutschlands Autobauer als geheimes Kartell</del><wbr>' +
 			'<ins>&quot;Geheimes Kartell&quot; deutscher Autobauer: Auch Daimler und Porsche mit dabei</ins>?'
 	},
 	{

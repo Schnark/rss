@@ -281,7 +281,7 @@ Feed.prototype.showList = function (listItem) {
 		status = 'updating';
 		count = '';
 	} else {
-		count = this.getCounts();
+		count = this.getCounts(true);
 		if (count.unread) {
 			status = 'unread';
 			count = String(count.unread);
@@ -311,11 +311,17 @@ Feed.prototype.showConfig = function (element) {
 	input.dispatchEvent(new Event('blur'));
 };
 
+Feed.prototype.hasUnread = function () {
+	var counts = this.getCounts(true);
+	return counts.unread > 0 || counts.updated > 0 || this.loadingFailed;
+};
+
 Feed.prototype.markAsRead = function () {
 	var i;
 	for (i = 0; i < this.entries.length; i++) {
 		this.entries[i].markAsRead();
 	}
+	this.loadingFailed = false;
 };
 
 return Feed;
