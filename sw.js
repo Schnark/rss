@@ -3,7 +3,7 @@
 "use strict";
 
 var PREFIX = 'rss',
-	VERSION = '1.42',
+	VERSION = '1.43',
 	FILES = [
 		'feed.css',
 		'index.html',

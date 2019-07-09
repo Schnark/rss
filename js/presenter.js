@@ -599,6 +599,7 @@ Presenter.prototype.onBackClick = function (toCollection) {
 	if (toCollection) {
 		this.showPageCollection();
 	} else {
+		this.stopAudioVideo();
 		this.showPageFeed();
 	}
 };
@@ -708,6 +709,18 @@ Presenter.prototype.onConfigSaveClick = function () {
 	this.updateAlarm();
 	this.updateThemes();
 	this.showPageCollection();
+};
+
+Presenter.prototype.stopAudioVideo = function () {
+	var audio, video, i;
+	audio = document.getElementsByTagName('audio');
+	video = document.getElementsByTagName('video');
+	for (i = 0; i < audio.length; i++) {
+		audio[i].pause();
+	}
+	for (i = 0; i < video.length; i++) {
+		video[i].pause();
+	}
 };
 
 Presenter.prototype.importOpml = function (xml) {
