@@ -38,16 +38,29 @@ function parseDate (dateString) {
 }
 
 function normalizeContent (content) {
-	return content.replace(/data-rel="lightbox-gallery-[a-zA-Z0-9]*"/g,
-		'data-rel="lightbox-gallery-ABC0"'); //WordPress lightbox, id changes every time
+	return content
+		//WordPress lightbox, id changes every time
+		.replace(/data-rel="lightbox-gallery-[a-zA-Z0-9]*"/g, 'data-rel="lightbox-gallery-ABC0"')
+		//Feedburner links, inconsistent and tracking, it's better to remove them
+		.replace(
+			new RegExp(
+				'(?:\\s*<div class="feedflare">\\s*' +
+				'(?:<a href="[^"]+"><img [^>]+>(?:<\\/img>)?<\\/a>\\s*)+' +
+				'<\\/div>\\s*<img [^>]+>(?:<\\/img>)?)+(<ul class="tag-list">|$)'
+			),
+			'$1'
+		);
 }
 
-function buildMedia (content, url, type, attr) {
+function buildMedia (content, url, type, attr, thumb) {
 	var name, download;
 	url = util.escape(url || '');
 	type = util.escape(type || '');
 	attr = attr ? ' ' + attr : '';
-	if (!url || content.indexOf('src="' + url + '"') > -1) { //media seems already present
+	if (
+		!url ||
+		content.indexOf('src="' + url + '"') > -1 || (thumb && content.indexOf('src=') > -1) //media seems already present
+	) {
 		return '';
 	}
 	name = url.replace(/.*\//, '');
@@ -76,7 +89,7 @@ function parseEnclosure (enclosures, content) {
 	return html.join('');
 }
 
-function parseMedia (media, content) {
+function parseMedia (media, content, thumb) {
 	var i, html = [], attr;
 	for (i = 0; i < media.length; i++) {
 		attr = {
@@ -92,10 +105,33 @@ function parseMedia (media, content) {
 			content,
 			media[i].getAttribute('url'),
 			media[i].getAttribute('type') || 'image',
-			attr
+			attr,
+			thumb
 		));
 	}
 	return html.join('');
+}
+
+function parseTags (categories) {
+	var tags = [], i, cat;
+	for (i = 0; i < categories.length; i++) {
+		cat = categories[i];
+		tags.push(
+			cat.textContent ||
+			cat.getAttributeNS('http://www.w3.org/2005/Atom', 'label') ||
+			cat.getAttribute('label') ||
+			''
+		);
+	}
+	tags = tags.filter(function (tag) {
+		return tag;
+	});
+	if (tags.length === 1 && (/,\S/.test(tags[0]))) {
+		tags = tags[0].split(/,(?!\s)/);
+	}
+	return '<ul class="tag-list">' + tags.map(function (tag) {
+		return '<li>' + util.escape(tag) + '</li>';
+	}).join('') + '</ul>';
 }
 
 function parseRssItems (items, fallbackAuthor) {
@@ -108,7 +144,7 @@ function parseRssItems (items, fallbackAuthor) {
 		date = parseDate(getDataFromXmlElement(item, ['pubDate', 'dc:date']));
 		content = getDataFromXmlElement(item, ['content:encoded', 'description']);
 		content =
-			parseMedia(item.getElementsByTagName('media:thumbnail'), content) +
+			parseMedia(item.getElementsByTagName('media:thumbnail'), content, true) +
 			content;
 		content =
 			parseMedia(item.getElementsByTagName('media:content'), content) +
@@ -116,6 +152,7 @@ function parseRssItems (items, fallbackAuthor) {
 		content =
 			parseEnclosure(item.getElementsByTagName('enclosure'), content) +
 			content;
+		content += parseTags(item.getElementsByTagName('category'));
 		content = normalizeContent(content);
 		if (date <= new Date()) {
 			result.push({title: title, author: author, url: url, content: content, date: date});
@@ -149,6 +186,7 @@ function parseAtomItems (items, fallbackAuthor) {
 		url = getDataFromXmlElement(item, 'link', getHrefAttr);
 		date = parseDate(getDataFromXmlElement(item, ['updated', 'published']));
 		content = getDataFromXmlElement(item, ['content', 'summary'], maybeEscape);
+		content += parseTags(item.getElementsByTagName('category'));
 		content = normalizeContent(content);
 		if (date <= new Date()) {
 			result.push({title: title, author: author, url: url, content: content, date: date});

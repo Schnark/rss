@@ -475,6 +475,21 @@ pre {
 	overflow: auto;
 }
 
+.tag-list {
+	margin: 1em 0 0 0;
+	padding: 0;
+}
+
+.tag-list li {
+	font-size: 90%;
+	display: inline-block;
+	white-space: nowrap;
+	border: solid thin;
+	margin: 0.5em;
+	padding: 0.3em;
+	border-radius: 1em;
+}
+
 del,
 ins {
 	text-decoration: none;

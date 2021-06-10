@@ -25,6 +25,11 @@ util = {
 	escape: function (text) {
 		return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	},
+	replaceUrls: function (text, oldUrl, newUrl) {
+		return text
+			.replace(new RegExp(oldUrl.replace(/([\\{}()|.?*+\-\^$\[\]])/g, '\\$1'), 'g'), newUrl)
+			.replace(new RegExp(util.escape(oldUrl).replace(/([\\{}()|.?*+\-\^$\[\]])/g, '\\$1'), 'g'), util.escape(newUrl));
+	},
 	titleFromUrl: function (url) {
 		return url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
 	},

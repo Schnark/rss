@@ -1,8 +1,8 @@
 {
-	"version": "1.45",
+	"version": "1.46",
 	"name": "Firri",
 	"description": "Feed reader",
-	"size": 76985,
+	"size": 77547,
 	"package_path": "https://schnark.github.io/rss/rss.zip",
 	"icons": {
 		"128": "/icons/icon-128.png",
