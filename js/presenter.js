@@ -47,9 +47,12 @@ function Presenter (config) {
 		this.onPrevNextHold(1);
 	});
 	this.bindClickHold('open-share', null, function () {
-		var el = document.getElementById('open-share');
-		this.ignoreClick();
-		util.share(el.dataset.title, el.href);
+		var el;
+		if (this.getConfig('enable-share')) {
+			el = document.getElementById('open-share');
+			this.ignoreClick();
+			util.share(el.dataset.title, el.href);
+		}
 	});
 	this.bindMulti('reload', this.onReloadClick, function (index) {
 		return index === 0;
@@ -512,6 +515,7 @@ Presenter.prototype.updatePageConfig = function () {
 	this.pageConfig.getElementsByClassName('config-theme-dark')[0].checked = (themes.indexOf('dark') > -1);
 	this.pageConfig.getElementsByClassName('config-theme-large')[0].checked = (themes.indexOf('large') > -1);
 	this.pageConfig.getElementsByClassName('config-theme-expandurl')[0].checked = (themes.indexOf('expandurl') > -1);
+	this.pageConfig.getElementsByClassName('config-enable-share')[0].checked = this.getConfig('enable-share');
 	document.getElementById('page-config-save').disabled = true;
 	document.getElementById('page-config-read').disabled = !this.collection.hasUnread();
 	feedExport = this.pageConfig.getElementsByClassName('feed-export')[0];
@@ -705,6 +709,8 @@ Presenter.prototype.onConfigSaveClick = function () {
 		themes.push('expandurl');
 	}
 	this.collection.setConfig('themes', themes);
+	input = this.pageConfig.getElementsByClassName('config-enable-share')[0];
+	this.collection.setConfig('enable-share', input.checked);
 	this.saveData();
 	this.updateAlarm();
 	this.updateThemes();

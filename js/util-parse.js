@@ -129,6 +129,9 @@ function parseTags (categories) {
 	if (tags.length === 1 && (/,\S/.test(tags[0]))) {
 		tags = tags[0].split(/,(?!\s)/);
 	}
+	if (tags.length === 0) {
+		return '';
+	}
 	return '<ul class="tag-list">' + tags.map(function (tag) {
 		return '<li>' + util.escape(tag) + '</li>';
 	}).join('') + '</ul>';

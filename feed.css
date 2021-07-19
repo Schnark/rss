@@ -481,12 +481,12 @@ pre {
 }
 
 .tag-list li {
-	font-size: 90%;
+	font-size: 75%;
 	display: inline-block;
 	white-space: nowrap;
 	border: solid thin;
-	margin: 0.5em;
-	padding: 0.3em;
+	margin: 0.2em 0.4em;
+	padding: 0.1em 0.3em;
 	border-radius: 1em;
 }
 

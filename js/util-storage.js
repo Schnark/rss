@@ -11,6 +11,7 @@ var cachedDB,
 		'cors-proxy': 'https://crossorigin.me/', //for alternatives see suggestions in html
 		'auto-update': 0, //-1: no auto update, 0: update on start, > 0: update every n minutes
 		'show-updates': 2, //0: never, 1: all except changes to timestamp, 2: always
+		'enable-share': true,
 		themes: []
 	};
 
