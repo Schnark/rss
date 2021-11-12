@@ -46,7 +46,7 @@ function normalizeContent (content) {
 			new RegExp(
 				'(?:\\s*<div class="feedflare">\\s*' +
 				'(?:<a href="[^"]+"><img [^>]+>(?:<\\/img>)?<\\/a>\\s*)+' +
-				'<\\/div>\\s*<img [^>]+>(?:<\\/img>)?)+(<ul class="tag-list">|$)'
+				'<\\/div>\\s*(?:<img [^>]+>(?:<\\/img>)?)?)+(<ul class="tag-list">|$)'
 			),
 			'$1'
 		);
