@@ -19,6 +19,6 @@
 	},
 	"restrictions": {
 		"en": "Note that it will have restrictions with automatic updates, as well as some minor problems with feeds that don’t use HTTPS. You also have to make sure that you don’t open multiple instances of the app in different browser tabs, as this will cause problems.",
-		"de": "Beachte, dass sie Einschränkugen bei den automatischen Aktualisierungen haben wird, sowie kleinere Probleme mit Feeds, die nicht über HTTPS verwenden. Du musst auch darauf achten, dass du die App nicht mehrfach in verschiedenen Browsertabs öffnest, da dies sonst Probleme bereiten wird."
+		"de": "Beachte, dass sie Einschränkungen bei den automatischen Aktualisierungen haben wird, sowie kleinere Probleme mit Feeds, die nicht HTTPS verwenden. Du musst auch darauf achten, dass du die App nicht mehrfach in verschiedenen Browsertabs öffnest, da dies sonst Probleme bereiten wird."
 	}
 }

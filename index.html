@@ -85,7 +85,8 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <option value="1000000" data-l10n-id="suggest-never">(suggest-never)</option>
 <option value="" data-l10n-id="suggest-other-pause">(suggest-other-pause)</option>
 </select></label>
-<input type="number" required min="0" step="1" id="pause-input" class="pause page-feed-config-save">
+<input type="number" required min="0" step="1" id="pause-input" class="pause page-feed-config-save"><br>
+<label><input type="checkbox" class="no-proxy page-feed-config-save"> <span data-l10n-id="label-no-proxy">(label-no-proxy)</span></label>
 <button id="page-feed-config-save" data-l10n-id="button-save-changes">(button-save-changes)</button>
 </p>
 <p>
@@ -131,27 +132,30 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 </select></label>
 <label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><select id="cors-proxy-suggest">
 <optgroup data-l10n-id="proxy-group-suggested" label="(proxy-group-suggested)">
-<option value="https://crossorigin.me/">crossorigin.me</option><!--broken-->
-<option value="https://jsonp.afeld.me/?url=">jsonp.afeld.me</option>
-<option value="https://api.allorigins.win/raw?url=">api.allorigins.win</option>
-<option value="https://cors.bridged.cc/">cors.bridged.cc</option>
-<option value="https://jsonproxy.herokuapp.com/?url=">jsonproxy.herokuapp.com</option><!--broken-->
-<option value="https://yacdn.org/proxy/">yacdn.org</option><!--broken-->
-<option value="https://api.codetabs.com/v1/proxy/?quest=">api.codetabs.com</option><!--broken-->
-<option value="https://thingproxy.freeboard.io/fetch/">thingproxy.freeboard.io</option><!--broken-->
-<option value="https://cors-proxy.htmldriven.com/?url=">cors-proxy.htmldriven.com</option><!--broken-->
+<option value="https://crossorigin.me/">crossorigin.me</option><!--long broken, but declared default-->
+<option value="https://jsonp.afeld.me/?url=">jsonp.afeld.me</option><!--broken-->
+<option value="https://api.allorigins.win/raw?url=">api.allorigins.win</option><!--broken-->
+<option value="https://cors.bridged.cc/">cors.bridged.cc</option><!--broken-->
+<!--<option value="https://jsonproxy.herokuapp.com/?url=">jsonproxy.herokuapp.com</option> long broken-->
+<!--<option value="https://yacdn.org/proxy/">yacdn.org</option> long broken-->
+<option value="https://api.codetabs.com/v1/proxy/?quest=%">api.codetabs.com</option>
+<!--<option value="https://thingproxy.freeboard.io/fetch/">thingproxy.freeboard.io</option> long broken-->
+<!--<option value="https://cors-proxy.htmldriven.com/?url=">cors-proxy.htmldriven.com</option> long broken-->
 </optgroup>
 <optgroup data-l10n-id="proxy-group-testing" label="(proxy-group-testing)">
-<option value="https://cors-anywhere.herokuapp.com/">cors-anywhere.herokuapp.com</option>
-<option value="https://goxcors.appspot.com/cors?method=GET&url=">goxcors.appspot.com</option><!--broken-->
+<option value="https://cors-anywhere.herokuapp.com/">cors-anywhere.herokuapp.com</option><!--requires opt-in-->
+<!--<option value="https://goxcors.appspot.com/cors?method=GET&url=">goxcors.appspot.com</option> long broken-->
+<option value="https://proxy.cors.sh/">proxy.cors.sh</option>
+<option value="https://cors.eu.org/">cors.eu.org</option>
 </optgroup>
-<optgroup data-l10n-id="proxy-group-http" label="(proxy-group-http)">
-<option value="http://gobetween.oklabs.org/">gobetween.oklabs.org</option><!--broken-->
-<option value="http://www.whateverorigin.org/">whateverorigin.org</option><!--broken-->
-<option value="http://cors.io/?">cors.io</option><!--broken-->
-</optgroup>
-<optgroup data-l10n-id="proxy-group-json" label="(proxy-group-json)">
-<option value="https://lit-beach-8985.herokuapp.com/?url=">lit-beach-8985.herokuapp.com</option>
+<!--<optgroup data-l10n-id="proxy-group-http" label="(proxy-group-http)"> whole group broken-->
+<!--<option value="http://gobetween.oklabs.org/">gobetween.oklabs.org</option> long broken-->
+<!--<option value="http://www.whateverorigin.org/">whateverorigin.org</option> long broken-->
+<!--<option value="http://cors.io/?">cors.io</option> long broken-->
+<!--</optgroup> whole group broken-->
+<optgroup data-l10n-id="proxy-group-text" label="(proxy-group-text)">
+<option value="https://cors-get-proxy.sirjosh.workers.dev/?url=">cors-get-proxy.sirjosh.workers.dev</option>
+<option value="https://lit-beach-8985.herokuapp.com/?url=">lit-beach-8985.herokuapp.com</option><!--broken-->
 </optgroup>
 <optgroup data-l10n-id="proxy-group-manual" label="(proxy-group-manual)">
 <option value="" data-l10n-id="suggest-other">(suggest-other)</option>

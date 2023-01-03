@@ -10,6 +10,7 @@ function Feed (parent, data) {
 	this.url = data.url;
 	this.date = data.date ? new Date(data.date) : false;
 	this.pause = data.pause || 0;
+	this.noProxy = data.noProxy || false;
 	if (!this.isTimeline()) {
 		this.entries = data.entries.map(function (entry) {
 			return new MultiEntry(this, entry);
@@ -35,6 +36,7 @@ Feed.prototype.getJSON = function () {
 		url: this.url,
 		date: this.date ? Number(this.date) : false,
 		pause: this.pause,
+		noProxy: this.noProxy,
 		entries: this.entries.map(function (entry) {
 			return entry.getJSON();
 		})
@@ -112,6 +114,7 @@ Feed.prototype.updateSettings = function (element) {
 	this.title = title.value;
 	this.url = url.value;
 	this.pause = pause.value;
+	this.noProxy = element.getElementsByClassName('no-proxy')[0].checked;
 	this.parent.sort();
 	return true;
 };
@@ -161,7 +164,7 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 	}
 	this.isUpdating = true;
 	oldCounts = this.getCounts(true);
-	util.getXML(this.url, this.getConfig('cors-proxy'), function (xml, raw) {
+	util.getXML(this.url, this.noProxy ? '' : this.getConfig('cors-proxy'), function (xml, raw) {
 		var data;
 		this.isUpdating = false;
 		if (raw) {
@@ -309,6 +312,7 @@ Feed.prototype.showConfig = function (element) {
 	input = element.getElementsByClassName('pause')[0];
 	input.value = this.pause;
 	input.dispatchEvent(new Event('blur'));
+	element.getElementsByClassName('no-proxy')[0].checked = this.noProxy;
 };
 
 Feed.prototype.hasUnread = function () {

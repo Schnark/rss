@@ -26,7 +26,7 @@ function getXmlViaProxy (url, proxy, callback) {
 	if (proxy === false) { //for a privileged app
 		xhr = new XMLHttpRequest({mozAnon: true, mozSystem: true});
 		proxy = '';
-		maxXhrRunning = 6; //they all go to different hosts (probably)
+		maxXhrRunning = 6; //in this case (and only in this) we can increase the number
 	} else {
 		xhr = new XMLHttpRequest();
 	}
@@ -58,7 +58,9 @@ function getXmlViaProxy (url, proxy, callback) {
 		text = xhr.status + ' ' + xhr.statusText + '\n\n' + xhr.getAllResponseHeaders() + '\n\n' + text;
 		callback(false, text);
 	};
-	if (proxy.indexOf('?') > -1) {
+	if (proxy.slice(-1) === '%') {
+		proxy = proxy.slice(0, -1);
+	} else if (proxy.indexOf('?') > -1) {
 		url = encodeURIComponent(url);
 	}
 	url = proxy + url;
