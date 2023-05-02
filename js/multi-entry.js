@@ -73,7 +73,8 @@ MultiEntry.prototype.add = function (data) {
 		showUpdates = this.getConfig('show-updates');
 		if (
 			showUpdates === 0 ||
-			(showUpdates === 1 && this.entries[this.entries.length - 2].isSimpleUpdate(data))
+			(showUpdates === 1 && this.entries[this.entries.length - 2].isSimpleUpdate(data)) ||
+			(showUpdates === 3 && this.entries[this.entries.length - 2].isUpdateWithoutTextChange(data))
 		) {
 			this.read++;
 		}

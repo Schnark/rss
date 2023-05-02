@@ -44,6 +44,11 @@ SingleEntry.prototype.isSimpleUpdate = function (other) {
 		(this.content === other.content || util.replaceUrls(this.content, this.url, other.url) === other.content);
 };
 
+SingleEntry.prototype.isUpdateWithoutTextChange = function (other) {
+	return (this.title === other.title) &&
+		(util.getText(this.content) === util.getText(other.content));
+};
+
 SingleEntry.prototype.getIndex = function () {
 	return this.parent.getIndex(this);
 };

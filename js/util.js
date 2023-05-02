@@ -30,6 +30,12 @@ util = {
 			.replace(new RegExp(oldUrl.replace(/([\\{}()|.?*+\-\^$\[\]])/g, '\\$1'), 'g'), newUrl)
 			.replace(new RegExp(util.escape(oldUrl).replace(/([\\{}()|.?*+\-\^$\[\]])/g, '\\$1'), 'g'), util.escape(newUrl));
 	},
+	getText: function (html) {
+		return html
+			.replace(/<ul class="tag-list">[\s\S]*<\/ul>$/, '')
+			.replace(/<[^<>]+>/g, '')
+			.replace(/\s+/g, ' ');
+	},
 	titleFromUrl: function (url) {
 		return url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
 	},

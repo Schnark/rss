@@ -127,18 +127,20 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 <input type="number" required min="1" step="1" id="max-feed-input" class="config-max-feed page-config-save"><br>
 <label><span data-l10n-id="label-show-updates">(label-show-updates)</span><br><select class="config-show-updates page-config-save">
 <option value="0" data-l10n-id="show-updates-never">(show-updates-never)</option>
+<option value="3" data-l10n-id="show-updates-text">(show-updates-text)</option>
 <option value="1" data-l10n-id="show-updates-except-timestamp">(show-updates-except-timestamp)</option>
 <option value="2" data-l10n-id="show-updates-always">(show-updates-always)</option>
 </select></label>
 <label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><select id="cors-proxy-suggest">
 <optgroup data-l10n-id="proxy-group-suggested" label="(proxy-group-suggested)">
 <option value="https://crossorigin.me/">crossorigin.me</option><!--long broken, but declared default-->
+<option value="https://corsproxy.io/?">corsproxy.io</option>
+<option value="https://api.allorigins.win/raw?url=">api.allorigins.win</option>
+<option value="https://api.codetabs.com/v1/proxy/?quest=%">api.codetabs.com</option>
 <option value="https://jsonp.afeld.me/?url=">jsonp.afeld.me</option><!--broken-->
-<option value="https://api.allorigins.win/raw?url=">api.allorigins.win</option><!--broken-->
 <option value="https://cors.bridged.cc/">cors.bridged.cc</option><!--broken-->
 <!--<option value="https://jsonproxy.herokuapp.com/?url=">jsonproxy.herokuapp.com</option> long broken-->
 <!--<option value="https://yacdn.org/proxy/">yacdn.org</option> long broken-->
-<option value="https://api.codetabs.com/v1/proxy/?quest=%">api.codetabs.com</option>
 <!--<option value="https://thingproxy.freeboard.io/fetch/">thingproxy.freeboard.io</option> long broken-->
 <!--<option value="https://cors-proxy.htmldriven.com/?url=">cors-proxy.htmldriven.com</option> long broken-->
 </optgroup>
