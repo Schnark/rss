@@ -11,6 +11,7 @@ function Feed (parent, data) {
 	this.date = data.date ? new Date(data.date) : false;
 	this.pause = data.pause || 0;
 	this.noProxy = data.noProxy || false;
+	this.filter = data.filter || false;
 	if (!this.isTimeline()) {
 		this.entries = data.entries.map(function (entry) {
 			return new MultiEntry(this, entry);
@@ -37,6 +38,7 @@ Feed.prototype.getJSON = function () {
 		date: this.date ? Number(this.date) : false,
 		pause: this.pause,
 		noProxy: this.noProxy,
+		filter: this.filter,
 		entries: this.entries.map(function (entry) {
 			return entry.getJSON();
 		})
@@ -101,7 +103,7 @@ Feed.prototype.getEntryByIndex = function (index, onlyEntry) {
 };
 
 Feed.prototype.updateSettings = function (element) {
-	var title, url, pause;
+	var title, url, pause, filter, i;
 	title = element.getElementsByClassName('title')[0];
 	url = element.getElementsByClassName('url')[0];
 	pause = element.getElementsByClassName('pause')[0];
@@ -115,6 +117,24 @@ Feed.prototype.updateSettings = function (element) {
 	this.url = url.value;
 	this.pause = pause.value;
 	this.noProxy = element.getElementsByClassName('no-proxy')[0].checked;
+	filter = element.getElementsByClassName('filter-mode')[0].value;
+	if (filter === 'none') {
+		this.filter = false;
+	} else {
+		this.filter = {
+			include: filter === 'include',
+			rules: []
+		};
+		filter = element.getElementsByClassName('filter-rule');
+		for (i = 0; i < filter.length; i += 3) {
+			if (filter[i].value) {
+				this.filter.rules.push([filter[i].value, filter[i + 1].value, filter[i + 2].value]);
+			}
+		}
+		if (this.filter.rules.length === 0) {
+			this.filter = false;
+		}
+	}
 	this.parent.sort();
 	return true;
 };
@@ -131,8 +151,43 @@ Feed.prototype.sort = function () {
 	this.entries.sort(util.compare);
 };
 
+Feed.prototype.checkFilter = function (data) {
+	var i;
+	function testRule (rule) {
+		var not = false, field = rule[0], mode = rule[1], val = rule[2], result;
+		if (mode.slice(-4) === '-not') {
+			mode = mode.slice(0, -4);
+			not = true;
+		}
+		switch (mode) {
+		case 'is':
+			result = data[field] === val;
+			break;
+		case 'contains':
+			result = data[field].indexOf(val) > -1;
+			break;
+		default:
+			result = false; //should not happen;
+		}
+		return not ? !result : result;
+	}
+
+	if (!this.filter) {
+		return true;
+	}
+	for (i = 0; i < this.filter.rules.length; i++) {
+		if (testRule(this.filter.rules[i])) {
+			return this.filter.include;
+		}
+	}
+	return !this.filter.include;
+};
+
 Feed.prototype.add = function (data) {
 	var i, shouldAdd;
+	if (!this.checkFilter(data)) {
+		return;
+	}
 	for (i = 0; i < this.entries.length; i++) {
 		shouldAdd = this.entries[i].shouldAdd(data);
 		if (shouldAdd === -1) {
@@ -305,7 +360,7 @@ Feed.prototype.showList = function (listItem) {
 };
 
 Feed.prototype.showConfig = function (element) {
-	var input;
+	var input, i, filter;
 	element.getElementsByClassName('feed-title')[0].textContent = this.title;
 	element.getElementsByClassName('title')[0].value = this.title;
 	element.getElementsByClassName('url')[0].value = this.url;
@@ -313,6 +368,19 @@ Feed.prototype.showConfig = function (element) {
 	input.value = this.pause;
 	input.dispatchEvent(new Event('blur'));
 	element.getElementsByClassName('no-proxy')[0].checked = this.noProxy;
+	element.getElementsByClassName('filter-mode')[0].value =
+		this.filter ? (this.filter.include ? 'include' : 'exclude') : 'none';
+	input = element.getElementsByClassName('filter-rule');
+	for (i = 0; i < input.length; i++) {
+		filter = this.filter && this.filter.rules[Math.floor(i / 3)];
+		if (filter) {
+			filter = filter[i % 3];
+		} else {
+			filter = i % 3 === 1 ? 'is' : '';
+		}
+		input[i].value = filter;
+	}
+	element.getElementsByClassName('filter-rule-table')[0].hidden = !this.filter;
 };
 
 Feed.prototype.hasUnread = function () {

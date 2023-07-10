@@ -6,7 +6,7 @@
 	<body>
 		<outline type="rss" xmlUrl="https://feeds.bbci.co.uk/news/rss.xml?edition=int" title="BBC" text="BBC" />
 		<outline type="rss" xmlUrl="https://blog.mozilla.org/feed/" title="Mozilla Blog" text="Mozilla Blog" />
-		<outline type="rss" xmlUrl="https://www.tagesschau.de/xml/rss2" title="tagesschau.de" text="tagesschau.de" />
+		<outline type="rss" xmlUrl="https://www.tagesschau.de/infoservices/alle-meldungen-100~rdf.xml" title="tagesschau.de" text="tagesschau.de" />
 		<outline type="rss" xmlUrl="https://xkcd.com/atom.xml" title="xkcd" text="xkcd" />
 	</body>
 </opml>

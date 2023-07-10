@@ -20,7 +20,7 @@ button, input, select {
 	margin-bottom: 0.5em;
 }
 
-input, select {
+input, select, .filter-rule-table {
 	width: 100%;
 }
 
@@ -53,6 +53,7 @@ input, select {
 	line-height: 1;
 	overflow: hidden;
 	margin-right: 0.5em;
+	margin-bottom: 0.5em;
 }
 
 [type="checkbox"]:checked + span::before {

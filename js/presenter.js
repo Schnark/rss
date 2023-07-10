@@ -95,6 +95,11 @@ function Presenter (config) {
 	this.bindEnableSave('page-feed-config-save');
 	this.bindEnableSave('page-config-add');
 	this.bindEnableSave('page-config-save');
+	this.filterModeInput = document.getElementsByClassName('filter-mode')[0];
+	this.filterRuleTable = document.getElementsByClassName('filter-rule-table')[0];
+	this.filterModeInput.addEventListener('change', function () {
+		this.filterRuleTable.hidden = this.filterModeInput.value === 'none';
+	}.bind(this));
 
 	document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
 

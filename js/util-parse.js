@@ -37,6 +37,21 @@ function parseDate (dateString) {
 	return new Date(date);
 }
 
+function unescapeTitle (title) {
+	var span;
+	if (title.indexOf('&') === -1) {
+		//nothing to do
+		return title;
+	}
+	if (title.indexOf('<') > -1 || title.indexOf('>') > -1 || title.indexOf('& ') > -1) {
+		//already unescaped
+		return title;
+	}
+	span = document.createElement('span');
+	span.innerHTML = title;
+	return span.textContent;
+}
+
 function normalizeContent (content) {
 	return content
 		//WordPress lightbox, id changes every time
@@ -49,7 +64,31 @@ function normalizeContent (content) {
 				'<\\/div>\\s*(?:<img [^>]+>(?:<\\/img>)?)?)+(<ul class="tag-list">|$)'
 			),
 			'$1'
-		);
+		)
+		//unescaped " in images
+		.replace(/<img [^>\n]+>/g, function (img) {
+			return img
+				.split('=')
+				.map(function (part) {
+					var first, last, index;
+					first = part.indexOf('"');
+					if (first === -1) {
+						return part;
+					}
+					last = part.lastIndexOf('"');
+					if (first === last) {
+						return part;
+					}
+					index = part.indexOf('"', first + 1);
+					while (index !== last) {
+						part = part.slice(0, index) + '&quot;' + part.slice(index + 1);
+						last += 5;
+						index = part.indexOf('"', first + 1);
+					}
+					return part;
+				})
+				.join('=');
+		});
 }
 
 function buildMedia (content, url, type, attr, thumb) {
@@ -141,7 +180,7 @@ function parseRssItems (items, fallbackAuthor) {
 	var i, result = [], item, title, author, url, content, date;
 	for (i = 0; i < items.length; i++) {
 		item = items[i];
-		title = getDataFromXmlElement(item, 'title');
+		title = unescapeTitle(getDataFromXmlElement(item, 'title'));
 		author = getDataFromXmlElement(item, ['author', 'dc:creator']) || fallbackAuthor;
 		url = getDataFromXmlElement(item, ['feedburner:origLink', 'link']);
 		date = parseDate(getDataFromXmlElement(item, ['pubDate', 'dc:date']));

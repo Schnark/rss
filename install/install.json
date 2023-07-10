@@ -4,7 +4,7 @@
 		"en": "Firri – Feed reader app for Firefox OS",
 		"de": "Firri – Feed-Reader-App für Firefox OS"
 	},
-	"serviceworker": true,
+	"serviceworker": false,
 	"icon": "icons/icon-128.png",
 	"screenshots": [
 		"2016-11-03-19-01-56.png",
