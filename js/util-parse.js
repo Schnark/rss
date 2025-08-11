@@ -238,7 +238,12 @@ function parseAtomItems (items, fallbackAuthor) {
 }
 
 function parseFeed (xml) {
-	var items = xml.getElementsByTagName('item'), isRSS = !!items.length, author;
+	var items, isRSS, author;
+	if (xml.documentElement.tagName === 'html') {
+		return false;
+	}
+	items = xml.getElementsByTagName('item');
+	isRSS = !!items.length;
 	if (!isRSS) {
 		items = xml.getElementsByTagName('entry');
 	}

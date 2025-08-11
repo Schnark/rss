@@ -503,7 +503,7 @@ Presenter.prototype.updatePageFeedConfig = function () {
 Presenter.prototype.updatePageConfig = function () {
 	var input, themes, feedExport;
 
-	this.pageConfig.getElementsByClassName('url')[0].value = 'https://';
+	this.pageConfig.getElementsByClassName('url')[0].value = '';
 	document.getElementById('page-config-add').disabled = true;
 	input = this.pageConfig.getElementsByClassName('config-max-multi')[0];
 	input.value = this.getConfig('max-entries-per-multi');
@@ -515,6 +515,7 @@ Presenter.prototype.updatePageConfig = function () {
 	input = this.pageConfig.getElementsByClassName('config-cors-proxy')[0];
 	input.value = this.getConfig('cors-proxy');
 	input.dispatchEvent(new Event('blur'));
+	this.pageConfig.getElementsByClassName('config-speed')[0].value = this.getConfig('speed');
 	this.pageConfig.getElementsByClassName('config-auto-update')[0].value = this.getConfig('auto-update');
 	themes = this.getConfig('themes');
 	this.pageConfig.getElementsByClassName('config-theme-dark')[0].checked = (themes.indexOf('dark') > -1);
@@ -699,6 +700,8 @@ Presenter.prototype.onConfigSaveClick = function () {
 	if (input.checkValidity()) {
 		this.collection.setConfig('cors-proxy', input.value);
 	}
+	input = this.pageConfig.getElementsByClassName('config-speed')[0];
+	this.collection.setConfig('speed', Number(input.value));
 	input = this.pageConfig.getElementsByClassName('config-auto-update')[0];
 	this.collection.setConfig('auto-update', Number(input.value));
 	input = this.pageConfig.getElementsByClassName('config-theme-dark')[0];
@@ -753,7 +756,7 @@ Presenter.prototype.onConfigImportClick = function () {
 };
 
 Presenter.prototype.onDefaultImportClick = function () {
-	util.getXML('opml/' + util.translate('default-opml'), '', this.importOpml.bind(this));
+	util.getXML('opml/' + util.translate('default-opml'), '', 0, this.importOpml.bind(this));
 };
 
 Presenter.prototype.onAlarm = function () {

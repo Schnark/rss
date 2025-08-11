@@ -9,6 +9,7 @@ var cachedDB,
 		'max-entries-per-multi': 10,
 		'max-entries-per-feed': 100,
 		'cors-proxy': '',
+		speed: 1, //0: fast, 1: normal (usually 3 connections parallel), 2: slow
 		'auto-update': 0, //-1: no auto update, 0: update on start, > 0: update every n minutes
 		'show-updates': 2, //0: never, 1: all except changes to timestamp, 2: always, 3: only for changes to text
 		'enable-share': true,

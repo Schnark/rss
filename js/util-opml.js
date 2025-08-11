@@ -65,15 +65,33 @@ function readFile (file, callback) {
 }
 
 function parseOpml (xml) {
-	var feeds = [], outlines = xml.getElementsByTagName('outline'), outline, type, url, title, i;
+	var feeds = [], outlines = xml.getElementsByTagName('outline'), outline, type, url, title, pause, noProxy, filter, i;
 	for (i = 0; i < outlines.length; i++) {
 		outline = outlines[i];
 		type = outline.getAttribute('type');
-		url = outline.getAttribute('xmlUrl');
-		title = outline.getAttribute('text') || outline.getAttribute('title');
-		if (type === 'rss' && url) {
-			feeds.push({title: title || util.titleFromUrl(url), url: url});
+		if (type !== 'rss') {
+			continue;
 		}
+		url = outline.getAttribute('xmlUrl');
+		if (!url) {
+			continue;
+		}
+		title = outline.getAttribute('title') || outline.getAttribute('text') || util.titleFromUrl(url);
+		pause = Number(outline.getAttributeNS('https://schnark.github.io/rss', 'pause'));
+		if (isNaN(pause) || pause < 0) {
+			pause = 0;
+		}
+		noProxy = outline.hasAttributeNS('https://schnark.github.io/rss', 'no-proxy');
+		filter = outline.getAttributeNS('https://schnark.github.io/rss', 'filter');
+		try {
+			filter = JSON.parse(filter);
+			if (!filter.rules.length) {
+				filter = false;
+			}
+		} catch (e) {
+			filter = false;
+		}
+		feeds.push({title: title, url: url, pause: pause, noProxy: noProxy, filter: filter});
 	}
 	return feeds;
 }

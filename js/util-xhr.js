@@ -21,17 +21,26 @@ function workXhrQueue (xhr) {
 	}
 }
 
-function getXmlViaProxy (url, proxy, callback) {
+function getXmlViaProxy (url, proxy, speed, callback) {
 	var xhr;
+	switch (speed) {
+	case 0:
+		maxXhrRunning = proxy === false ? 6 : 4;
+		break;
+	case 1:
+		maxXhrRunning = proxy === false ? 4 : 3;
+		break;
+	case 2:
+		maxXhrRunning = 1;
+	}
 	if (proxy === false) { //for a privileged app
 		xhr = new XMLHttpRequest({mozAnon: true, mozSystem: true});
 		proxy = '';
-		maxXhrRunning = 6; //in this case (and only in this) we can increase the number
 	} else {
 		xhr = new XMLHttpRequest();
 	}
 	xhr.onload = function () {
-		var xml = xhr.responseXML, text = xhr.responseText;
+		var xml = xhr.responseXML, text = xhr.responseText, domParser;
 		if (!xml) {
 			try {
 				//the JSON proxy wrappes the XML into JSON
@@ -40,10 +49,11 @@ function getXmlViaProxy (url, proxy, callback) {
 				} catch (e) {
 				}
 				//try to parse as XML if it comes from JSON or was sent with a wrong MIME type
-				xml = (new DOMParser()).parseFromString(text, 'application/xml');
-				//don't keep if it's plain (X)HTML (probably an error page) or no XML at all
-				if (['parsererror', 'html'].indexOf(xml.documentElement.tagName) > -1) {
-					xml = false;
+				domParser = new DOMParser();
+				xml = domParser.parseFromString(text, 'application/xml');
+				//parse as HTML if that fails (we only need it to discover a new feed via rel="alternate" links)
+				if (xml.documentElement.tagName === 'parsererror') {
+					xml = domParser.parseFromString(text, 'text/html');
 				}
 			} catch (e) {
 			}
@@ -76,15 +86,15 @@ function getXmlViaProxy (url, proxy, callback) {
 	workXhrQueue(xhr);
 }
 
-function getXMLViaSimulation (url, callback) {
-	getXmlViaProxy(simulationUrls.shift() || 'http://foo.invalid/', '', callback);
+function getXMLViaSimulation (url, speed, callback) {
+	getXmlViaProxy(simulationUrls.shift() || 'http://foo.invalid/', '', speed, callback);
 }
 
-function getXML (url, proxy, callback) {
+function getXML (url, proxy, speed, callback) {
 	if (proxy !== '' && location.protocol === 'file:') { //allow testing without internet connection
-		getXMLViaSimulation(url, callback);
+		getXMLViaSimulation(url, speed, callback);
 	} else {
-		getXmlViaProxy(url, proxy, callback);
+		getXmlViaProxy(url, proxy, speed, callback);
 	}
 }
 

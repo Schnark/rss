@@ -1,5 +1,5 @@
 /*global Feed: true, MultiEntry, util*/
-/*global Event*/
+/*global Event, URL*/
 Feed =
 (function () {
 "use strict";
@@ -54,9 +54,22 @@ Feed.prototype.getLength = function () {
 };
 
 Feed.prototype.getOPML = function () {
-	return '<outline type="rss" xmlUrl="' + util.escape(this.url) + '" ' +
-		'title="' + util.escape(this.title) + '" ' +
-		'text="' + util.escape(this.title) + '" />';
+	var attr = [
+		'type="rss"',
+		'xmlUrl="' + util.escape(this.url) + '"',
+		'title="' + util.escape(this.title) + '"',
+		'text="' + util.escape(this.title) + '"'
+	];
+	if (this.pause) {
+		attr.push('s:pause="' + this.pause + '"');
+	}
+	if (this.noProxy) {
+		attr.push('s:no-proxy="true"');
+	}
+	if (this.filter) {
+		attr.push('s:filter="' + util.escape(JSON.stringify(this.filter)) + '"');
+	}
+	return '<outline ' + attr.join(' ') + ' />';
 };
 
 Feed.prototype.getUrl = function () {
@@ -202,8 +215,8 @@ Feed.prototype.add = function (data) {
 	return;
 };
 
-Feed.prototype.reload = function (callback, force, updateTitle) {
-	var oldCounts, newCounts;
+Feed.prototype.reload = function (callback, force, firstLoad) {
+	var oldCounts, newCounts, relAlternate;
 	if (this.isTimeline()) {
 		this.parent.reload(callback);
 		return;
@@ -219,7 +232,7 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 	}
 	this.isUpdating = true;
 	oldCounts = this.getCounts(true);
-	util.getXML(this.url, this.noProxy ? '' : this.getConfig('cors-proxy'), function (xml, raw) {
+	util.getXML(this.url, this.noProxy ? '' : this.getConfig('cors-proxy'), this.getConfig('speed'), function (xml, raw) {
 		var data;
 		this.isUpdating = false;
 		if (raw) {
@@ -232,13 +245,28 @@ Feed.prototype.reload = function (callback, force, updateTitle) {
 		}
 		data = util.parseFeed(xml);
 		if (!data) {
+			if (firstLoad) {
+				//look for rel="alternate" links
+				try {
+					relAlternate = xml.querySelector(
+						'link[rel="alternate"][type="application/rss+xml"][href], ' +
+						'link[rel="alternate"][type="application/atom+xml"][href]'
+					);
+					relAlternate = (new URL(relAlternate.getAttribute('href'), this.url)).toString();
+					if (relAlternate) {
+						callback(util.errors.RELALT, relAlternate);
+						return;
+					}
+				} catch (e) {
+				}
+			}
 			this.loadingFailed = true;
 			callback(util.errors.XML, this, 0, 0);
 			return;
 		}
 		this.loadingFailed = false;
 		this.date = new Date();
-		if (updateTitle && data.title) {
+		if (firstLoad && data.title) {
 			this.title = data.title;
 		}
 		data.entries.forEach(function (entry) {

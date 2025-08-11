@@ -121,9 +121,6 @@ util = {
 					continue;
 				}
 				makeAbsolute(els[i], 'href', base);
-				if (els[i].download) {
-					continue;
-				}
 				els[i].target = '_blank';
 				if (els[i].relList) {
 					els[i].relList.add('noopener');
@@ -173,7 +170,8 @@ util = {
 		XML: 2,
 		EXISTS: 3,
 		NOFEED: 4,
-		SKIP: 5
+		SKIP: 5,
+		RELALT: 6
 	},
 	translate: function (key, args) {
 		if (typeof args === 'number') {

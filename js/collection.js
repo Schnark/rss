@@ -30,7 +30,7 @@ Collection.prototype.getJSON = function () {
 Collection.prototype.getOPML = function () {
 	var date = util.escape(util.formatOpmlDate(new Date()));
 	return '<?xml version="1.0"?>\n' +
-		'<opml version="1.0">\n' +
+		'<opml xmlns:s="https://schnark.github.io/rss" version="1.0">\n' +
 		//well, actually 2.0, but for whatever reason, everybody uses 1.0, so let's do the same
 		'\t<head>\n' +
 		'\t\t<title>' + util.escape(util.translate('export-title')) + '</title>\n' +
@@ -88,7 +88,11 @@ Collection.prototype.add = function (url, callback) {
 	}
 	var title = util.titleFromUrl(url),
 		feed = new Feed(this, {title: title, url: url, entries: []});
-	feed.reload(function (result) {
+	feed.reload(function (result, relaltUrl) {
+		if (result === util.errors.RELALT) {
+			this.add(relaltUrl, callback);
+			return;
+		}
 		if (result !== util.errors.OK) {
 			callback(result);
 			return;
@@ -103,7 +107,14 @@ Collection.prototype.addFromOPML = function (xml) {
 	var data = util.parseOpml(xml), i, added = 0;
 	for (i = 0; i < data.length; i++) {
 		if (this.indexByUrl(data[i].url) === -1) {
-			this.feeds.push(new Feed(this, {title: data[i].title, url: data[i].url, entries: []}));
+			this.feeds.push(new Feed(this, {
+				title: data[i].title,
+				url: data[i].url,
+				pause: data[i].pause,
+				noProxy: data[i].noProxy,
+				filter: data[i].filter,
+				entries: []
+			}));
 			added++;
 		}
 	}
