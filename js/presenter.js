@@ -5,7 +5,8 @@ Presenter =
 "use strict";
 
 function Presenter (config) {
-	var passiveSupported = false;
+	var passiveSupported = false,
+		corsSuggestions, corsInput, corsTestLink;
 	this.config = config;
 
 	this.resetReloadData();
@@ -103,10 +104,23 @@ function Presenter (config) {
 
 	document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
 
+	corsSuggestions = document.getElementById('cors-proxy-suggest');
+	corsInput = document.getElementById('cors-proxy-input');
+	corsTestLink = document.getElementById('cors-proxy-test');
+
 	this.initSuggestor(document.getElementById('pause-input'), document.getElementById('pause-suggest'));
 	this.initSuggestor(document.getElementById('max-multi-input'), document.getElementById('max-multi-suggest'));
 	this.initSuggestor(document.getElementById('max-feed-input'), document.getElementById('max-feed-suggest'));
-	this.initSuggestor(document.getElementById('cors-proxy-input'), document.getElementById('cors-proxy-suggest'));
+	this.initSuggestor(corsInput, corsSuggestions);
+
+	function updateCorsTestLink () {
+		var url = corsSuggestions.options[corsSuggestions.selectedIndex].dataset.test || corsInput.value;
+		corsTestLink.href = url;
+		corsTestLink.hidden = !url;
+	}
+
+	corsInput.addEventListener('blur', updateCorsTestLink);
+	corsInput.addEventListener('input', updateCorsTestLink);
 
 	util.storage.get(this.init.bind(this));
 }

@@ -198,9 +198,9 @@
 <!--new proxies are often mentioned in https://github.com/Rob--W/cors-anywhere/issues/301-->
 <label><span data-l10n-id="label-cors-proxy">(label-cors-proxy)</span><br><select id="cors-proxy-suggest">
 <optgroup data-l10n-id="proxy-group-suggested" label="(proxy-group-suggested)">
-<option value="https://corsproxy.io/?">corsproxy.io</option>
-<option value="https://api.codetabs.com/v1/proxy/?quest=%">api.codetabs.com</option>
-<option value="https://api.cors.lol/?url=">api.cors.lol</option>
+<option value="https://corsproxy.io/?url=">corsproxy.io</option>
+<option value="https://api.codetabs.com/v1/proxy/?quest=">api.codetabs.com</option>
+<option value="https://api.cors.lol/?url=">api.cors.lol</option><!--broken-->
 <option value="https://api.allorigins.win/raw?url=">api.allorigins.win</option><!--broken-->
 <!--<option value="https://jsonp.afeld.me/?url=">jsonp.afeld.me</option> long broken-->
 <!--<option value="https://cors.bridged.cc/">cors.bridged.cc</option> long broken-->
@@ -211,11 +211,11 @@
 <!--<option value="https://cors-proxy.htmldriven.com/?url=">cors-proxy.htmldriven.com</option> long broken-->
 </optgroup>
 <optgroup data-l10n-id="proxy-group-testing" label="(proxy-group-testing)">
-<option value="https://cors-anywhere.herokuapp.com/">cors-anywhere.herokuapp.com</option><!--requires opt-in-->
+<option value="https://cors-anywhere.herokuapp.com/" data-test="https://cors-anywhere.herokuapp.com/corsdemo">cors-anywhere.herokuapp.com</option><!--requires opt-in-->
 <!--<option value="https://goxcors.appspot.com/cors?method=GET&url=">goxcors.appspot.com</option> long broken-->
-<option value="https://proxy.cors.sh/">proxy.cors.sh</option>
+<option value="https://proxy.cors.sh/">proxy.cors.sh</option><!--broken-->
 <option value="https://cors.eu.org/">cors.eu.org</option>
-<option value="https://cors-anywhere.com/">cors-anywhere.com</option>
+<option value="https://cors-anywhere.com/">cors-anywhere.com</option><!--broken-->
 </optgroup>
 <optgroup data-l10n-id="proxy-group-text" label="(proxy-group-text)">
 <option value="https://cors-get-proxy.sirjosh.workers.dev/?url=">cors-get-proxy.sirjosh.workers.dev</option>
@@ -226,6 +226,7 @@
 </optgroup>
 </select></label>
 <input type="url" id="cors-proxy-input" class="config-cors-proxy page-config-save"><br>
+<a id="cors-proxy-test" target="_blank" data-l10n-id="proxy-test">(proxy-test)</a><br>
 <label><span data-l10n-id="label-speed">(label-speed)</span><br><select class="config-speed page-config-save">
 <option value="0" data-l10n-id="option-speed-fast">(option-speed-fast)</option>
 <option value="1" data-l10n-id="option-speed-normal">(option-speed-normal)</option>

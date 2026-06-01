@@ -128,7 +128,7 @@ Feed.prototype.updateSettings = function (element) {
 	}
 	this.title = title.value;
 	this.url = url.value;
-	this.pause = pause.value;
+	this.pause = Number(pause.value);
 	this.noProxy = element.getElementsByClassName('no-proxy')[0].checked;
 	filter = element.getElementsByClassName('filter-mode')[0].value;
 	if (filter === 'none') {
